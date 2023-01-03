@@ -1,0 +1,75 @@
+#! /bin/bash
+
+
+#########################################################
+DIR=`dirname $0`
+CHANGE_CALIB=$DIR/change_calib.rb
+
+
+#########################################################
+indir=''
+template_dir=''
+outdir=''
+is_force=false
+is_soft=false
+
+
+#########################################################
+while [ $# -gt 0 ]; do
+	case $1 in
+		--indir)
+			indir=$2
+			shift
+			;;
+		--template_dir)
+			template_dir=$2
+			shift
+			;;
+		--outdir)
+			outdir=$2
+			shift
+			;;
+		--force)
+			is_force=true
+			;;
+		--soft)
+			is_soft=true
+			;;
+	esac
+	shift
+done
+
+
+#########################################################
+if [ -d $outdir ]; then
+	if [ $is_force == true ]; then
+		rm -rf $outdir
+	else
+		echo "outdir $outdir already exists! Exiting ......"
+		exit 1
+	fi
+fi
+
+mkdir -p $outdir
+
+for i in $template_dir/*; do
+	template_subdir=$i
+	continue
+done
+
+
+#########################################################
+for i in $indir/*; do
+	b=`basename $i`
+	sub_outdir=$outdir/$b-hardAll
+	cp -r combined $sub_outdir
+	head -1 combined/species.trees > $sub_outdir/species.trees
+	if [ $is_soft == true ]; then
+		sed '1d' combined/species.trees | ruby $CHANGE_CALIB -i - --calib $i >> $sub_outdir/species.trees
+	else
+		sed '1d' combined/species.trees | ruby $CHANGE_CALIB -i - --calib $i --unif 0,0.025 >> $sub_outdir/species.trees
+	fi
+	[ -f $sub_outdir/FigTree.tre ] && rm $sub_outdir/FigTree.tre
+done
+
+

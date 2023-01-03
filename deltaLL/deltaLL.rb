@@ -1,0 +1,107 @@
+#! /bin/env ruby
+
+
+######################################################
+require 'parallel'
+require 'getoptlong'
+
+require 'Dir'
+require 'util'
+
+
+######################################################
+indir = nil
+treefile = nil
+model = 'LG+G+I'
+outdir = nil
+is_force = true
+cpu = 1
+thread = 2
+taxa_file = nil
+outgrp_str = nil
+
+taxa = Array.new
+
+
+######################################################
+opts = GetoptLong.new(
+  ['--indir', GetoptLong::REQUIRED_ARGUMENT],
+  ['-t', '--tree', GetoptLong::REQUIRED_ARGUMENT],
+  ['-m', '--model', GetoptLong::REQUIRED_ARGUMENT],
+  ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
+  ['--force', GetoptLong::NO_ARGUMENT],
+  ['--cpu', GetoptLong::REQUIRED_ARGUMENT],
+  ['-T', '--thread', GetoptLong::REQUIRED_ARGUMENT],
+  ['--taxa', GetoptLong::REQUIRED_ARGUMENT],
+  ['--outgrp', GetoptLong::REQUIRED_ARGUMENT],
+  ['--outgrp_file', GetoptLong::REQUIRED_ARGUMENT],
+)
+
+
+opts.each do |opt, value|
+  case opt
+    when '--indir'
+      indir = value
+    when '-t', '--tree'
+      treefile = value
+    when '-m', '--model'
+      model = value
+    when '--outdir'
+      outdir = value
+    when '--force'
+      is_force = true
+    when '--cpu'
+      cpu = value.to_i
+    when '--taxa'
+      taxa_file = value
+    when '--outgrp'
+      outgrp_str = value.split(',').join(' ')
+    when '--outgrp_file'
+      outgrp_str = read_list(value).keys.join(' ')
+  end
+end
+
+
+######################################################
+infiles = read_infiles(indir)
+
+mkdir_with_force(outdir, is_force)
+
+taxa = read_list(taxa_file).keys
+
+
+######################################################
+Parallel.map(infiles, in_threads: cpu) do |infile|
+  b = File.basename(infile)
+  c = getCorename(b)
+  sub_outdir = File.join(outdir, c)
+  `mkdir -p #{sub_outdir}`
+  `mkdir -p #{sub_outdir}/cons`
+  `mkdir -p #{sub_outdir}/no_cons`
+
+  `sed '/>/!d; s/>//' #{infile} > #{sub_outdir}/cons/species.list`
+  topo_file = File.join(sub_outdir, 'cons', 'topo.tre')
+  `nw_prune -vf #{treefile} #{sub_outdir}/cons/species.list > #{topo_file}`
+
+  # constraint
+  `iqtree -s #{infile} -pre #{sub_outdir}/cons/iqtree -m #{model} -T #{thread} -te #{topo_file}`
+  # no_constraint
+  `iqtree -s #{infile} -pre #{sub_outdir}/no_cons/iqtree -m #{model} -T #{thread}`
+
+  lnLs = Array.new
+  mean_distances = Array.new
+  Dir.foreach(sub_outdir) do |f_b|
+    next if f_b =~ /^\./
+    iqtree_iqtree = File.join(sub_outdir, f_b, 'iqtree.iqtree')
+    iqtree_treefile = File.join(sub_outdir, f_b, 'iqtree.treefile')
+    lnLs << `sed '/^Log-likelihood of the tree:/!d' #{iqtree_iqtree} | awk '{print $5}'`.chomp.to_f
+    if f_b == 'cons' and not taxa.empty?
+      mean_distances << `nw_reroot #{iqtree_treefile} #{outgrp_str} | nw_distance -n #{iqtree_treefile} | grep -f #{taxa_file} -  | awk '{a+=$2}END{print a/NR}'`.chomp.to_f
+      mean_distances << `nw_reroot #{iqtree_treefile} #{outgrp_str} | nw_distance -n #{iqtree_treefile} | grep -vf #{taxa_file} - | awk '{a+=$2}END{print a/NR}'`.chomp.to_f
+    end
+  end
+  puts [c, lnLs.reduce(:-)].join("\t")
+  puts [c, mean_distances.reduce(:-).abs/(mean_distances.max)].join("\t")
+end
+
+

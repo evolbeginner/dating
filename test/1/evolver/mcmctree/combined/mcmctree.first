@@ -1,0 +1,28 @@
+135391
+/home-user/sswang/project/Rhizobiales/scripts/dating/test/1/evolver/mcmctree/combined/disabled_bin/codeml
+MCMCTREE in paml version 4.9j, October 2019
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+Reading master tree.
+(((a, b), c), (d, e));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 5  	ls = 100
+Reading sequences, sequential format..
+Reading seq # 1: a       Reading seq # 2: b       Reading seq # 3: c       Reading seq # 4: d       Reading seq # 5: e       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,     37 patterns at    100 /    100 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     37 patterns at    100 /    100 sites (100.0%),  0:00
+Counting frequencies..
+ 37 patterns, clean
+
+
+
+*** Locus 1 ***
+running baseml tmp0001.ctl
+file rst2 not found!

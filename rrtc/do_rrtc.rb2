@@ -1,0 +1,227 @@
+#! /bin/env ruby
+
+# 2022-10-03
+
+##############################################
+require 'getoptlong'
+require 'csv'
+require 'smarter_csv'
+require 'parallel'
+require 'bio-nwk'
+
+require_relative 'lib/weighted_rand'
+
+
+##############################################
+class Bio::Tree
+  def de_no_for_tips
+    allTips.each do |tip|
+      tip.name = tip.name.split(' ')[1,100].join('_')
+    end
+  end
+end
+
+
+class Subclade
+  attr_accessor :name, :num
+  def initialize(arr)
+    @name = arr.sort
+    @num = nil
+  end
+end
+
+
+class Symbiont < Subclade
+  attr_accessor :hosts
+  def initialize(arr)
+    @name = arr
+    @hosts = Array.new
+  end
+  def is_co_evolve?(data)
+    @host2prob = Hash.new
+    @hosts.map{|i| @host2prob[i]=i.prob }
+    selected_host = weighted_rand(@host2prob)
+    if data[selected_host.num-1].to_f >= data[@num-1].to_f
+      return(true)
+    else
+      return(false)
+    end
+  end
+end
+
+
+class Host < Subclade
+  attr_accessor :prob
+  def prob
+    @prob
+  end
+  def prob=(prob)
+    @prob = prob.to_f
+  end
+end
+
+
+##############################################
+def get_lca_bootstrap(names, name2node, tree)
+  nodes = names.map{|i| name2node[i] }
+  lca = tree.lowest_common_ancestor(nodes[0], nodes[1])
+  begin
+    return(lca.bootstrap)
+  rescue
+    raise nodes.join("\t")
+  end
+end
+
+
+def read_mcmctree_out(file)
+  is_start = false
+  tree = nil
+  in_fh = File.open(file, 'r')
+  #(((1_t5, 2_t9) 33 , ((3_t21, (4_t22, 5_t18) 36 ) 35 , (6_t3, 7_t6) 37 ) 34 ) 32 , (((((8_t8, 9_t12) 42 , (10_t23, 11_t14) 43 ) 41 , (12_t2, 13_t4) 44 ) 40 , 14_t24) 39 , ((((15_t30, 16_t20) 48 , 17_t13) 47 , (((18_t11, 19_t10) 51 , ((20_t1, 21_t26) 53 , (22_t7, (23_t19, 24_t27) 55 ) 54 ) 52 ) 50 , ((((25_t25, 26_t17) 59 , 27_t15) 58 , 28_t16) 57 , 29_t29) 56 ) 49 ) 46 , 30_t28) 45 ) 38 ) 31 ;
+  in_fh.each_line do |line|
+    line.chomp!
+    if is_start
+      tree = getTreeObjFromNwkString(line)
+      break
+    end
+    is_start = true if line =~ /^Species tree for FigTree/
+  end
+  in_fh.close
+
+  tree.de_no_for_tips
+
+  #get_internal_node_index(tree)
+  return(tree)
+end
+
+
+def get_rtc(file, root_two_children_names)
+  rtc_info = Hash.new
+  in_fh = File.open(file, 'r')
+  in_fh.each_line do |line|
+    line.chomp!
+    next if line =~ /^#|^$/
+    line_arr = line.split("\t")
+
+    symbiont = line_arr[0].gsub('_', '_').split(',')
+    rtc = Symbiont.new(symbiont)
+
+    (1..line_arr.size-1).each do |index|
+      ele = line_arr[index]
+      host = ele.split(':')[0].gsub('_', '_').split(',')
+      prob = ele.split(':')[1]
+
+      host_obj = Host.new(host)
+      host_obj.prob = prob
+      rtc.hosts << host_obj
+    end
+
+    root_obj = Host.new(root_two_children_names)
+
+    curr_total_prob = rtc.hosts.map{|host|host.prob}.reduce(&:+)
+    if curr_total_prob < 1
+      root_obj.prob = 1 - curr_total_prob
+      rtc.hosts << root_obj
+    end
+
+    if not rtc_info.include?(symbiont)
+      rtc_info[symbiont] = Array.new
+    end
+    rtc_info[symbiont] << rtc
+  end
+  in_fh.close
+  return(rtc_info)
+end
+
+
+##############################################
+if __FILE__ == $0
+  indir = nil
+  infile = nil
+  rtc_file = nil
+  mcmctxt_file = nil
+  is_rtc = true
+
+
+  ##############################################
+  opts = GetoptLong.new(
+    ['--indir', GetoptLong::REQUIRED_ARGUMENT],
+    ['-i', GetoptLong::REQUIRED_ARGUMENT],
+    ['--rtc', GetoptLong::REQUIRED_ARGUMENT],
+    ['--mcmctxt', GetoptLong::REQUIRED_ARGUMENT],
+    ['--is_rtc', '--is_rrtc', GetoptLong::REQUIRED_ARGUMENT],
+  )
+
+
+  opts.each do |opt, value|
+    case opt
+      when '--indir'
+        indir = value
+      when '-i'
+        infile = value
+      when '--rtc'
+        rtc_file = value
+      when '--mcmctxt'
+        mcmctxt_file = value
+      when '--is_rtc', '--is_rtc'
+        is_rtc = value =~ /^true|T$/i ? true : false
+    end
+  end
+
+
+  ##############################################
+  unless indir.nil?
+    infile = File.join(indir, 'out') # file 'out' from the mcmctree output
+    #rtc_file = File.join(indir, 'rtc_file')
+    mcmctxt_file = File.join(indir, 'mcmc.txt')
+  end
+
+
+  ##############################################
+  tree = read_mcmctree_out(infile) # "out", NOT "mcmc.txt"
+
+  root_two_children_names = tree.children(tree.root).map{|i|tree.tips(i)[0].name}
+
+  rtc_info = get_rtc(rtc_file, root_two_children_names)
+
+  name2node, node2name = tree.getNameNodeRela
+  rtc_info.delete_if{|names, rtcs| not names.all?{|name|name2node.include?(name)}}
+
+  minus = tree.allTips.size - 1
+
+
+  ##############################################
+  rtc_info.each_pair do |names, rtcs|
+    rtcs.each do |rtc|
+      begin
+        rtc.num = get_lca_bootstrap(names, name2node, tree) - minus
+        rtc.hosts.map{|obj|obj.num = get_lca_bootstrap(obj.name, name2node, tree) - minus}
+      rescue
+        raise "species #{names} or #{rtc.hosts} not found"
+      end
+    end
+  end
+
+
+  ##############################################
+  headers = CSV.open(mcmctxt_file, &:readline)
+
+  col_data = Array.new
+  counter = 0
+  CSV.foreach(mcmctxt_file) do |row|
+    counter += 1
+    data = row[0].split("\t")
+    if is_rtc
+      col_data << row if rtc_info.all?{|rtc_name, rtcs| rtcs.all?{|rtc| rtc.is_co_evolve?(data)} }
+    else
+      col_data << row
+    end
+  end
+
+  STDERR.puts col_data.size
+  col_data.each do |i|
+    puts i
+  end
+end
+
+

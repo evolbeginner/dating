@@ -1,0 +1,21 @@
+
+         5        125  P
+
+a                               AAAAAAAAAA AAAAAADDDE FFFFFFGGGG GGHHIIIIII IIIIIIIIII IIIKLLLLLL LLLLLLLLLL LLLMMMMMMM MMMMMNPPQR RSSSSSSSSS SSSVVVVVVV VVVVVVVWYY YYYYY
+b                               AAAAAAAAAA AASSVVDDKE FFFLLMGGGG GGHNEIIIII IIIILLLMVV VVVKIILLLL LLLLLLLLLL MTVAAILLLM MMMMMNPPQR RAALSSSSSS STTIIILLVV VVVVVVVWFL YYYYY
+c                               AAAAAAASSS VVSTLVDDKE FFFLLIGGGG GSHHEIIIII IIILFLVLII LVVKIIFIII LLLLLLLLLV MIIILIILMI ILMMMNPPQR RSSASSSSSS TSTIITFIFI IILVVVVWYL YYYYY
+d                               AAAACPVAAV AVATAVDHRE FFLFVL-AGG SGHHEFILLL MVVIVLMIAV LAVK-IFLVV FFFILLLMVL LILVLILLLV VLMMTNPTQG RASSAAEGNS SSTFVVLLLI VVMAILTWYL FFYYY
+e                               AGLSAAAATA AAAAAADDKE FLFLLLGGAG GGHNELI-MV LFILIIVIIV VVVKVLLIFL FILLILMLLL MLIIIMFLLM VAFMMDPPQR RASSGSSSSS SSTVVIMTVI IVLVVVVWYL FYFWY
+
+
+
+    5    1    1    2    1    1    1    2    1    1    1    1    1    1    1
+    1    3    1    1    4    8    1    3    1    1    1    1    1    1   12
+    2    1    1    1    1    1    2    1    1    1    1    1    1    1    1
+    2    1    1    1    1    1    1    1    6    1    1    1    1    1    1
+    1    1    3    1    1    9    2    2    3    1    1    1    1    1    1
+    1    1    1    1    1    1    1    1    1    1    1    6    1    1    1
+    3    1    1    1    1    2    1    2    1    3    1    1    1    1    3
+    1    1    1    1    1    1    1    1    2    2    1    1    1    1    1
+    1    1    1    1    8
+

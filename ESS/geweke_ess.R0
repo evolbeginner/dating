@@ -1,0 +1,72 @@
+#! /bin/env Rscript
+
+
+#########################################################
+suppressWarnings(suppressMessages(library(ergm)))
+
+library(coda)
+library(ergm)
+library(getopt)
+
+
+#########################################################
+args=commandArgs(T)
+
+
+#########################################################
+n = 1000000
+
+
+#########################################################
+a=mcmc(read.table(args[1], header=TRUE, nrows=n))
+b=mcmc(read.table(args[2], header=TRUE, nrows=n))
+
+if(args[1] == args[2]){
+	c = a
+} else{
+	c = mcmc.list(a, b)
+}
+
+
+#########################################################
+# ESS
+cat("ESS","\n")
+ess=coda::effectiveSize(c); print(ess) # c or a
+cat("\n")
+
+
+#########################################################
+# autocorrelation
+cat("autocorrelation","\n")
+#autocorr.diag(c, lags = c(0, 10, 50, 100, 500), relative=TRUE)
+cat("\n")
+
+
+#########################################################
+# geweke
+cat("geweke", "\n")
+pnorm(geweke.diag(a)$z)
+geweke.diag(a)$z
+cat("\n")
+
+
+#########################################################
+# heidel
+#heidel.diag(a)
+#q()
+
+
+#########################################################
+# gelman
+print(gelman.diag(c, autoburnin=F))
+
+
+#########################################################
+# mv_geweke
+cat("mv_geweke", "\n")
+mv_geweke <- geweke.diag.mv(c, split.mcmc.list = T)
+for(i in 1:length(mv_geweke)){ cat(unname(mv_geweke[[i]]$p.value),"\n") }
+cat("\n")
+q()
+
+

@@ -1,0 +1,8 @@
+
+out_bn = "output/rep.root10-45.trees"
+trees_base_name = out_bn
+trees_file_name = trees_base_name + ".trees"
+
+tt = readTreeTrace(trees_file_name, burnin=2)
+mapTree(tt, trees_base_name+".haha.tree")
+q()

@@ -1,0 +1,81 @@
+MCMCTREE (paml version 4.9j, October 2019) combined.phy
+
+
+*** Locus 1 ***
+      5    100
+
+Xenococcus_sp_PCC_7305          TACACCATTG CCTACACACA CCAGATATGA CCGCCTTTGA CACCCGACTA GCTAATTGAT CCCCACACAC GTCCATCTTG TCTCATACCA CCCCTCCAAA 
+Moorea_producens_3L             TACACCATTA CCTACATTCA CCAGATATGA CCGTCTTTGA CACCCAACCA GCTAACTGAC TCCCACACAC GTCCACTTTA TCTTATACCA CCCTTCCAAA 
+Oscillatoria_sp_PCC_10802       CACACCATTG CCTACACCCA CCAGATATGA CCGTCTCAGA CACCCAACTA GCTAACTGAC CCCCACACAC GTCCACTTTA CCTCATACCA CCCTTCCAAA 
+Crinalium_epipsammum_PCC_9333   TACACCATTG CCTACACTCA CCAGATATGA CCGTCTCAGA CACCCAACTA GCTAACTGAC CCCTACACAC GTCCACTTTA CCTTACACCA CCCTTCCAAA 
+Nostoc_sp_PCC_7107              TGCACCATTG CCCACACCCA CCGGATATGA CCGTCTTAGA CACCCAGCTA GCTAACTGAT CCCCACACAC GTCCACTTTA CCTTATACCA CCCTTCCAAA 
+
+
+
+Printing out site pattern counts
+
+
+         5         21  P
+
+Xenococcus_sp_PCC_7305          AAACCCCCGG GTTTTTTTTT T
+Moorea_producens_3L             AATCCTTTAA GCCCTTTTTT T
+Oscillatoria_sp_PCC_10802       AACCCCCTAG GCCTACCCTT T
+Crinalium_epipsammum_PCC_9333   AATCTCTTAG GCCTACCTCT T
+Nostoc_sp_PCC_7107              AGCCCCTTAG GCTTACTTTC T
+
+
+
+   24    3    1   33    1    2    1    3    2    1    7    2    1    1    1
+    1    1    1    1    1   12
+
+
+Frequencies..
+                                    T      C      A      G
+Xenococcus_sp_PCC_7305         0.22000 0.40000 0.28000 0.10000 GC = 0.500
+Moorea_producens_3L            0.25000 0.38000 0.30000 0.07000 GC = 0.450
+Oscillatoria_sp_PCC_10802      0.18000 0.44000 0.30000 0.08000 GC = 0.520
+Crinalium_epipsammum_PCC_9333  0.21000 0.41000 0.30000 0.08000 GC = 0.490
+Nostoc_sp_PCC_7107             0.21000 0.41000 0.27000 0.11000 GC = 0.520
+
+Homogeneity statistic: X2 = 0.03141 G = 0.03127 
+
+Average                        0.21400 0.40800 0.29000 0.08800
+
+# constant sites:     76 (76.00%)
+ln Lmax (unconstrained) = -214.668169
+
+Time used:  0:14
+
+mean of parameters using all iterations
+  31.60045  29.98098  28.56387  27.15207  25.87790  24.59467  22.09073  18.34534  19.25854  10.72763   9.20748   3.41843  14.15399  16.28794  22.73139  12.06547  17.82796   0.00750   0.04121
+
+Species tree for FigTree.  Branch lengths = posterior mean times; 95% CIs = labels
+((((((((1_Xenococcus_sp_PCC_7305, 2_Moorea_producens_3L) 26 , ((3_Oscillatoria_sp_PCC_10802, 4_Crinalium_epipsammum_PCC_9333) 28 , ((5_Nostoc_sp_PCC_7107, 6_Raphidiopsis_brookii_D9) 30 , 7_Richelia_intracellularis_HH01) 29 ) 27 ) 25 , 8_Lyngbya_aestuarii_BL_J) 24 , (9_Synechococcus_elongatus_PCC_6301, 10_Prochlorococcus_marinus_CCMP1986) 31 ) 23 , 11_Thermosynechococcus_elongatus_BP-1) 22 , (12_Gloeobacter_violaceus_PCC_7421, 13_Gloeobacter_kilaueensis_JS1) 32 ) 21 , ((14_Candidatus_Caenarcanum_bioreactoricola_UASB_169, 15_Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16) 34 , 16_Vampirovibrio_chlorellavorus_Vc_AZ_2) 33 ) 20 , (17_Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, 18_Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196) 35 ) 19 ;
+
+((((((((Xenococcus_sp_PCC_7305: 18.345342, Moorea_producens_3L: 18.345342): 3.745387, ((Oscillatoria_sp_PCC_10802: 10.727626, Crinalium_epipsammum_PCC_9333: 10.727626): 8.530914, ((Nostoc_sp_PCC_7107: 3.418429, Raphidiopsis_brookii_D9: 3.418429): 5.789049, Richelia_intracellularis_HH01: 9.207478): 10.051062): 2.832189): 2.503940, Lyngbya_aestuarii_BL_J: 24.594669): 1.283234, (Synechococcus_elongatus_PCC_6301: 14.153994, Prochlorococcus_marinus_CCMP1986: 14.153994): 11.723908): 1.274168, Thermosynechococcus_elongatus_BP-1: 27.152070): 1.411796, (Gloeobacter_violaceus_PCC_7421: 16.287944, Gloeobacter_kilaueensis_JS1: 16.287944): 12.275922): 1.417109, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 12.065475, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 12.065475): 10.665918, Vampirovibrio_chlorellavorus_Vc_AZ_2: 22.731392): 7.249583): 1.619479, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: 17.827964, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: 17.827964): 13.772489);
+
+((((((((Xenococcus_sp_PCC_7305: 18.345342, Moorea_producens_3L: 18.345342) [&95%HPD={9.0356, 26.888}]: 3.745387, ((Oscillatoria_sp_PCC_10802: 10.727626, Crinalium_epipsammum_PCC_9333: 10.727626) [&95%HPD={2.23492, 19.0755}]: 8.530914, ((Nostoc_sp_PCC_7107: 3.418429, Raphidiopsis_brookii_D9: 3.418429) [&95%HPD={0.0013542, 10.1769}]: 5.789049, Richelia_intracellularis_HH01: 9.207478) [&95%HPD={0.50544, 18.6857}]: 10.051062) [&95%HPD={14.7049, 25.2508}]: 2.832189) #5.000000 [&95%HPD={16.6244, 28.2779}]: 2.503940, Lyngbya_aestuarii_BL_J: 24.594669) [&95%HPD={17.7808, 30.386}]: 1.283234, (Synechococcus_elongatus_PCC_6301: 14.153994, Prochlorococcus_marinus_CCMP1986: 14.153994) [&95%HPD={0.0039459, 28.1805}]: 11.723908) [&95%HPD={20.4166, 31.7254}]: 1.274168, Thermosynechococcus_elongatus_BP-1: 27.152070) [&95%HPD={21.8472, 31.8092}]: 1.411796, (Gloeobacter_violaceus_PCC_7421: 16.287944, Gloeobacter_kilaueensis_JS1: 16.287944) [&95%HPD={0.0070458, 29.3128}]: 12.275922) [&95%HPD={23.8178, 32.2467}]: 1.417109, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 12.065475, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 12.065475) [&95%HPD={0.0044597, 27.4159}]: 10.665918, Vampirovibrio_chlorellavorus_Vc_AZ_2: 22.731392) [&95%HPD={4.20931, 31.8081}]: 7.249583) [&95%HPD={26.7546, 33.3175}]: 1.619479, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: 17.827964, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: 17.827964) [&95%HPD={0.0116667, 30.6745}]: 13.772489) [&95%HPD={28.4426, 34.7465}];
+
+
+Posterior mean (95% Equal-tail CI) (95% HPD CI) HPD-CI-width
+
+t_n19         31.6165 (28.3302, 34.6963) (28.4426, 34.7465)  6.3039 (Jnode 34)
+t_n20         29.9916 (26.3708, 33.0149) (26.7546, 33.3175)  6.5629 (Jnode 33)
+t_n21         28.5779 (23.6172, 32.0921) (23.8178, 32.2467)  8.4289 (Jnode 32)
+t_n22         27.1574 (21.3270, 31.5719) (21.8472, 31.8092)  9.9620 (Jnode 31)
+t_n23         25.9071 (19.5311, 31.2125) (20.4166, 31.7254) 11.3088 (Jnode 30)
+t_n24         24.6008 (17.8244, 30.6306) (17.7808, 30.3860) 12.6052 (Jnode 29)
+t_n25         22.0965 (16.6515, 28.3285) (16.6244, 28.2779) 11.6535 (Jnode 28)
+t_n26         18.4020 ( 7.9790, 26.5279) ( 9.0356, 26.8880) 17.8524 (Jnode 27)
+t_n27         19.2394 (15.1455, 25.9657) (14.7049, 25.2508) 10.5459 (Jnode 26)
+t_n28         10.7046 ( 2.8898, 19.7904) ( 2.2349, 19.0755) 16.8406 (Jnode 25)
+t_n29          9.2623 ( 1.1298, 20.2913) ( 0.5054, 18.6857) 18.1803 (Jnode 24)
+t_n30          3.4005 ( 0.0935, 11.8688) ( 0.0014, 10.1769) 10.1756 (Jnode 23)
+t_n31         14.1574 ( 0.3592, 29.5159) ( 0.0039, 28.1805) 28.1765 (Jnode 22)
+t_n32         16.3164 ( 0.3644, 30.1020) ( 0.0070, 29.3128) 29.3057 (Jnode 21)
+t_n33         22.7435 ( 3.1490, 31.3711) ( 4.2093, 31.8081) 27.5988 (Jnode 20)
+t_n34         12.1695 ( 0.2363, 29.2689) ( 0.0045, 27.4159) 27.4114 (Jnode 19)
+t_n35         17.8791 ( 0.4559, 31.6590) ( 0.0117, 30.6745) 30.6628 (Jnode 18)
+mu             0.0075 ( 0.0015,  0.0297) ( 0.0006,  0.0227)  0.0221
+sigma2         0.0412 ( 0.0005,  0.1650) ( 0.0002,  0.1294)  0.1292
+lnL           -2.9800 (-6.6890, -0.7960) (-5.8440, -0.4740)  5.3700

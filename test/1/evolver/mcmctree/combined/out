@@ -1,0 +1,69 @@
+MCMCTREE (paml version 4.9j, October 2019) combined.phy
+
+
+*** Locus 1 ***
+      5    100
+
+a                               CCACAGCTAT TACTCTCACC CTCAAACACC CACTAAATCT GCGCTTATTC CCAAACCGAC CTCCCTAGAA CGGAGCCCCT CACTCACCAC ACAATTCGCT 
+b                               TCACAGCTAT TACTCTCACC CTCAAACACC CACTAAATCT GCGCTTATTC CCGAACCGAC CCCCCCAGGA CGGAGTCCTT CGCCCACCAC ACAATTCGCT 
+c                               TTCTAGCTTT CACTCCCACC CTCAAATATC CACTAAACCC GCGCTTATTC CCAAGCCGTC CCCCCTACAA CGGAGACCCC CATTCCCCAT ATAATGCGCT 
+d                               TCATAGCTAT TACTCCCACC CTCTAACATC CACTAAATCA GCGCTTATTC CCAAGCCGAT CCTCCCATAA CAGAGTTCTT CGATCCCCAC ATGATACGCT 
+e                               TTATAGTTAT CATTCTCACC CTCGAATATC CACTAAATCC GCGCTCACTC CCGGACCGGC CCTCCCAACA TAGAGTTCCT CACCCCCCAA ACGATGCGCT 
+
+
+
+Printing out site pattern counts
+
+
+         5         37  P
+
+a                               AAAAAAAAAA AACCCCCCCC CCCCGGGTTT TTTTTTT
+b                               AAAAAAAAAG GGCCCCCCCC CTTTGGGCCC TTTTTTT
+c                               AAAACCGTTA AACCCCTTTT TACTCGGCTT CCCCGTT
+d                               AAGTACGAAA AGCCTTACCT TTTTTAGCCT ACTTATT
+e                               AGGGACAAGC GACTCTCATC TTCTAAGCCC CTCTGCT
+
+
+
+   17    1    1    1    1    1    1    1    1    1    1    1   27    3    1
+    2    1    1    2    1    2    1    1    1    1    1    7    1    1    1
+    1    1    1    2    1    2    9
+
+
+Frequencies..
+                                    T      C      A      G
+a                              0.20000 0.43000 0.28000 0.09000 GC = 0.520
+b                              0.20000 0.43000 0.25000 0.12000 GC = 0.550
+c                              0.23000 0.43000 0.24000 0.10000 GC = 0.530
+d                              0.26000 0.37000 0.27000 0.10000 GC = 0.470
+e                              0.23000 0.40000 0.24000 0.13000 GC = 0.530
+
+Homogeneity statistic: X2 = 0.03340 G = 0.03328 
+
+Average                        0.22400 0.41200 0.25600 0.10800
+
+# constant sites:     60 (60.00%)
+ln Lmax (unconstrained) = -279.741095
+
+Time used:  0:19
+
+mean of parameters using all iterations
+   0.28436   0.26617   0.22480   0.24544   0.07586   0.09906
+
+Species tree for FigTree.  Branch lengths = posterior mean times; 95% CIs = labels
+(((1_a, 2_b) 8 , 3_c) 7 , (4_d, 5_e) 9 ) 6 ;
+
+(((a: 0.224800, b: 0.224800): 0.041371, c: 0.266171): 0.018188, (d: 0.245443, e: 0.245443): 0.038917);
+
+(((a: 0.224800, b: 0.224800) [&95%HPD={0.184329, 0.271099}]: 0.041371, c: 0.266171) [&95%HPD={0.237884, 0.297052}]: 0.018188, (d: 0.245443, e: 0.245443) [&95%HPD={0.13115, 0.300249}]: 0.038917) [&95%HPD={0.259028, 0.302411}];
+
+
+Posterior mean (95% Equal-tail CI) (95% HPD CI) HPD-CI-width
+
+t_n6           0.2847 ( 0.2564,  0.3011) ( 0.2590,  0.3024)  0.0434 (Jnode  8)
+t_n7           0.2660 ( 0.2349,  0.2952) ( 0.2379,  0.2971)  0.0592 (Jnode  7)
+t_n8           0.2246 ( 0.1853,  0.2731) ( 0.1843,  0.2711)  0.0868 (Jnode  6)
+t_n9           0.2467 ( 0.0955,  0.2967) ( 0.1311,  0.3002)  0.1691 (Jnode  5)
+mu             0.0759 ( 0.0213,  0.1812) ( 0.0135,  0.1598)  0.1463
+sigma2         0.1001 ( 0.0020,  0.3733) ( 0.0001,  0.3016)  0.3015
+lnL          -14.1827 (-17.1020, -10.9750) (-17.0100, -10.8910)  6.1190

@@ -1,0 +1,14 @@
+
+         5         25  P
+
+a                               AAAAAAAAAA ACCCGGGTTT TTTTT
+b                               AAAAAAAATT TCCGCGGACT TTTTT
+c                               AAAAAATTAT TCCGGGGTCA TTTTT
+d                               -?AACTATAA TCGGGAGTCT -ATTT
+e                               AAATAAAAAA ACCGCGGTCT TT-AT
+
+
+
+    1    1   51    1    2    2    1    1    1    1    1    9    1    1    1
+    1   10    3    1    1    1    6    1    2   99
+

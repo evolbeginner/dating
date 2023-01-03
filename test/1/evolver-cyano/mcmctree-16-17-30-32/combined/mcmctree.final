@@ -1,0 +1,679 @@
+MCMCTREE in paml version 4.9j, October 2019
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+Reading master tree.
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 5  	ls = 100
+Reading sequences, sequential format..
+Reading seq # 1: Xenococcus_sp_PCC_7305       Reading seq # 2: Moorea_producens_3L       Reading seq # 3: Oscillatoria_sp_PCC_10802       Reading seq # 4: Crinalium_epipsammum_PCC_9333       Reading seq # 5: Nostoc_sp_PCC_7107       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,     21 patterns at    100 /    100 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     21 patterns at    100 /    100 sites (100.0%),  0:00
+Counting frequencies..
+ 21 patterns, clean
+
+
+Fossil calibration information used.
+Node  19:   B ( 30.0000, 32.0000,  0.0250,  0.0250 )
+Node  20:   L ( 30.0000,  0.1000,  1.0000,  0.0250 )
+Node  24:   L ( 17.0000,  0.1000,  1.0000,  0.0250 )
+Node  27:   L ( 16.0000,  0.1000,  1.0000,  0.0250 )
+280 bytes for rates.
+
+Reading branch lengths, Gradient & Hessian from in.BV.
+Locus 1: 5 species
+5000 burnin, sampled every 10, 5000 samples
+Approximating posterior
+(Settings: cleandata=1  print=1  saveconP=0)
+
+getting initial values to start MCMC.
+
+
+Setting up initial node ages...
+pop-pop table:
+       0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34
+ 0:    1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0
+ 1:    0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0
+ 2:    0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  1  0  0  0  0  0  0  0
+ 3:    0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  1  0  0  0  0  0  0  0
+ 4:    0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  1  1  0  0  0  0  0
+ 5:    0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  1  1  0  0  0  0  0
+ 6:    0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  1  0  0  0  0  0  0
+ 7:    0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0  0  0
+ 8:    0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  1  1  1  1  1  0  0  0  0  0  0  0  1  0  0  0  0
+ 9:    0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  1  1  1  1  1  0  0  0  0  0  0  0  1  0  0  0  0
+10:    0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  1  1  1  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+11:    0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  1  1  1  0  0  0  0  0  0  0  0  0  0  1  0  0  0
+12:    0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  1  1  1  0  0  0  0  0  0  0  0  0  0  1  0  0  0
+13:    0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0
+14:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0
+15:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0
+16:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1
+17:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1
+18:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0   B   label =  0, 
+19:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0   L   label =  0, 
+20:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0       label =  0, 
+21:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  0  0  0  0  0  0  0  0  0  0  0  0  0       label =  0, 
+22:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  0  0  0  0  0  0  0  0  0  0  0  0       label =  0, 
+23:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0  0  0   L   label =  0, 
+24:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0  0       label =  0, 
+25:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  1  0  0  0  0  0  0  0  0  0       label =  0, 
+26:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  0  0  0  0  0  0  0   L   label =  0, 
+27:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  1  0  0  0  0  0  0  0       label =  0, 
+28:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  1  0  0  0  0  0  0       label =  0, 
+29:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  1  1  0  1  0  1  1  0  0  0  0  0       label =  0, 
+30:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  1  1  0  0  0  0  0  0  0  1  0  0  0  0       label =  0, 
+31:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  1  0  0  0  0  0  0  0  0  0  0  1  0  0  0       label =  0, 
+32:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0       label =  0, 
+33:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0  0  0  0  0  0  0  0  0  0  0  0  1  1  0       label =  0, 
+34:    0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1       label =  0, 
+
+bounds on nodes after removing duplicated min and max bounds
+19:  (  0.0000,  32.0000)
+20:  ( 30.0000,   0.0000)
+24:  ( 17.0000,   0.0000)
+27:  ( 16.0000,   0.0000)
+*** min-age round  1: from nodes  20 ( 30.24243) to  19,   2 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  -1.00000  (22 32)
+     21     22                                                                  -1.00000  (23 11)
+     22     23                                                                  -1.00000  (24 31)
+     23     24                                                                  -1.00000  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  -1.00000  (26 27)
+     25     26                                                                  -1.00000  ( 1  2)
+     25     27                                                                  -1.00000  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  -1.00000  (30  7)
+     29     30                                                                  -1.00000  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  -1.00000  (34 16)
+     33     34                                                                  -1.00000  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: -1.000000, Moorea_producens_3L: -1.000000): 0.000000, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 0.000000, ((Nostoc_sp_PCC_7107: -1.000000, Raphidiopsis_brookii_D9: -1.000000): 0.000000, Richelia_intracellularis_HH01: -1.000000): 0.000000): 0.000000): 0.000000, Lyngbya_aestuarii_BL_J: -1.000000): 0.000000, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 0.000000): 0.000000, Thermosynechococcus_elongatus_BP-1: -1.000000): 0.000000, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 0.000000): 31.242433, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: -1.000000, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: -1.000000): 0.000000, Vampirovibrio_chlorellavorus_Vc_AZ_2: -1.000000): 31.242433): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** min-age round  2: from nodes  24 ( 18.74326) to  20,   4 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  -1.00000  (26 27)
+     25     26                                                                  -1.00000  ( 1  2)
+     25     27                                                                  -1.00000  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  -1.00000  (30  7)
+     29     30                                                                  -1.00000  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  -1.00000  (34 16)
+     33     34                                                                  -1.00000  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: -1.000000, Moorea_producens_3L: -1.000000): 0.000000, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 0.000000, ((Nostoc_sp_PCC_7107: -1.000000, Raphidiopsis_brookii_D9: -1.000000): 0.000000, Richelia_intracellularis_HH01: -1.000000): 0.000000): 0.000000): 19.743262, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: -1.000000, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: -1.000000): 0.000000, Vampirovibrio_chlorellavorus_Vc_AZ_2: -1.000000): 31.242433): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** min-age round  3: from nodes  27 ( 16.51056) to  24,   2 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                  -1.00000  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  -1.00000  (30  7)
+     29     30                                                                  -1.00000  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  -1.00000  (34 16)
+     33     34                                                                  -1.00000  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: -1.000000, Moorea_producens_3L: -1.000000): 18.472502, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 17.510561, ((Nostoc_sp_PCC_7107: -1.000000, Raphidiopsis_brookii_D9: -1.000000): 0.000000, Richelia_intracellularis_HH01: -1.000000): 17.510561): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: -1.000000, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: -1.000000): 0.000000, Vampirovibrio_chlorellavorus_Vc_AZ_2: -1.000000): 31.242433): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  1: from nodes  30 (  8.80676) to  27,   2 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                  -1.00000  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  -1.00000  (34 16)
+     33     34                                                                  -1.00000  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: -1.000000, Moorea_producens_3L: -1.000000): 18.472502, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 17.510561, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: -1.000000, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: -1.000000): 0.000000, Vampirovibrio_chlorellavorus_Vc_AZ_2: -1.000000): 31.242433): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  2: from nodes  34 (  6.10439) to  20,   2 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                  -1.00000  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: -1.000000, Moorea_producens_3L: -1.000000): 18.472502, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 17.510561, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  3: from nodes  26 (  8.35099) to  25,   1 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                  -1.00000  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: -1.000000, Crinalium_epipsammum_PCC_9333: -1.000000): 17.510561, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  4: from nodes  28 (  9.07896) to  27,   1 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                   9.07896  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                  -1.00000  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: 9.078959, Crinalium_epipsammum_PCC_9333: 9.078959): 7.431601, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: -1.000000, Prochlorococcus_marinus_CCMP1986: -1.000000): 23.159885): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  5: from nodes  31 (  4.76340) to  23,   1 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                   9.07896  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                   4.76340  ( 9 10)
+     21     32                                                                  -1.00000  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: 9.078959, Crinalium_epipsammum_PCC_9333: 9.078959): 7.431601, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: 4.763401, Prochlorococcus_marinus_CCMP1986: 4.763401): 17.396483): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: -1.000000, Gloeobacter_kilaueensis_JS1: -1.000000): 28.582699): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  6: from nodes  32 ( 22.06214) to  21,   1 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                   9.07896  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                   4.76340  ( 9 10)
+     21     32                                                                  22.06214  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                  -1.00000  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: 9.078959, Crinalium_epipsammum_PCC_9333: 9.078959): 7.431601, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: 4.763401, Prochlorococcus_marinus_CCMP1986: 4.763401): 17.396483): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: 22.062144, Gloeobacter_kilaueensis_JS1: 22.062144): 5.520555): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: -1.000000, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: -1.000000): 31.628766);
+
+*** longest-path round  7: from nodes  35 (  4.44782) to  19,   1 nodes 
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                   9.07896  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                   4.76340  ( 9 10)
+     21     32                                                                  22.06214  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                   4.44782  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: 9.078959, Crinalium_epipsammum_PCC_9333: 9.078959): 7.431601, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: 4.763401, Prochlorococcus_marinus_CCMP1986: 4.763401): 17.396483): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: 22.062144, Gloeobacter_kilaueensis_JS1: 22.062144): 5.520555): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: 4.447819, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: 4.447819): 26.180948);
+
+************
+Species tree
+ns = 18  nnode = 35
+ father   node  name                                                             time     sons          fossil
+     26      1  Xenococcus_sp_PCC_7305                                           0.00000
+     26      2  Moorea_producens_3L                                              0.00000
+     28      3  Oscillatoria_sp_PCC_10802                                        0.00000
+     28      4  Crinalium_epipsammum_PCC_9333                                    0.00000
+     30      5  Nostoc_sp_PCC_7107                                               0.00000
+     30      6  Raphidiopsis_brookii_D9                                          0.00000
+     29      7  Richelia_intracellularis_HH01                                    0.00000
+     24      8  Lyngbya_aestuarii_BL_J                                           0.00000
+     31      9  Synechococcus_elongatus_PCC_6301                                 0.00000
+     31     10  Prochlorococcus_marinus_CCMP1986                                 0.00000
+     22     11  Thermosynechococcus_elongatus_BP-1                               0.00000
+     32     12  Gloeobacter_violaceus_PCC_7421                                   0.00000
+     32     13  Gloeobacter_kilaueensis_JS1                                      0.00000
+     34     14  Candidatus_Caenarcanum_bioreactoricola_UASB_169                  0.00000
+     34     15  Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16              0.00000
+     33     16  Vampirovibrio_chlorellavorus_Vc_AZ_2                             0.00000
+     35     17  Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72             0.00000
+     35     18  Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196        0.00000
+      0     19                                                                  30.62877  (20 35)  B ( 30.0000, 32.0000, 0.0250, 0.0250 ) 
+     19     20                                                                  30.24243  (21 33)  L ( 30.0000, 0.1000, 1.0000, 0.0250 ) 
+     20     21                                                                  27.58270  (22 32)
+     21     22                                                                  24.70818  (23 11)
+     22     23                                                                  22.15988  (24 31)
+     23     24                                                                  18.74326  (25  8)  L ( 17.0000, 0.1000, 1.0000, 0.0250 ) 
+     24     25                                                                  17.47250  (26 27)
+     25     26                                                                   8.35099  ( 1  2)
+     25     27                                                                  16.51056  (28 29)  L ( 16.0000, 0.1000, 1.0000, 0.0250 ) 
+     27     28                                                                   9.07896  ( 3  4)
+     27     29                                                                  12.24422  (30  7)
+     29     30                                                                   8.80676  ( 5  6)
+     23     31                                                                   4.76340  ( 9 10)
+     21     32                                                                  22.06214  (12 13)
+     20     33                                                                  15.05847  (34 16)
+     33     34                                                                   6.10439  (14 15)
+     19     35                                                                   4.44782  (17 18)
+
+((((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16)), (17, 18));
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+((((((((Xenococcus_sp_PCC_7305: 8.350987, Moorea_producens_3L: 8.350987): 9.121514, ((Oscillatoria_sp_PCC_10802: 9.078959, Crinalium_epipsammum_PCC_9333: 9.078959): 7.431601, ((Nostoc_sp_PCC_7107: 8.806755, Raphidiopsis_brookii_D9: 8.806755): 3.437468, Richelia_intracellularis_HH01: 12.244223): 4.266338): 0.961941): 1.270761, Lyngbya_aestuarii_BL_J: 18.743262): 3.416623, (Synechococcus_elongatus_PCC_6301: 4.763401, Prochlorococcus_marinus_CCMP1986: 4.763401): 17.396483): 2.548293, Thermosynechococcus_elongatus_BP-1: 24.708178): 2.874522, (Gloeobacter_violaceus_PCC_7421: 22.062144, Gloeobacter_kilaueensis_JS1: 22.062144): 5.520555): 2.659734, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 6.104392, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 6.104392): 8.954081, Vampirovibrio_chlorellavorus_Vc_AZ_2: 15.058472): 15.183961): 0.386333, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: 4.447819, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: 4.447819): 26.180948);
+
+priors: 
+	mu_i ~ gammaDir(1.000, 50.000, 1.000), SD(mu_i) =  0.02000, corr(mu_i,mu_j) = 0.00000
+	sigma2 ~ gammaDir(1.0000, 10.0000, 1.0000)
+
+Initial parameters (np = 19):
+ 30.628766 30.242433 27.582699 24.708178 22.159885 18.743262 17.472502  8.350987 16.510561  9.078959 12.244223  8.806755  4.763401 22.062144 15.058472  6.104392  4.447819  0.017301  0.010737
+
+lnL0 =    -65.02
+
+Starting MCMC (np = 19) . . .
+paras: 17 times, 1 mu, 1 sigma2 (& rates, kappa, alpha)
+ -9% 0.25 0.73 0.75 0.78 0.87  31.339 30.286 28.531 26.409 24.413 22.497 - 0.020 0.011 -20.6 -8% 0.26 0.77 0.82 0.85 0.89  31.248 30.108 27.719 24.274 21.468 19.803 - 0.019 0.011 -15.2
+(nsteps = 54)
+Current Pjump:      0.25600  0.77200  0.82200  0.85400  0.88800  0.55400  0.76300  0.78700  0.82600  0.91400  0.96300  0.93300  0.88100  0.76400  0.75800  0.84500  0.98700  0.51600  0.96700  0.92500  0.92800  0.85400  0.87400  0.98300  0.85900  0.89100  0.89200  0.95500  0.97100  0.89300  0.99600  0.92200  0.90500  0.98300  0.92900  0.93300  0.91900  0.96200  0.95200  0.86100  0.63600  0.64600  0.83400  0.94700  0.62400  0.91000  0.72500  0.90000  0.90500  0.74900  0.81900  0.79900  0.92200  0.00000
+Current finetune:   0.06022  0.01779  0.05057  0.04630  0.03500  0.08105  0.02346  0.09878  0.01323  0.08432  0.01974  0.07712  0.05149  0.08688  0.08680  0.05909  0.03044  0.09059  0.00709  0.02579  0.02964  0.07570  0.05748  0.01194  0.07735  0.06683  0.08961  0.03540  0.01109  0.09595  0.00471  0.06058  0.06000  0.00484  0.07126  0.02537  0.03495  0.00400  0.00897  0.03643  0.08724  0.08039  0.03750  0.01234  0.07196  0.02098  0.06339  0.02942  0.02681  0.09449  0.05353  0.09986  0.05244  0.00837
+New     finetune:   0.05027  0.09326  0.34569  0.38929  0.38639  0.18864  0.11793  0.55766  0.09263  1.21752  0.66585  1.43285  0.53435  0.43871  0.42636  0.46689  2.92506  0.18695  0.26836  0.42770  0.51217  0.63645  0.56253  0.87751  0.67419  0.75858  1.02673  0.98135  0.47746  1.10989  1.47125  0.96547  0.78328  0.35558  1.24882  0.47134  0.53620  0.13146  0.23307  0.32226  0.26610  0.25387  0.27586  0.29028  0.21066  0.28931  0.26985  0.36450  0.35004  0.44571  0.35952  0.59997  0.83577  0.00008
+
+ -7% 0.32 0.64 0.82 0.82 0.76  31.139 29.213 26.676 24.346 22.071 20.045 - 0.035 0.103 -2.9 -6% 0.31 0.66 0.82 0.81 0.77  31.136 29.523 27.615 25.748 23.849 21.896 - 0.028 0.088 -2.9
+(nsteps = 54)
+Current Pjump:      0.31200  0.66400  0.82500  0.80800  0.77100  0.61000  0.73600  0.17300  0.40800  0.35600  0.70800  0.59100  0.51200  0.56900  0.61300  0.65300  0.26100  0.61800  0.54000  0.61300  0.58600  0.55000  0.56800  0.25400  0.39700  0.51300  0.58300  0.49900  0.71600  0.59200  0.39600  0.55500  0.52700  0.75000  0.51700  0.73800  0.72900  0.66400  0.58400  0.50800  0.51900  0.61000  0.53200  0.57800  0.65200  0.71100  0.69400  0.58800  0.66700  0.61100  0.64000  0.51900  0.44100  0.00000
+Current finetune:   0.05027  0.09326  0.34569  0.38929  0.38639  0.18864  0.11793  0.55766  0.09263  1.21752  0.66585  1.43285  0.53435  0.43871  0.42636  0.46689  2.92506  0.18695  0.26836  0.42770  0.51217  0.63645  0.56253  0.87751  0.67419  0.75858  1.02673  0.98135  0.47746  1.10989  1.47125  0.96547  0.78328  0.35558  1.24882  0.47134  0.53620  0.13146  0.23307  0.32226  0.26610  0.25387  0.27586  0.29028  0.21066  0.28931  0.26985  0.36450  0.35004  0.44571  0.35952  0.59997  0.83577  0.00008
+New     finetune:   0.05263  0.31398  2.40560  2.45603  2.01642  0.52679  0.52575  0.30496  0.13561  1.49546  2.64645  3.75768  1.08902  1.07126  1.20262  1.51125  2.49496  0.53627  0.59741  1.20640  1.32140  1.46252  1.36922  0.72607  0.95185  1.55088  2.62324  1.91996  1.95934  2.92025  2.07030  2.25419  1.67352  1.68479  2.58546  2.11938  2.32097  0.44258  0.59741  0.64857  0.55439  0.70894  0.59876  0.72971  0.67946  1.16364  1.01563  0.94658  1.19136  1.24881  1.11183  1.24997  1.36132  0.00000
+
+ -5% 0.31 0.66 0.81 0.82 0.79  31.176 29.633 28.029 26.310 24.717 23.065 - 0.013 0.059 -2.6  0:01
+ -4% 0.32 0.62 0.78 0.81 0.78  31.138 29.812 28.023 26.305 24.871 23.364 - 0.009 0.043 -2.6
+(nsteps = 54)
+Current Pjump:      0.31700  0.62500  0.78200  0.81000  0.78400  0.59200  0.79900  0.34500  0.36400  0.30200  0.62700  0.35400  0.38400  0.37700  0.49500  0.43100  0.26300  0.12400  0.25200  0.16200  0.16300  0.12300  0.15400  0.19300  0.15000  0.13800  0.12100  0.18700  0.12000  0.09400  0.15600  0.13500  0.15500  0.15600  0.11600  0.16500  0.14800  0.13800  0.12400  0.13300  0.13000  0.11800  0.13100  0.18300  0.13700  0.09800  0.11700  0.11900  0.15800  0.13100  0.15400  0.13700  0.15300  0.00000
+Current finetune:   0.05263  0.31398  2.40560  2.45603  2.01642  0.52679  0.52575  0.30496  0.13561  1.49546  2.64645  3.75768  1.08902  1.07126  1.20262  1.51125  2.49496  0.53627  0.59741  1.20640  1.32140  1.46252  1.36922  0.72607  0.95185  1.55088  2.62324  1.91996  1.95934  2.92025  2.07030  2.25419  1.67352  1.68479  2.58546  2.11938  2.32097  0.44258  0.59741  0.64857  0.55439  0.70894  0.59876  0.72971  0.67946  1.16364  1.01563  0.94658  1.19136  1.24881  1.11183  1.24997  1.36132  0.00000
+New     finetune:   0.05615  0.92224 13.24419 15.66842 11.21280  1.38604  3.15877  0.36034  0.17125  1.50710  7.82641  4.58330  1.47224  1.41440  2.32348  2.38387  2.14641  0.20764  0.48998  0.61586  0.67891  0.56158  0.66304  0.44575  0.44849  0.67033  0.99049  1.13982  0.73355  0.85246  1.01608  0.95248  0.81587  0.82688  0.93496  1.10288  1.07847  0.19130  0.23131  0.26987  0.22532  0.26089  0.24528  0.42340  0.29148  0.35436  0.37051  0.35136  0.59252  0.51158  0.53840  0.53623  0.65476  0.00000
+
+ -3% 0.26 0.64 0.84 0.81 0.84  31.166 29.522 27.795 26.328 25.037 23.847 - 0.007 0.050 -2.9 -2% 0.28 0.65 0.82 0.83 0.86  31.122 29.550 27.597 25.965 24.534 23.061 - 0.007 0.038 -2.9
+(nsteps = 54)
+Current Pjump:      0.27800  0.64800  0.81800  0.83000  0.85500  0.63500  0.77800  0.39900  0.39600  0.33100  0.67400  0.21500  0.40600  0.41200  0.51300  0.37700  0.31400  0.43300  0.32500  0.41300  0.39500  0.44600  0.39000  0.35300  0.37600  0.41600  0.46000  0.27600  0.43400  0.49300  0.30900  0.35800  0.36300  0.34100  0.47000  0.31900  0.34400  0.43700  0.43300  0.35700  0.39000  0.37400  0.42500  0.35100  0.39400  0.49600  0.49000  0.42400  0.34300  0.48200  0.34000  0.41400  0.35800  0.00000
+Current finetune:   0.05615  0.92224 13.24419 15.66842 11.21280  1.38604  3.15877  0.36034  0.17125  1.50710  7.82641  4.58330  1.47224  1.41440  2.32348  2.38387  2.14641  0.20764  0.48998  0.61586  0.67891  0.56158  0.66304  0.44575  0.44849  0.67033  0.99049  1.13982  0.73355  0.85246  1.01608  0.95248  0.81587  0.82688  0.93496  1.10288  1.07847  0.19130  0.23131  0.26987  0.22532  0.26089  0.24528  0.42340  0.29148  0.35436  0.37051  0.35136  0.59252  0.51158  0.53840  0.53623  0.65476  0.00000
+New     finetune:   0.05144  2.93292 88.43121 99.00000 94.94193  4.21293 17.05135  0.51212  0.24098  1.69329 27.32683  3.15890  2.14119  2.09789  4.75024  3.14745  2.26444  0.32964  0.53854  0.91645  0.95218  0.92942  0.91455  0.54178  0.59015  1.00731  1.71382  1.03555  1.16833  1.63666  1.05185  1.17811  1.02679  0.96319  1.66969  1.18553  1.26978  0.30762  0.36722  0.33263  0.31080  0.34096  0.37950  0.51102  0.40745  0.68679  0.70468  0.54187  0.69514  0.94880  0.62491  0.80056  0.80986  0.00000
+
+ -1% 0.29 0.41 0.83 0.83 0.89  31.157 30.073 29.596 28.997 28.467 27.989 - 0.010 0.083 -2.8  0% 0.28 0.53 0.83 0.85 0.87  31.236 30.095 29.400 28.514 27.747 26.969 - 0.006 0.067 -2.8  0:01
+
+(nsteps = 54)
+Current Pjump:      0.27800  0.52500  0.82900  0.84600  0.87200  0.40200  0.66200  0.28600  0.38600  0.25700  0.65600  0.34400  0.37200  0.17400  0.44700  0.24100  0.15900  0.29800  0.26600  0.28100  0.34700  0.40100  0.35400  0.36300  0.34400  0.34600  0.38100  0.40600  0.36200  0.39700  0.52900  0.49100  0.44400  0.46900  0.40100  0.47900  0.43600  0.28900  0.17000  0.21500  0.23400  0.26600  0.43800  0.39100  0.44600  0.35900  0.36700  0.39300  0.47500  0.18900  0.17300  0.31700  0.24100  0.00000
+Current finetune:   0.05144  2.93292 88.43121 99.00000 94.94193  4.21293 17.05135  0.51212  0.24098  1.69329 27.32683  3.15890  2.14119  2.09789  4.75024  3.14745  2.26444  0.32964  0.53854  0.91645  0.95218  0.92942  0.91455  0.54178  0.59015  1.00731  1.71382  1.03555  1.16833  1.63666  1.05185  1.17811  1.02679  0.96319  1.66969  1.18553  1.26978  0.30762  0.36722  0.33263  0.31080  0.34096  0.37950  0.51102  0.40745  0.68679  0.70468  0.54187  0.69514  0.94880  0.62491  0.80056  0.80986  0.00000
+New     finetune:   0.04712  6.22700 99.00000 99.00000 99.00000  6.04708 56.99439  0.48459  0.32798  1.41955 89.39983  3.71926  2.77935  1.15423  7.88681  2.45697  1.13364  0.32708  0.46926  0.84982  1.13310  1.32966  1.11550  0.68185  0.69483  1.19446  2.29361  1.50607  1.46529  2.31069  2.26157  2.24770  1.68855  1.71468  2.38872  2.17808  2.03540  0.29459  0.19717  0.22926  0.23488  0.29710  0.61223  0.70723  0.67434  0.85244  0.89917  0.75494  1.26114  0.56966  0.34174  0.85415  0.63219  0.00000
+
+  1% 0.28 0.52 0.84 0.84 0.83  31.344 29.933 29.242 28.559 27.847 26.735 - 0.003 0.066 -3.3  2% 0.28 0.58 0.82 0.83 0.84  31.264 29.730 28.770 27.802 26.850 25.680 - 0.004 0.060 -3.1  3% 0.30 0.61 0.83 0.85 0.84  31.232 29.717 28.536 27.428 26.287 24.949 - 0.005 0.054 -2.9  4% 0.30 0.60 0.83 0.85 0.84  31.210 29.647 28.448 27.298 26.201 24.903 - 0.005 0.045 -3.1  5% 0.30 0.60 0.82 0.83 0.83  31.194 29.608 28.282 26.972 25.735 24.356 - 0.008 0.049 -3.0  0:02
+  6% 0.31 0.62 0.82 0.83 0.82  31.184 29.614 28.180 26.737 25.390 23.978 - 0.009 0.054 -3.0  7% 0.31 0.62 0.83 0.82 0.81  31.172 29.631 28.124 26.569 25.070 23.602 - 0.008 0.052 -3.0  8% 0.31 0.63 0.83 0.83 0.81  31.170 29.603 28.048 26.471 24.954 23.480 - 0.008 0.049 -2.9  9% 0.31 0.63 0.83 0.83 0.82  31.179 29.633 28.115 26.597 25.138 23.723 - 0.007 0.047 -3.0 10% 0.30 0.60 0.83 0.83 0.83  31.157 29.691 28.315 26.941 25.621 24.339 - 0.007 0.048 -3.0  0:02
+ 11% 0.31 0.60 0.83 0.83 0.83  31.158 29.720 28.395 27.067 25.788 24.514 - 0.006 0.046 -3.0 12% 0.31 0.61 0.83 0.84 0.83  31.158 29.759 28.462 27.139 25.864 24.581 - 0.006 0.047 -3.0 13% 0.31 0.62 0.83 0.84 0.83  31.152 29.715 28.388 27.048 25.748 24.433 - 0.006 0.045 -2.9 14% 0.31 0.62 0.84 0.84 0.83  31.150 29.710 28.379 27.039 25.741 24.420 - 0.006 0.044 -2.9 15% 0.32 0.62 0.83 0.84 0.83  31.147 29.669 28.245 26.843 25.502 24.175 - 0.006 0.043 -3.0  0:02
+ 16% 0.32 0.62 0.83 0.84 0.83  31.146 29.682 28.217 26.770 25.397 24.041 - 0.008 0.044 -3.0 17% 0.31 0.63 0.83 0.83 0.83  31.149 29.678 28.216 26.764 25.387 24.029 - 0.008 0.045 -3.0 18% 0.31 0.63 0.83 0.83 0.83  31.155 29.692 28.211 26.727 25.324 23.947 - 0.008 0.044 -3.0 19% 0.32 0.63 0.83 0.83 0.83  31.155 29.707 28.235 26.757 25.350 23.957 - 0.007 0.042 -3.0 20% 0.31 0.64 0.83 0.83 0.83  31.156 29.701 28.205 26.696 25.275 23.869 - 0.007 0.042 -3.0  0:03
+ 21% 0.32 0.64 0.83 0.83 0.83  31.158 29.701 28.179 26.660 25.235 23.815 - 0.008 0.046 -3.0 22% 0.32 0.64 0.83 0.83 0.83  31.160 29.693 28.168 26.655 25.236 23.818 - 0.008 0.046 -3.0 23% 0.32 0.64 0.83 0.83 0.83  31.159 29.694 28.173 26.658 25.244 23.830 - 0.008 0.046 -3.0 24% 0.32 0.64 0.83 0.83 0.83  31.157 29.688 28.164 26.650 25.233 23.793 - 0.008 0.046 -3.0 25% 0.32 0.64 0.83 0.83 0.83  31.164 29.712 28.210 26.718 25.318 23.885 - 0.009 0.047 -3.0  0:03
+ 26% 0.32 0.64 0.83 0.84 0.83  31.166 29.719 28.214 26.728 25.332 23.904 - 0.008 0.046 -3.0 27% 0.32 0.65 0.83 0.84 0.83  31.166 29.707 28.177 26.674 25.263 23.828 - 0.008 0.046 -3.0 28% 0.32 0.65 0.83 0.83 0.83  31.164 29.701 28.165 26.647 25.226 23.784 - 0.008 0.045 -3.0 29% 0.32 0.65 0.83 0.83 0.83  31.162 29.696 28.145 26.614 25.175 23.733 - 0.008 0.045 -3.0 30% 0.32 0.65 0.83 0.83 0.83  31.163 29.693 28.151 26.619 25.182 23.747 - 0.008 0.045 -3.0  0:04
+ 31% 0.32 0.65 0.83 0.83 0.83  31.164 29.681 28.107 26.553 25.108 23.670 - 0.008 0.045 -3.0 32% 0.32 0.64 0.83 0.83 0.83  31.161 29.685 28.144 26.622 25.206 23.793 - 0.008 0.044 -3.0 33% 0.32 0.64 0.83 0.83 0.83  31.162 29.694 28.189 26.700 25.312 23.915 - 0.008 0.044 -3.0 34% 0.32 0.64 0.83 0.84 0.83  31.163 29.708 28.228 26.769 25.405 24.021 - 0.008 0.044 -3.0 35% 0.32 0.64 0.83 0.83 0.83  31.163 29.708 28.210 26.735 25.356 23.961 - 0.008 0.045 -3.0  0:04
+ 36% 0.32 0.64 0.82 0.84 0.83  31.164 29.698 28.185 26.711 25.335 23.947 - 0.008 0.045 -3.0 37% 0.32 0.63 0.82 0.84 0.83  31.162 29.678 28.184 26.730 25.373 24.000 - 0.007 0.045 -3.0 38% 0.32 0.63 0.82 0.84 0.83  31.158 29.673 28.190 26.747 25.397 24.028 - 0.007 0.044 -3.0 39% 0.32 0.63 0.82 0.84 0.83  31.158 29.678 28.209 26.775 25.434 24.073 - 0.007 0.045 -3.0 40% 0.32 0.63 0.82 0.84 0.83  31.160 29.682 28.218 26.783 25.445 24.084 - 0.007 0.045 -3.0  0:05
+ 41% 0.32 0.64 0.82 0.84 0.83  31.161 29.682 28.206 26.756 25.409 24.050 - 0.007 0.045 -3.0 42% 0.32 0.64 0.83 0.84 0.83  31.161 29.683 28.205 26.751 25.402 24.038 - 0.007 0.045 -3.0 43% 0.32 0.64 0.82 0.84 0.83  31.164 29.693 28.207 26.750 25.400 24.036 - 0.007 0.044 -3.0 44% 0.32 0.64 0.82 0.84 0.83  31.163 29.699 28.222 26.769 25.415 24.041 - 0.007 0.044 -3.0 45% 0.32 0.63 0.82 0.84 0.83  31.163 29.691 28.224 26.779 25.435 24.058 - 0.007 0.045 -3.0  0:05
+ 46% 0.32 0.63 0.82 0.84 0.83  31.164 29.684 28.219 26.772 25.427 24.048 - 0.007 0.045 -3.0 47% 0.32 0.63 0.82 0.84 0.83  31.166 29.690 28.218 26.766 25.415 24.027 - 0.008 0.046 -3.0 48% 0.33 0.63 0.82 0.84 0.83  31.166 29.688 28.215 26.758 25.405 24.011 - 0.008 0.047 -3.0 49% 0.33 0.64 0.82 0.84 0.83  31.165 29.681 28.213 26.762 25.418 24.029 - 0.008 0.046 -3.0 50% 0.33 0.64 0.82 0.84 0.83  31.163 29.684 28.215 26.755 25.398 23.999 - 0.008 0.047 -3.0  0:06
+ 51% 0.33 0.64 0.82 0.84 0.83  31.163 29.686 28.204 26.734 25.368 23.959 - 0.008 0.047 -3.0 52% 0.33 0.64 0.82 0.84 0.83  31.162 29.682 28.192 26.718 25.351 23.942 - 0.008 0.047 -3.0 53% 0.33 0.64 0.82 0.84 0.83  31.163 29.679 28.182 26.709 25.341 23.928 - 0.008 0.048 -3.0 54% 0.33 0.64 0.82 0.84 0.83  31.164 29.682 28.185 26.710 25.341 23.919 - 0.009 0.049 -3.0 55% 0.33 0.64 0.82 0.84 0.83  31.165 29.681 28.169 26.679 25.299 23.870 - 0.009 0.048 -3.0  0:06
+ 56% 0.33 0.64 0.82 0.84 0.83  31.165 29.676 28.171 26.688 25.311 23.889 - 0.009 0.048 -3.0 57% 0.33 0.64 0.82 0.84 0.83  31.168 29.686 28.178 26.698 25.325 23.907 - 0.009 0.048 -3.0 58% 0.32 0.64 0.82 0.84 0.83  31.169 29.685 28.181 26.704 25.332 23.914 - 0.009 0.048 -3.0 59% 0.33 0.64 0.82 0.84 0.83  31.169 29.683 28.176 26.694 25.313 23.885 - 0.009 0.049 -3.0 60% 0.33 0.64 0.82 0.84 0.83  31.169 29.678 28.161 26.670 25.286 23.856 - 0.009 0.048 -3.0  0:06
+ 61% 0.33 0.64 0.82 0.83 0.83  31.170 29.680 28.162 26.668 25.287 23.861 - 0.009 0.048 -3.0 62% 0.33 0.64 0.82 0.83 0.83  31.172 29.685 28.165 26.668 25.284 23.852 - 0.009 0.048 -3.0 63% 0.32 0.64 0.82 0.83 0.83  31.171 29.688 28.167 26.674 25.290 23.859 - 0.009 0.048 -3.0 64% 0.32 0.64 0.82 0.84 0.83  31.171 29.692 28.184 26.703 25.330 23.905 - 0.009 0.048 -3.0 65% 0.32 0.64 0.82 0.83 0.83  31.171 29.690 28.176 26.689 25.313 23.886 - 0.009 0.048 -3.0  0:07
+ 66% 0.33 0.64 0.82 0.83 0.83  31.169 29.687 28.165 26.679 25.301 23.871 - 0.009 0.048 -3.0 67% 0.33 0.64 0.82 0.83 0.83  31.168 29.691 28.184 26.710 25.342 23.922 - 0.009 0.049 -3.0 68% 0.33 0.64 0.82 0.83 0.83  31.167 29.692 28.171 26.685 25.309 23.885 - 0.009 0.049 -3.0 69% 0.33 0.64 0.82 0.83 0.83  31.168 29.693 28.175 26.688 25.310 23.888 - 0.009 0.049 -3.0 70% 0.33 0.64 0.82 0.83 0.83  31.169 29.696 28.177 26.689 25.310 23.884 - 0.009 0.049 -3.0  0:07
+ 71% 0.33 0.64 0.82 0.83 0.83  31.169 29.696 28.178 26.689 25.310 23.885 - 0.009 0.049 -3.0 72% 0.32 0.64 0.82 0.83 0.83  31.171 29.711 28.207 26.732 25.366 23.954 - 0.009 0.049 -3.0 73% 0.32 0.64 0.82 0.83 0.83  31.175 29.722 28.234 26.776 25.425 24.029 - 0.009 0.049 -3.0 74% 0.32 0.64 0.82 0.83 0.83  31.177 29.725 28.242 26.786 25.437 24.042 - 0.009 0.049 -3.0 75% 0.32 0.64 0.82 0.83 0.83  31.178 29.726 28.248 26.795 25.449 24.057 - 0.009 0.049 -3.0  0:08
+ 76% 0.32 0.64 0.82 0.83 0.83  31.178 29.725 28.235 26.771 25.410 24.011 - 0.009 0.049 -3.0 77% 0.32 0.64 0.82 0.83 0.83  31.179 29.724 28.230 26.756 25.391 23.987 - 0.009 0.050 -3.0 78% 0.32 0.64 0.82 0.83 0.83  31.181 29.731 28.242 26.767 25.400 23.997 - 0.009 0.050 -3.0 79% 0.32 0.64 0.82 0.83 0.83  31.184 29.745 28.274 26.816 25.466 24.078 - 0.009 0.049 -3.0 80% 0.32 0.63 0.82 0.83 0.83  31.186 29.757 28.303 26.864 25.529 24.158 - 0.009 0.049 -3.0  0:08
+ 81% 0.32 0.63 0.82 0.83 0.83  31.187 29.769 28.332 26.910 25.591 24.236 - 0.008 0.049 -3.0 82% 0.32 0.62 0.82 0.83 0.83  31.190 29.781 28.361 26.955 25.652 24.311 - 0.008 0.048 -3.0 83% 0.32 0.62 0.82 0.83 0.83  31.189 29.791 28.388 26.999 25.711 24.385 - 0.008 0.048 -3.0 84% 0.32 0.61 0.82 0.83 0.83  31.192 29.803 28.416 27.042 25.768 24.457 - 0.008 0.048 -3.0 85% 0.31 0.61 0.82 0.83 0.83  31.196 29.814 28.443 27.084 25.825 24.527 - 0.008 0.048 -3.0  0:09
+ 86% 0.31 0.61 0.82 0.83 0.83  31.200 29.827 28.470 27.126 25.880 24.594 - 0.008 0.048 -3.0 87% 0.31 0.60 0.82 0.83 0.83  31.203 29.840 28.499 27.171 25.939 24.668 - 0.008 0.048 -3.0 88% 0.31 0.59 0.82 0.83 0.83  31.206 29.853 28.527 27.214 25.997 24.740 - 0.008 0.047 -3.0 89% 0.31 0.59 0.83 0.83 0.83  31.211 29.868 28.556 27.255 26.049 24.803 - 0.008 0.047 -3.0 90% 0.31 0.59 0.83 0.83 0.83  31.212 29.872 28.561 27.261 26.055 24.808 - 0.008 0.048 -3.0  0:09
+ 91% 0.31 0.59 0.83 0.83 0.83  31.212 29.872 28.551 27.243 26.027 24.772 - 0.008 0.048 -3.0 92% 0.31 0.60 0.83 0.83 0.83  31.211 29.867 28.545 27.239 26.024 24.762 - 0.008 0.047 -3.0 93% 0.31 0.60 0.83 0.83 0.83  31.211 29.861 28.527 27.212 25.990 24.723 - 0.008 0.047 -3.0 94% 0.31 0.60 0.83 0.83 0.83  31.210 29.859 28.517 27.196 25.968 24.697 - 0.008 0.048 -3.0 95% 0.31 0.60 0.82 0.83 0.83  31.209 29.856 28.511 27.189 25.961 24.693 - 0.008 0.048 -3.0  0:10
+ 96% 0.31 0.60 0.82 0.83 0.83  31.209 29.856 28.509 27.185 25.958 24.688 - 0.008 0.048 -3.0 97% 0.31 0.60 0.82 0.83 0.83  31.210 29.855 28.500 27.167 25.933 24.656 - 0.008 0.048 -3.0 98% 0.31 0.60 0.82 0.83 0.83  31.209 29.855 28.497 27.159 25.919 24.634 - 0.008 0.048 -3.0 99% 0.31 0.60 0.82 0.83 0.83  31.208 29.852 28.476 27.129 25.884 24.593 - 0.008 0.048 -3.0100% 0.31 0.60 0.82 0.83 0.83  31.208 29.851 28.472 27.121 25.872 24.574 - 0.008 0.048 -3.0  0:10
+
+Time used:  0:10
+Summarizing MCMC samples . ..
+
+Data file has a header line.
+5001 records, 21 variables
+Collecting mean, median, min, max, percentiles, etc.
+			    21/    21 done   0:10
+
+
+Posterior means (95% Equal-tail CI) (95% HPD CI) HPD-CI-width
+
+t_n19         31.2157 (30.0804, 32.0181) (30.1087, 32.0317)  1.9230  (Jnode 34)
+t_n20         29.8415 (26.8940, 31.6051) (27.3799, 31.7658)  4.3860  (Jnode 33)
+t_n21         28.4626 (23.5203, 31.0311) (24.5985, 31.5499)  6.9514  (Jnode 32)
+t_n22         27.1212 (21.1750, 30.9945) (21.7558, 31.0656)  9.3099  (Jnode 31)
+t_n23         25.8600 (19.2909, 30.9871) (19.8833, 31.0212) 11.1379  (Jnode 30)
+t_n24         24.5633 (17.7772, 30.9800) (18.2717, 31.0045) 12.7329  (Jnode 29)
+t_n25         21.9868 (16.4436, 29.7250) (16.2705, 29.5060) 13.2355  (Jnode 28)
+t_n26         18.0303 ( 7.5966, 27.3734) ( 7.5291, 27.2511) 19.7221  (Jnode 27)
+t_n27         19.2188 (15.0452, 27.0407) (14.4435, 25.8265) 11.3830  (Jnode 26)
+t_n28         10.6631 ( 2.8943, 20.4959) ( 2.3693, 19.5526) 17.1833  (Jnode 25)
+t_n29          9.3085 ( 1.2262, 20.3281) ( 0.6448, 18.9640) 18.3192  (Jnode 24)
+t_n30          3.5528 ( 0.0892, 13.0654) ( 0.0001, 10.9904) 10.9903  (Jnode 23)
+t_n31         15.1657 ( 0.3525, 30.5000) ( 0.6591, 30.5100) 29.8509  (Jnode 22)
+t_n32         16.5264 ( 0.3701, 30.5788) ( 0.6110, 30.5788) 29.9678  (Jnode 21)
+t_n33         22.5595 ( 3.5430, 30.9911) ( 5.4350, 31.3154) 25.8804  (Jnode 20)
+t_n34         11.4138 ( 0.2150, 28.1235) ( 0.0067, 27.2076) 27.2009  (Jnode 19)
+t_n35         17.6087 ( 0.4581, 30.9267) ( 0.3757, 30.7166) 30.3409  (Jnode 18)
+mu             0.0083 ( 0.0018,  0.0317) ( 0.0009,  0.0238)  0.0229
+sigma2         0.0485 ( 0.0041,  0.1616) ( 0.0012,  0.1350)  0.1338
+lnL           -2.9572 (-6.7910, -0.7430) (-5.9990, -0.4230)  5.5760
+
+mean	31.2157	29.8415	28.4626	27.1212	25.8600	24.5633	21.9868	18.0303	19.2188	10.6631	9.3085	3.5528	15.1657	16.5264	22.5595	11.4138	17.6087	0.0083	0.0485	-2.9572
+Eff 	0.2995	0.0285	0.0102	0.0081	0.0071	0.0062	0.0121	0.0388	0.0189	0.1224	0.3934	0.5223	0.0123	0.0156	0.0766	0.2322	0.1531	0.0287	0.0475	0.5384
+time prior: Birth-Death-Sampling
+rate prior: Log-Normal
+square root transform is used in approx like calculation.
+
+Time used:  0:10

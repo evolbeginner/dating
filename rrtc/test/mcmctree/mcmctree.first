@@ -1,0 +1,28 @@
+172602
+/home-user/sswang/huche/test/mcmctree/hessian/test/test/30/sim-LG+G/dating/ori/combined/disabled_bin/codeml
+MCMCTREE in paml version 4.10.0, September 2020
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+Reading master tree.
+(((t5, t9), ((t21, (t22, t18)), (t3, t6))), (((((t8, t12), (t23, t14)), (t2, t4)), t24), ((((t30, t20), t13), (((t11, t10), ((t1, t26), (t7, (t19, t27)))), ((((t25, t17), t15), t16), t29))), t28)));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 30  	ls = 1000
+Reading sequences, sequential format..
+Reading seq # 1: t5       Reading seq # 2: t9       Reading seq # 3: t21       Reading seq # 4: t22       Reading seq # 5: t18       Reading seq # 6: t3       Reading seq # 7: t6       Reading seq # 8: t8       Reading seq # 9: t12       Reading seq #10: t23       Reading seq #11: t14       Reading seq #12: t2       Reading seq #13: t4       Reading seq #14: t24       Reading seq #15: t30       Reading seq #16: t20       Reading seq #17: t13       Reading seq #18: t11       Reading seq #19: t10       Reading seq #20: t1       Reading seq #21: t26       Reading seq #22: t7       Reading seq #23: t19       Reading seq #24: t27       Reading seq #25: t25       Reading seq #26: t17       Reading seq #27: t15       Reading seq #28: t16       Reading seq #29: t29       Reading seq #30: t28       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,    870 patterns at   1000 /   1000 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],    870 patterns at   1000 /   1000 sites (100.0%),  0:00
+Counting frequencies..
+870 patterns, clean
+
+
+
+*** Locus 1 ***
+running codeml tmp0001.ctl
+file rst2 not found!

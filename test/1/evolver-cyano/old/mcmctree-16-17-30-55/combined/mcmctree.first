@@ -1,0 +1,28 @@
+159253
+/home-user/sswang/project/Rhizobiales/scripts/dating/test/1/evolver-cyano/mcmctree/combined/disabled_bin/codeml
+MCMCTREE in paml version 4.9j, October 2019
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+Reading master tree.
+((((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2)), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 18  	ls = 100
+Reading sequences, sequential format..
+Reading seq # 1: Xenococcus_sp_PCC_7305       Reading seq # 2: Moorea_producens_3L       Reading seq # 3: Oscillatoria_sp_PCC_10802       Reading seq # 4: Crinalium_epipsammum_PCC_9333       Reading seq # 5: Nostoc_sp_PCC_7107       Reading seq # 6: Raphidiopsis_brookii_D9       Reading seq # 7: Richelia_intracellularis_HH01       Reading seq # 8: Lyngbya_aestuarii_BL_J       Reading seq # 9: Synechococcus_elongatus_PCC_6301       Reading seq #10: Prochlorococcus_marinus_CCMP1986       Reading seq #11: Thermosynechococcus_elongatus_BP-1       Reading seq #12: Gloeobacter_violaceus_PCC_7421       Reading seq #13: Gloeobacter_kilaueensis_JS1       Reading seq #14: Candidatus_Caenarcanum_bioreactoricola_UASB_169       Reading seq #15: Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16       Reading seq #16: Vampirovibrio_chlorellavorus_Vc_AZ_2       Reading seq #17: Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72       Reading seq #18: Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,     93 patterns at    100 /    100 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     93 patterns at    100 /    100 sites (100.0%),  0:00
+Counting frequencies..
+ 93 patterns, clean
+
+
+
+*** Locus 1 ***
+running baseml tmp0001.ctl
+file rst2 not found!

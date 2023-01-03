@@ -1,0 +1,74 @@
+
+Printing out site pattern counts
+
+
+         5         25  P
+
+a                               AAAAAAAAAA ACCCGGGTTT TTTTT
+b                               AAAAAAAATT TCCGCGGACT TTTTT
+c                               AAAAAATTAT TCCGGGGTCA TTTTT
+d                               -?AACTATAA TCGGGAGTCT -ATTT
+e                               AAATAAAAAA ACCGCGGTCT TT-AT
+
+
+
+    1    1   51    1    2    2    1    1    1    1    1    9    1    1    1
+    1   10    3    1    1    1    6    1    2   99
+
+
+BASEML (in paml version 4.9j, October 2019)  tmp0002.txt  REV dGamma (ncatG=5)
+Frequencies..
+                                    T      C      A      G
+a                              0.57000 0.05500 0.31500 0.06000 GC = 0.115
+b                              0.56500 0.06000 0.31500 0.06000 GC = 0.120
+c                              0.58000 0.05500 0.30000 0.06500 GC = 0.120
+d                              0.55838 0.06091 0.31472 0.06599 GC = 0.127
+e                              0.55779 0.06030 0.32161 0.06030 GC = 0.121
+
+Homogeneity statistic: X2 = 0.00259 G = 0.00259 
+
+Average                        0.56627 0.05823 0.31325 0.06225
+(Ambiguity characters are used to calculate freqs.)
+
+
+# constant sites:    169 (84.50%)
+Distances: TN93 (kappa)  (alpha set at 0.50)
+This matrix is not used in later m.l. analysis.
+
+(Pairwise deletion.)
+a                
+b                  0.0511( 0.3998)
+c                  0.0386( 0.5963)  0.0452(-0.0675)
+d                  0.1028( 0.6130)  0.1309( 0.2166)  0.0964( 0.3482)
+e                  0.0328( 0.7231)  0.0519(-0.0759)  0.0519(-0.0764)  0.1224( 0.2412)
+
+TREE #  1:  ((1, 2), 3, (4, 5));  MP score: -1.00
+lnL(ntime:  7  np: 13):   -346.799819    +0.000000
+   6..7     7..1     7..2     6..3     6..8     8..4     8..5  
+ 0.000004 0.013704 0.035315 0.025378 0.000004 0.087377 0.023182 0.870568 3.888662 0.000010 3.391904 35.316132 0.372466
+SEs for parameters:
+ 0.104313 0.020366 0.020589 0.015885 0.111761 0.042852 0.027749 2.409473 6.268742 6.658573 6.520764 60.205509 0.386722
+
+tree length =   0.18496
+
+((a, b), c, (d, e));
+
+((a: 0.013704, b: 0.035315): 0.000004, c: 0.025378, (d: 0.087377, e: 0.023182): 0.000004);
+
+Detailed output identifying parameters
+
+Parameters  in the rate matrix (REV) (Yang 1994 J Mol Evol 39:105-111):
+
+
+Rate parameters:    0.87057  3.88866  0.00001  3.39190 35.31613
+Base frequencies:   0.56627  0.05823  0.31325  0.06225
+Rate matrix Q, Average Ts/Tv =   0.0548
+   -0.683721    0.027318    0.656402    0.000000
+    0.265642   -2.022816    0.572550    1.184623
+    1.186574    0.106436   -1.326553    0.033543
+    0.000003    1.108196    0.168799   -1.276998
+
+alpha (gamma, K=5) =  0.37247
+rate:   0.00709  0.08620  0.34736  1.00354  3.55582
+freq:   0.20000  0.20000  0.20000  0.20000  0.20000
+

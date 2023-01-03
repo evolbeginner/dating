@@ -1,0 +1,61 @@
+IQ-TREE multicore version 2.2.0 COVID-edition for Linux 64-bit built Nov 20 2021 built Nov 20 2021
+Developed by Bui Quang Minh, James Barbetti, Nguyen Lam Tung,
+Olga Chernomor, Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan.
+
+Host:    cl001 (AVX2, FMA3, 125 GB RAM)
+Command: iqtree -s aln/2.fa -pre haha/2/cons/iqtree -m LG+G+I -T 2 -te haha/2/cons/topo.tre
+Seed:    129831 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Tue Sep 27 19:13:05 2022
+Kernel:  AVX+FMA - 2 threads (40 CPU cores detected)
+
+Reading alignment file aln/2.fa ... Fasta format detected
+Reading fasta file: done in 6.14654e-05 secs using 47.18% CPU
+Alignment most likely contains protein sequences
+Constructing alignment: done in 0.00034941 secs using 283.9% CPU
+Alignment has 6 sequences with 300 columns, 300 distinct patterns
+45 parsimony-informative, 255 singleton sites, 0 constant sites
+   Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 1.6002e-05 secs
+   1  a    0.00%    passed     87.58%
+   2  b    0.00%    passed     65.14%
+   3  c    0.00%    passed     44.46%
+   4  d    0.00%    passed     76.61%
+   5  e    0.00%    passed     93.02%
+   6  f    0.00%    passed     73.15%
+****  TOTAL    0.00%  0 sequences failed composition chi2 test (p-value<5%; df=19)
+Checking for duplicate sequences: done in 2.19001e-05 secs
+Reading input tree file haha/2/cons/topo.tre ... rooted tree
+WARNING: 10 undefined/negative branch lengths are initialized with parsimony
+
+NOTE: 1 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -5246.542
+2. Current log-likelihood: -5192.055
+3. Current log-likelihood: -5138.144
+4. Current log-likelihood: -5133.902
+5. Current log-likelihood: -5133.605
+6. Current log-likelihood: -5133.383
+7. Current log-likelihood: -5133.213
+8. Current log-likelihood: -5133.112
+9. Current log-likelihood: -5133.055
+10. Current log-likelihood: -5133.024
+Optimal log-likelihood: -5133.012
+Proportion of invariable sites: 0.000
+Gamma shape alpha: 998.499
+Parameters optimization took 10 rounds (0.213 sec)
+Wrote distance file to... 
+BEST SCORE FOUND : -5133.012
+Total tree length: 40.337
+
+Total number of iterations: 0
+CPU time used for tree search: 0.000 sec (0h:0m:0s)
+Wall-clock time used for tree search: 0.000 sec (0h:0m:0s)
+Total CPU time used: 0.435 sec (0h:0m:0s)
+Total wall-clock time used: 0.223 sec (0h:0m:0s)
+
+Analysis results written to: 
+  IQ-TREE report:                haha/2/cons/iqtree.iqtree
+  Maximum-likelihood tree:       haha/2/cons/iqtree.treefile
+  Screen log file:               haha/2/cons/iqtree.log
+
+Date and Time: Tue Sep 27 19:13:05 2022

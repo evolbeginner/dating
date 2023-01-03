@@ -1,0 +1,46 @@
+#! /usr/bin/env Rscript
+
+
+#####################################################
+library(ape)
+
+
+#####################################################
+args <- commandArgs(TRUE)
+
+
+#####################################################
+t1 <- ape::read.tree(args[1])
+t2 <- ape::read.tree(args[2])
+titles <- args[3:4]
+
+root_no <- length(t1$tip.label) + 1
+
+#d1 <- dist.nodes(t1)[root_no, (root_no+1):(root_no+t1$Nnode-1)]
+d1 <- dist.nodes(t1)[root_no, 1] - dist.nodes(t1)[root_no, (root_no):(root_no+t1$Nnode-1)]
+#d2 <- dist.nodes(t2)[root_no, (root_no+1):(root_no+t2$Nnode-1)]
+d2 <- dist.nodes(t2)[root_no, 1] - dist.nodes(t2)[root_no, (root_no):(root_no+t2$Nnode-1)]
+
+
+a <- d1 - d2
+max_bls <- apply(matrix(c(d1, d2), ncol=2), 1, max)
+
+score <- sum(a^2)^0.5
+
+mean_rel_diff <- mean(abs(a)/max_bls)
+
+#cor_ <- cor(t1$edge.length, t2$edge.length)
+
+lm_ <- lm(d2 ~ d1+0)
+
+#print(round(c(score, mean_rel_diff, unname(lm_$coefficients), summary(lm_)$r.squared), 3)) # the single coefficient is the slope
+cat(round(c(score, mean_rel_diff, unname(lm_$coefficients), summary(lm_)$r.squared), 3), sep="\t", "\n") # the single coefficient is the slope
+
+lim <- max(d1, d2) * 1.1
+
+plot(d1, d2, xlab="", ylab="", xlim=c(0,lim), ylim=c(0,lim))
+abline(0,1,col="darkgrey", lty=2, lwd=2)
+if (! is.null(titles)){
+	title(xlab = titles[1], ylab = titles[2])
+}
+

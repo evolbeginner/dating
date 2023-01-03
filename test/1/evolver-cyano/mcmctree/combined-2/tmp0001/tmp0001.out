@@ -1,0 +1,115 @@
+
+Printing out site pattern counts
+
+
+        18         60  P
+
+Xenococcus_sp_PCC_7305          AAAAAAAAAA AAAAAAACCC CCCCCCCCCC CCCCCCCCGG GGGGGTTTTT TTTTTTTTTT 
+Moorea_producens_3L             AAAAAAAAAA AAAAAATCCC CCCCCCCCCC CCTTTTTTAA AGGGGCCCCT TTTTTTTTTT 
+Oscillatoria_sp_PCC_10802       AAAAAAAAAA AAAAAACCCC CCCCCCCCCC CCCCCTTTAA GGGGGCCCTA CCCTTTTTTT 
+Crinalium_epipsammum_PCC_9333   AAAAAAAAAA AAAAAATCCC CCCCCCCCCC CTCCTTTTAA GGGGGCCCTA CCTCTTTTTT 
+Nostoc_sp_PCC_7107              AAAAAAAAAA AAAGGGCCCC CCCCCCCCCC CCCCTTTTAA GGGGGCCTTA CTTTCTTTTT 
+Raphidiopsis_brookii_D9         AAAAAAAAAA AAGGGGCCCC CCCCCCCCCC CCCTTCCTAG GGGGGCCATA CTTTCTTTTT 
+Richelia_intracellularis_HH01   AAAAAAAAAA CGGAGGCCCC CCCCCCCCCC TCCCTCTTAC GGGGGCCTTA CTTCCTTTTT 
+Lyngbya_aestuarii_BL_J          AAAAAAAGGT GAAGAACCCC CCCCCCCTTT CTCCCCCTAA GGGGGCCCTC CCTTTCTTTT 
+Synechococcus_elongatus_PCC_6301  AAAAAGGAAA AAACAGCCCC CCCCCCTCCT CCCCTCCTAA GAGGGCCCTT CCTTGTCTTT 
+Prochlorococcus_marinus_CCMP1986  AAAAAAAAAA GAATATTCCC CCCCCTCCCT CCCCTCTTAG GGGGGCCCTT CTTTCTCTTT 
+Thermosynechococcus_elongatus_BP-1  AAAAGACAAG ATAGAACCCC CCCCTCCCTC CCCTCCCTAG GGGGGCTCTA CGTTCCTTTT 
+Gloeobacter_violaceus_PCC_7421  AAAAAAAAAG AAAGAGTCCC CCTTCCCTCC CCCTTCTTAA AGGGGCCTTA CCTTCTTTTT 
+Gloeobacter_kilaueensis_JS1     AAAGAAAAAG AAGGAACCCC CTTTCTCCCC CCCTCCTTAA AGGGGACTTA CCTTCTTCTT 
+Candidatus_Caenarcanum_bioreactoricola_UASB_169  AAAAGAGGGA AAAAAGCCCT TCCCCCCCTC CTTCCTTTAC GAAGGCCTTT CTTCCTTCTT 
+Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16  AAAAAAAAAG AACAAACCCT TCCCCCCCTC CCTCTCTCAT GAAGGCCTTC CTTTTCCCTT 
+Vampirovibrio_chlorellavorus_Vc_AZ_2  AAGAAAAAGC AAAAAGCCCT TCCCTCCCCT CCCCTTCCAC AGGGGTCCTC CCTTTCACCT 
+Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72  AAAAAAAACA AGAGAAACCT TCCTTCCCTC CCCCCTTCAT AAGAGCTCTC TCTCCCCCTT 
+Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196  ACAAAACACT AAAAAACCTC TTCTCCCCTT CCCCCCTTAT GAGGGCCCTC TACTCCCCTT 
+
+
+
+   12    1    1    1    1    1    1    1    1    1    1    1    1    1    1
+    1    1   19    1    1    1    1    2    1    1    1    1    1    1    1
+    1    1    1    1    1    1    1    1    1    1    1    1    1    1    4
+    1    1    1    1    1    1    1    1    1    1    1    1    1    1    8
+
+
+
+BASEML (in paml version 4.9j, October 2019)  tmp0001.txt  REV dGamma (ncatG=5)
+Frequencies..
+                                    T      C      A      G
+Xenococcus_sp_PCC_7305         0.22000 0.40000 0.28000 0.10000 GC = 0.500
+Moorea_producens_3L            0.25000 0.38000 0.30000 0.07000 GC = 0.450
+Oscillatoria_sp_PCC_10802      0.18000 0.44000 0.30000 0.08000 GC = 0.520
+Crinalium_epipsammum_PCC_9333  0.21000 0.41000 0.30000 0.08000 GC = 0.490
+Nostoc_sp_PCC_7107             0.21000 0.41000 0.27000 0.11000 GC = 0.520
+Raphidiopsis_brookii_D9        0.19000 0.42000 0.26000 0.13000 GC = 0.550
+Richelia_intracellularis_HH01  0.20000 0.44000 0.24000 0.12000 GC = 0.560
+Lyngbya_aestuarii_BL_J         0.21000 0.43000 0.24000 0.12000 GC = 0.550
+Synechococcus_elongatus_PCC_6301 0.19000 0.44000 0.26000 0.11000 GC = 0.550
+Prochlorococcus_marinus_CCMP1986 0.24000 0.41000 0.25000 0.10000 GC = 0.510
+Thermosynechococcus_elongatus_BP-1 0.20000 0.43000 0.24000 0.13000 GC = 0.560
+Gloeobacter_violaceus_PCC_7421 0.25000 0.37000 0.28000 0.10000 GC = 0.470
+Gloeobacter_kilaueensis_JS1    0.23000 0.38000 0.28000 0.11000 GC = 0.490
+Candidatus_Caenarcanum_bioreactoricola_UASB_169 0.24000 0.40000 0.25000 0.11000 GC = 0.510
+Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16 0.22000 0.43000 0.28000 0.07000 GC = 0.500
+Vampirovibrio_chlorellavorus_Vc_AZ_2 0.19000 0.45000 0.26000 0.10000 GC = 0.550
+Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72 0.21000 0.43000 0.29000 0.07000 GC = 0.500
+Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196 0.22000 0.45000 0.26000 0.07000 GC = 0.520
+
+Homogeneity statistic: X2 = 0.16189 G = 0.16382 
+
+Average                        0.21444 0.41778 0.26889 0.09889
+
+# constant sites:     43 (43.00%)
+ln Lmax (unconstrained) = -351.186794
+
+Distances: TN93 (kappa)  (alpha set at 0.50)
+This matrix is not used in later m.l. analysis.
+
+Xenococcus_sp_PCC_7305  
+Moorea_producens_3L    0.2540(45.8783)
+Oscillatoria_sp_PCC_10802    0.2278(17.5852)  0.1599(23.7085)
+Crinalium_epipsammum_PCC_9333    0.3041(22.0045)  0.1320(19.7018)  0.0686(999.0000)
+Nostoc_sp_PCC_7107    0.2660(28.6063)  0.1918(45.3924)  0.1116(999.0000)  0.1301(999.0000)
+Raphidiopsis_brookii_D9    0.2558(16.9267)  0.2874(37.0689)  0.2245(54.7403)  0.2492(57.4483)  0.0724(14.2136)
+Richelia_intracellularis_HH01    0.3428(15.3375)  0.3603(23.8342)  0.2411(24.2155)  0.2094(21.8392)  0.1039(10.7495)  0.1155( 5.4159)
+Lyngbya_aestuarii_BL_J    0.4700(46.1197)  0.6002(104.1196)  0.2396(23.9808)  0.2676(25.3535)  0.3766(34.3214)  0.4118(29.7051)  0.5988(28.6166)
+Synechococcus_elongatus_PCC_6301    0.4107(28.5581)  0.3845(39.6669)  0.2334(15.5968)  0.2595(16.4544)  0.2261(13.8272)  0.2724(14.8193)  0.3858(15.0012)  0.3931(31.6508)
+Prochlorococcus_marinus_CCMP1986    0.3128(13.1669)  0.2351(20.5351)  0.2407(11.0779)  0.2049( 9.4968)  0.1739( 9.6904)  0.1908( 7.0080)  0.2340( 6.2782)  0.3829(17.1682)  0.2170(26.4776)
+Thermosynechococcus_elongatus_BP-1    0.3288( 9.5318)  0.4813(20.0152)  0.2951(17.2723)  0.4337(22.6407)  0.3170(19.2649)  0.2250(10.5564)  0.4562(15.7293)  0.2974(10.1211)  0.4477(12.7777)  0.4086( 7.7125)
+Gloeobacter_violaceus_PCC_7421    0.5255(51.3931)  0.2882(49.4703)  0.3070(999.0000)  0.2612(999.0000)  0.1737(999.0000)  0.2149(49.0980)  0.3354(37.6720)  0.4744(40.2010)  0.4009(23.8267)  0.3138(17.5156)  0.4136(20.6092)
+Gloeobacter_kilaueensis_JS1    0.6296(42.0311)  0.5988(46.2407)  0.3672(77.3657)  0.5424(99.3404)  0.3476(77.5705)  0.3313(34.6608)  0.5022(34.9798)  0.7345(39.3947)  0.7772(40.3059)  0.5227(23.7512)  0.4823(18.5634)  0.1416(28.2207)
+Candidatus_Caenarcanum_bioreactoricola_UASB_169    0.7505(85.2206)  0.6988(202.2841)  0.5124(64.9449)  0.4619(61.4196)  0.4515(63.8115)  0.6954(56.7410)  0.6043(88.8892)  0.6447(62.8043)  0.6966(34.8909)  0.6833(45.4884)  0.6906(23.9319)  1.0630(123.3252)  2.5802(272.9036)
+Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16    0.4871(26.2754)  0.5194(46.5954)  0.4869(24.7334)  0.5444(26.3701)  0.4281(33.7309)  0.4954(24.3863)  0.5221(36.2336)  0.5809(38.2822)  0.5776(24.6459)  0.5005(19.0786)  0.5879(12.6427)  0.7820(41.5987)  0.8565(31.8915)  0.3674(97.7830)
+Vampirovibrio_chlorellavorus_Vc_AZ_2    0.6636(25.7442)  0.9025(38.8494)  0.4933(19.6838)  0.5466(20.7795)  0.5784(22.8875)  0.6817(21.8187)  1.0107(38.1957)  0.5511(52.1697)  0.5368(19.6602)  0.7357(18.7252)  0.7532(15.6389)  1.4852(43.9764)  1.4909(40.6897)  0.8846(81.7370)  0.4915(39.2814)
+Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72    0.8585(80.3528)  1.0856(51.6497)  0.7186(32.7088)  0.6815(31.0380)  0.8340(36.4408)  1.3899(43.9374)  1.2554(53.8052)  0.9532(38.4872)  1.2978(39.2904)  1.0523(29.3122)  0.5337(11.3114)  1.2003(42.1538)  1.1808(35.8534)  1.0245(164.7348)  0.5414(52.9681)  0.5894(31.7410)
+Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196    1.0822(14.9428)  1.1400(18.9319)  0.4759( 6.1794)  1.0934(14.4689)  0.7120(12.5077)  0.8318(13.1986)  1.0397(18.7086)  0.4748(13.6053)  0.6011( 6.9414)  0.5568( 6.1105)  0.5833(12.4844)  1.0758(17.3635)  0.7030(12.2335)  0.8113(20.3047)  0.4188( 6.2782)  1.0971(27.3993)  0.3900(14.9696)
+
+TREE #  1:  (((((((1, 2), ((3, 4), ((5, 6), 7))), 8), (9, 10)), 11), (12, 13)), ((14, 15), 16), (17, 18));  MP score: 175.00
+lnL(ntime: 33  np: 39):   -745.277907    +0.000000
+  19..20   20..21   21..22   22..23   23..24   24..25   25..1    25..2    24..26   26..27   27..3    27..4    26..28   28..29   29..5    29..6    28..7    23..8    22..30   30..9    30..10   21..11   20..31   31..12   31..13   19..32   32..33   33..14   33..15   32..16   19..34   34..17   34..18 
+ 0.282960 0.000004 0.000004 0.000004 0.000004 0.010067 0.180414 0.062130 0.022302 0.000004 0.042319 0.031921 0.086426 0.000004 0.000004 0.076416 0.126622 0.292820 0.068085 0.234487 0.070780 0.427401 0.239384 0.000004 0.157048 0.000004 0.101913 0.206897 0.137375 0.511289 0.162921 0.355854 0.568310 0.694400 0.062842 0.000010 0.017436 0.000010 0.311171
+SEs for parameters:
+ 0.220079 1.001525 0.626551 0.619339 0.508204 0.025948 0.152475 0.053369 0.108604 0.059218 0.041659 0.040985 0.094665 0.157270 0.153144 0.074080 0.117606 0.296344 0.147905 0.183377 0.098111 0.300806 0.245471 0.070526 0.126494 0.653953 0.144957 0.278928 0.240929 0.440377 0.251108 0.349534 0.514778 0.591275 0.083789 0.351340 0.030699 0.171126 0.103057
+
+tree length =   4.45618
+
+(((((((Xenococcus_sp_PCC_7305, Moorea_producens_3L), ((Oscillatoria_sp_PCC_10802, Crinalium_epipsammum_PCC_9333), ((Nostoc_sp_PCC_7107, Raphidiopsis_brookii_D9), Richelia_intracellularis_HH01))), Lyngbya_aestuarii_BL_J), (Synechococcus_elongatus_PCC_6301, Prochlorococcus_marinus_CCMP1986)), Thermosynechococcus_elongatus_BP-1), (Gloeobacter_violaceus_PCC_7421, Gloeobacter_kilaueensis_JS1)), ((Candidatus_Caenarcanum_bioreactoricola_UASB_169, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16), Vampirovibrio_chlorellavorus_Vc_AZ_2), (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196));
+
+(((((((Xenococcus_sp_PCC_7305: 0.180414, Moorea_producens_3L: 0.062130): 0.010067, ((Oscillatoria_sp_PCC_10802: 0.042319, Crinalium_epipsammum_PCC_9333: 0.031921): 0.000004, ((Nostoc_sp_PCC_7107: 0.000004, Raphidiopsis_brookii_D9: 0.076416): 0.000004, Richelia_intracellularis_HH01: 0.126622): 0.086426): 0.022302): 0.000004, Lyngbya_aestuarii_BL_J: 0.292820): 0.000004, (Synechococcus_elongatus_PCC_6301: 0.234487, Prochlorococcus_marinus_CCMP1986: 0.070780): 0.068085): 0.000004, Thermosynechococcus_elongatus_BP-1: 0.427401): 0.000004, (Gloeobacter_violaceus_PCC_7421: 0.000004, Gloeobacter_kilaueensis_JS1: 0.157048): 0.239384): 0.282960, ((Candidatus_Caenarcanum_bioreactoricola_UASB_169: 0.206897, Candidatus_Melainabacteria_bacterium_SSGW_16SSGW_16: 0.137375): 0.101913, Vampirovibrio_chlorellavorus_Vc_AZ_2: 0.511289): 0.000004, (Candidatus_Sericytochromatia_bacterium_GL2-5_LSPB_72: 0.355854, Candidatus_Sericytochromatia_bacterium_S15B-MN24_RAAC_196: 0.568310): 0.162921);
+
+Detailed output identifying parameters
+
+Parameters  in the rate matrix (REV) (Yang 1994 J Mol Evol 39:105-111):
+
+
+Rate parameters:    0.69440  0.06284  0.00001  0.01744  0.00001
+Base frequencies:   0.21444  0.41778  0.26889  0.09889
+Rate matrix Q, Average Ts/Tv =  15.9060
+   -1.626347    1.536827    0.089515    0.000005
+    0.788850   -0.813691    0.024836    0.000005
+    0.071390    0.038588   -0.633841    0.523862
+    0.000011    0.000022    1.424435   -1.424468
+
+alpha (gamma, K=5) =  0.31117
+rate:   0.00304  0.05425  0.27411  0.92144  3.74716
+freq:   0.20000  0.20000  0.20000  0.20000  0.20000
+

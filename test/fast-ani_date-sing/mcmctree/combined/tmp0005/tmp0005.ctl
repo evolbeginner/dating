@@ -1,0 +1,13 @@
+seqfile = tmp0005.txt
+treefile = tmp0005.trees
+outfile = tmp0005.out
+noisy = 3
+seqtype = 2
+         model = 2
+    aaRatefile = /home-user/sswang/software/phylo/paml4.9i/dat/lg.dat
+     fix_alpha = 0
+         alpha = 0.5
+         ncatG = 5
+Small_Diff = 0.1e-6
+getSE = 2
+method = 0

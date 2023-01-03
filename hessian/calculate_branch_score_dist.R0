@@ -1,0 +1,33 @@
+#! /usr/bin/env Rscript
+
+
+#####################################################
+library(ape)
+
+
+#####################################################
+args <- commandArgs(TRUE)
+
+
+#####################################################
+t1 <- ape::read.tree(args[1])
+t2 <- ape::read.tree(args[2])
+
+a <- t1$edge.length - t2$edge.length
+max_bls <- apply(matrix(c(t1$edge.length, t2$edge.length),ncol=2), 1, max)
+
+score <- sum(a^2)^0.5
+
+#print(abs(a)/max_bls)
+
+mean_rel_diff <- mean(abs(a)/max_bls)
+
+#cor_ <- cor(t1$edge.length, t2$edge.length)
+
+lm_ <- lm(t2$edge.length ~ t1$edge.length + 0)
+
+print(c(score, mean_rel_diff, unname(lm_$coefficients), summary(lm_)$r.squared))
+
+#plot(t1$edge.length, t2$edge.length)
+#abline(0,1,col="darkgrey", lty=2, lwd=2)
+

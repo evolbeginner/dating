@@ -1,0 +1,28 @@
+34817
+/mnt/home-user/sswang/huche/test/mcmctree/hessian/test/test-official/tip30/p0.1_sd0.2/sl1000/sim-LG+C20+G/scale2/root/dating/ori/combined/disabled_bin/codeml
+MCMCTREE in paml version 4.10.0, September 2020
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+Reading master tree.
+(((((t276, t85), (t199, t23)), (t101, t257)), t126), (((t10, t3), ((t285, t219), t192)), (t244, ((((t89, (t9, t163)), (t148, t12)), (t100, t274)), ((((t177, t236), t62), ((t181, t72), (t254, (t223, t242)))), (t189, t92))))));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 30  	ls = 1000
+Reading sequences, sequential format..
+Reading seq # 1: t276       Reading seq # 2: t85       Reading seq # 3: t199       Reading seq # 4: t23       Reading seq # 5: t101       Reading seq # 6: t257       Reading seq # 7: t126       Reading seq # 8: t10       Reading seq # 9: t3       Reading seq #10: t285       Reading seq #11: t219       Reading seq #12: t192       Reading seq #13: t244       Reading seq #14: t89       Reading seq #15: t9       Reading seq #16: t163       Reading seq #17: t148       Reading seq #18: t12       Reading seq #19: t100       Reading seq #20: t274       Reading seq #21: t177       Reading seq #22: t236       Reading seq #23: t62       Reading seq #24: t181       Reading seq #25: t72       Reading seq #26: t254       Reading seq #27: t223       Reading seq #28: t242       Reading seq #29: t189       Reading seq #30: t92       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,    844 patterns at   1000 /   1000 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],    844 patterns at   1000 /   1000 sites (100.0%),  0:00
+Counting frequencies..
+844 patterns, clean
+
+
+
+*** Locus 1 ***
+running codeml tmp0001.ctl
+file rst2 not found!
