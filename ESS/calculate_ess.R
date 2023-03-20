@@ -7,7 +7,11 @@ args <- commandArgs(T)
 
 df <- data.frame()
 for(i in args){
-	d <- read.csv(i, header=T, sep="\t")
+	infile <- i
+	if(i == '-'){
+		infile <- file("stdin")
+	}
+	tryCatch( {d <- read.csv(infile, header=T, sep="\t")}, error=function(e){print(e)})
 	#d <- fread(i, sep="\t", data.table=F)
 	d <- d[1:nrow(d)-1,]
 	df <- rbind(df, d)
@@ -19,9 +23,7 @@ df <- df[,-1] # delete the last col (lnL)
 df <- df[names(df[grep("t_n", names(df))])]
 df <- df[grep("t_n", names(df))]
 
-sapply(df, FUN=function(x){ess <- coda::effectiveSize(x); })
-#ess=coda::effectiveSize(df[,2]); print(ess); 
-#ess=coda::effectiveSize(df[,3]); print(ess); 
+tryCatch( { sapply(df, FUN=function(x){ess <- coda::effectiveSize(x); }) }, error=function(e){print(e); cat("probably infile csv error!", fill=T)})
 q()
 
 ess=coda::effectiveSize(df$lnL); print(ess)

@@ -29,7 +29,7 @@ for i in `ls`; do
 		pwd
 		[ ! -d root ] && echo "wrong directory $i!" && cd $DIR
 		outdir=calib-${n}_$p
-		bash ~/project/Rhizobiales/scripts/dating/hessian/perform_calib_dating.sh --indir root/ --outdir $outdir --run_mcmctree --num $n
+		bash ~/project/Rhizobiales/scripts/dating/hessian/perform_calib_dating.sh --indir root/ --outdir $outdir --run_mcmctree --num $n --force
 		cd - >/dev/null
 	done
 	cd $DIR

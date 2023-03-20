@@ -2,6 +2,8 @@
 
 
 ##############################################
+# updated on 2022-11-18
+#   bugs fixed
 # updated on 2022-11-18 for non-independent ASR based on scm
 
 
@@ -12,6 +14,7 @@ require 'smarter_csv'
 require 'parallel'
 require 'bio-nwk'
 
+require 'Dir'
 require_relative 'lib/weighted_rand'
 
 
@@ -28,7 +31,9 @@ end
 class Subclade
   attr_accessor :name, :num
   def initialize(arr)
-    @name = arr
+    #@name = arr
+    @name = arr[0].is_a?(Array) ? arr.map{|i|i.sort} : arr.sort
+    #@name = arr[0] =~ /,/ ? arr.map{|i|i.split(',').sort} : arr.sort
     @num = nil
   end
 end
@@ -55,7 +60,6 @@ class Symbiont < Subclade
     @host2prob = Hash.new
     @hosts.map{|i| @host2prob[i]=i.prob }
     selected_host = weighted_rand(@host2prob)
-    p selected_host.num.zip(@num).map{|a, b| data[a-1].to_f >= data[b-1].to_f }
     if selected_host.num.zip(@num).all?{|a, b| data[a-1].to_f >= data[b-1].to_f }
       return(true)
     else
@@ -107,41 +111,6 @@ def read_mcmctree_out(file)
 
   #get_internal_node_index(tree)
   return(tree)
-end
-
-
-def get_rtc0(file, root_two_children_names)
-  rtc_info = Hash.new
-  in_fh = File.open(file, 'r')
-  in_fh.each_line do |line|
-    line.chomp!
-    next if line =~ /^#|^$/
-    line_arr = line.split("\t")
-
-    symbiont = line_arr[0].gsub(' ', '_').split(',')
-    rtc = Symbiont.new(symbiont)
-
-    (1..line_arr.size-1).each do |index|
-      ele = line_arr[index]
-      host = ele.split(':')[0].gsub('_', '_').split(',')
-      prob = ele.split(':')[1]
-      host_obj = Host.new(host)
-      host_obj.prob = prob
-      rtc.hosts << host_obj
-    end
-
-    root_obj = Host.new(root_two_children_names)
-
-    curr_total_prob = rtc.hosts.map{|host|host.prob}.reduce(&:+)
-    if curr_total_prob < 1
-      root_obj.prob = 1 - curr_total_prob
-      rtc.hosts << root_obj
-    end
-
-    rtc_info[symbiont] = rtc
-  end
-  in_fh.close
-  return(rtc_info)
 end
 
 
@@ -198,13 +167,14 @@ def get_scm(file, root_two_children_names)
     end
 
     prob = line_arr[-1].to_f
-    hosts = line_arr[0, line_arr.size-1]
+    hosts = line_arr[0, line_arr.size-1].map{|i|i.split(',')}
+    hosts.map!{|a| a[0] == 'root' ? root_two_children_names : a } #2023-01, in case of >=1 root (fl; Z)
     host_obj = Host.new(hosts)
     host_obj.prob = prob
     rtc.hosts << host_obj
   end
 
-  root_obj = Host.new([root_two_children_names.join(',')] * symbionts.size)
+  root_obj = Host.new([root_two_children_names] * symbionts.size)
   curr_total_prob = rtc.hosts.map{|host|host.prob}.reduce(&:+)
   if curr_total_prob < 1
     root_obj.prob = 1 - curr_total_prob
@@ -223,6 +193,7 @@ if __FILE__ == $0
   infile = nil
   rtc_file = nil
   scm_file = nil
+  scm_files = Array.new
   mcmctxt_file = nil
   is_rtc = true
 
@@ -233,8 +204,9 @@ if __FILE__ == $0
   opts = GetoptLong.new(
     ['--indir', GetoptLong::REQUIRED_ARGUMENT],
     ['-i', GetoptLong::REQUIRED_ARGUMENT],
-    ['--rtc', GetoptLong::REQUIRED_ARGUMENT],
-    ['--scm', GetoptLong::REQUIRED_ARGUMENT],
+    ['--rtc', '--marginal', GetoptLong::REQUIRED_ARGUMENT],
+    ['--scm', '--joint', GetoptLong::REQUIRED_ARGUMENT],
+    ['--scm_dir', GetoptLong::REQUIRED_ARGUMENT],
     ['--mcmctxt', GetoptLong::REQUIRED_ARGUMENT],
     ['--is_rtc', '--is_rrtc', GetoptLong::REQUIRED_ARGUMENT],
   )
@@ -246,10 +218,10 @@ if __FILE__ == $0
         indir = value
       when '-i'
         infile = value
-      when '--rtc'
+      when '--rtc', '--marginal'
         rtc_file = value
-      when '--scm'
-        scm_file = value
+      when '--scm', '--joint'
+        scm_files = File.directory?(value) ? read_infiles(value) : [value]
       when '--mcmctxt'
         mcmctxt_file = value
       when '--is_rtc', '--is_rtc'
@@ -261,7 +233,6 @@ if __FILE__ == $0
   ##############################################
   unless indir.nil?
     infile = File.join(indir, 'out') # file 'out' from the mcmctree output
-    #rtc_file = File.join(indir, 'rtc_file')
     mcmctxt_file = File.join(indir, 'mcmc.txt')
   end
 
@@ -273,8 +244,10 @@ if __FILE__ == $0
 
   if not rtc_file.nil?
     rtc_info = get_rtc(rtc_file, root_two_children_names)
-  elsif not scm_file.nil?
-    scm_info = get_scm(scm_file, root_two_children_names)
+  elsif not scm_files.empty?
+    scm_files.each do |scm_file|
+      scm_info.merge! get_scm(scm_file, root_two_children_names)
+    end
   else
     raise "rtc_file or scm_file has to be provided! Exiting ......"
   end
@@ -304,8 +277,7 @@ if __FILE__ == $0
         obj_nums = Array.new
         names = obj.name
         names.each do |names|
-          names2 = names.split(',')
-          obj_nums << get_lca_bootstrap(names2, name2node, tree) - minus
+          obj_nums << get_lca_bootstrap(names, name2node, tree) - minus
         end
         obj.num = obj_nums
       end
@@ -316,20 +288,14 @@ if __FILE__ == $0
   ##############################################
   headers = CSV.open(mcmctxt_file, &:readline)
 
-  #rtc_info = scm_info if not scm_info.empty?
-
   col_data = Array.new
-      counter = 0
   CSV.foreach(mcmctxt_file) do |row|
     data = row[0].split("\t")
     if is_rtc
       if not rtc_info.empty?
         #col_data << row if rtc_info.all?{|rtc_name, rtcs| rtcs.all?{|rtc| rtc.is_co_evolve?(data)} }
-        #p rtc_info.map{|rtc_name, rtc| rtc }
-        p rtc_info.map{|rtc_name, rtc| rtc.is_co_evolve?(data) }
-        #col_data << row if rtc_info.all?{|rtc_name, rtc| rtc.is_co_evolve?(data) }
+        col_data << row if rtc_info.all?{|rtc_name, rtc| rtc.is_co_evolve?(data) }
       elsif not scm_info.empty?
-        #p scm_info.map{|rtc_name, rtc| rtc.is_co_evolve2?(data) }
         col_data << row if scm_info.all?{|rtc_name, rtc| rtc.is_co_evolve2?(data) }
       end
     else

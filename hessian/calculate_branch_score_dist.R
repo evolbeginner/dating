@@ -21,6 +21,9 @@ d1 <- dist.nodes(t1)[root_no, 1] - dist.nodes(t1)[root_no, (root_no):(root_no+t1
 #d2 <- dist.nodes(t2)[root_no, (root_no+1):(root_no+t2$Nnode-1)]
 d2 <- dist.nodes(t2)[root_no, 1] - dist.nodes(t2)[root_no, (root_no):(root_no+t2$Nnode-1)]
 
+c <- abs(d1-d2)
+max <- max(c(d1,d2))
+#print((c/max)[which(c/max>0.04)])
 
 a <- d1 - d2
 max_bls <- apply(matrix(c(d1, d2), ncol=2), 1, max)

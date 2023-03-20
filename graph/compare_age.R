@@ -6,7 +6,9 @@ library('getopt')
 
 
 ######################################################################
-#color = "blue"
+circle_cex <- 0.5
+pch <- 16
+point_col <- 'black'
 
 
 ######################################################################
@@ -16,9 +18,10 @@ spec = matrix(
 		'infile2', 'j', 1, 'character',
 		'outfile', 'o', 1, 'character',
 		'minmax', 'm', 1, 'character',
-		'color', 'c', 1, 'character'
+		'color', 'c', 1, 'character',
+		'noCI', 'n', 0, 'logical'
 	),
-	byrow=5, ncol=4
+	byrow=T, ncol=4
 )
 
 opts = getopt(spec)
@@ -27,12 +30,16 @@ infile2 = opts$infile2
 outfile = opts$outfile
 minmax = opts$minmax
 color = opts$color
+noCI = opts$noCI
 
 if (is.null(infile1) | is.null(infile2) | is.null(outfile)){
 	print("infile or outfile not given! Exiting ......"); q()
 }
 if (is.null(minmax)){
 	print("minmax not given! Exiting ......"); q()
+}
+if (is.null(noCI)){
+	noCI <- F
 }
 
 min = as.numeric(unlist(strsplit(minmax, ","))[1])
@@ -68,18 +75,28 @@ if (is.null(col)){
 	col2<-color
 }
 
+if (noCI){
+	circle_cex <- 1
+	pch <- 16
+	point_col <- rgb(255, 0, 0, max = 255, alpha = 175, names = "blue50")
+}
+
 
 ######################################################################
 #The plot
 pdf(outfile)
 
-#plot(age1, age2, pch=16, cex=0.8, col="black", cex.axis=1.1, cex.lab=1.2)
+#plot(age1, age2, pch=pch, cex=0.8, col="black", cex.axis=1.1, cex.lab=1.2)
 print(age1)
-plot(age1, age2, pch=16, cex=0.8, col="black", ylim=c(min,max), xlim=c(min,max), cex.axis=1.1, cex.lab=1.2)
+plot(age1, age2, pch=pch, cex=circle_cex, col=point_col, ylim=c(min,max), xlim=c(min,max), cex.axis=1.1, cex.lab=1.2, 
+	ylab='', xlab=''
+)
 
-segments(age1_max, age2, age1_min, age2, lwd=0.8, col=col1)
-segments(age1, age2_max, age1, age2_min, lwd=0.8, col=col2)
-#legend("topright", legend=paste("Study",1:10),col=rainbow(length(pop.size)), pt.cex=1.5, pch=16)
+if(! noCI){
+	segments(age1_max, age2, age1_min, age2, lwd=0.5, col=col1)
+	segments(age1, age2_max, age1, age2_min, lwd=0.5, col=col2)
+	#legend("topright", legend=paste("Study",1:10),col=rainbow(length(pop.size)), pt.cex=1.5, pch=16)
+}
 
 abline(0,1,col="darkgrey", lty=2, lwd=2)
 

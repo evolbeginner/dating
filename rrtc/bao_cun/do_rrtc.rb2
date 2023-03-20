@@ -198,7 +198,6 @@ if __FILE__ == $0
         rtc.hosts.map{|obj|obj.num = get_lca_bootstrap(obj.name, name2node, tree) - minus}
       rescue
         raise "species #{names} or #{rtc.hosts} not found"
-        p rtc
       end
     end
   end

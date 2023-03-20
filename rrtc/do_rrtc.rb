@@ -2,6 +2,12 @@
 
 
 ##############################################
+# updated on 2023-01-11
+#   auto-detect input type (marginal or joint)
+# updated on 2023-01-09
+#   --rtc a folder as an input allowed
+# updated on 2022-11-18
+#   bugs fixed
 # updated on 2022-11-18 for non-independent ASR based on scm
 
 
@@ -11,6 +17,7 @@ require 'csv'
 require 'smarter_csv'
 require 'parallel'
 require 'bio-nwk'
+require 'colorize'
 
 require 'Dir'
 require_relative 'lib/weighted_rand'
@@ -43,21 +50,20 @@ class Symbiont < Subclade
     @name = arr
     @hosts = Array.new
   end
-  def is_co_evolve?(data)
+  def is_co_evolve?(data:, is_strict:)
     @host2prob = Hash.new
     @hosts.map{|i| @host2prob[i]=i.prob }
-    selected_host = weighted_rand(@host2prob)
-    #p [selected_host.num, @num]
+    selected_host = is_strict ? @hosts.sort_by{|i| i.prob }.reverse[0] : weighted_rand(@host2prob)
     if data[selected_host.num-1].to_f >= data[@num-1].to_f
       return(true)
     else
       return(false)
     end
   end
-  def is_co_evolve2?(data)
+  def is_co_evolve2?(data:, is_strict:)
     @host2prob = Hash.new
     @hosts.map{|i| @host2prob[i]=i.prob }
-    selected_host = weighted_rand(@host2prob)
+    selected_host = is_strict ? @hosts.sort_by{|i| i.prob }.reverse[0] : weighted_rand(@host2prob)
     if selected_host.num.zip(@num).all?{|a, b| data[a-1].to_f >= data[b-1].to_f }
       return(true)
     else
@@ -166,6 +172,7 @@ def get_scm(file, root_two_children_names)
 
     prob = line_arr[-1].to_f
     hosts = line_arr[0, line_arr.size-1].map{|i|i.split(',')}
+    hosts.map!{|a| a[0] == 'root' ? root_two_children_names : a } #2023-01, in case of >=1 root (fl; Z)
     host_obj = Host.new(hosts)
     host_obj.prob = prob
     rtc.hosts << host_obj
@@ -185,14 +192,33 @@ end
 
 
 ##############################################
+def auto_detect_mj(rtc_files) # identify whether marginal or joint
+  first_file = rtc_files[0]
+  in_fh = File.open(first_file, 'r')
+  first_line = in_fh.readline.chomp
+  if first_line =~ /:[10]\.\d+/
+    type = 'marginal'
+  else
+    type = 'joint'
+  end
+  in_fh.close
+  STDERR.puts "type auto-detected\t" + type.colorize(:yellow)
+  return(type)
+end
+
+
+##############################################
 if __FILE__ == $0
   indir = nil
   infile = nil
-  rtc_file = nil
+  type = nil
+  rtc_files = Array.new
   scm_file = nil
   scm_files = Array.new
   mcmctxt_file = nil
   is_rtc = true
+  is_renum = true
+  is_strict = false
 
   rtc_info = Hash.new
   scm_info = Hash.new
@@ -201,11 +227,13 @@ if __FILE__ == $0
   opts = GetoptLong.new(
     ['--indir', GetoptLong::REQUIRED_ARGUMENT],
     ['-i', GetoptLong::REQUIRED_ARGUMENT],
-    ['--rtc', GetoptLong::REQUIRED_ARGUMENT],
-    ['--scm', GetoptLong::REQUIRED_ARGUMENT],
-    ['--scm_dir', GetoptLong::REQUIRED_ARGUMENT],
+    ['--marginal', GetoptLong::REQUIRED_ARGUMENT],
+    ['--joint', GetoptLong::REQUIRED_ARGUMENT],
+    ['--rtc', '--rrtc', GetoptLong::REQUIRED_ARGUMENT],
     ['--mcmctxt', GetoptLong::REQUIRED_ARGUMENT],
-    ['--is_rtc', '--is_rrtc', GetoptLong::REQUIRED_ARGUMENT],
+    ['--is_rtc', '--is_rrtc', '--rrtc_file', '--rtc_file', GetoptLong::REQUIRED_ARGUMENT],
+    ['--strict', '--is_strict', GetoptLong::NO_ARGUMENT],
+    ['--no_renum', '--no_re_num', GetoptLong::NO_ARGUMENT],
   )
 
 
@@ -215,14 +243,23 @@ if __FILE__ == $0
         indir = value
       when '-i'
         infile = value
-      when '--rtc'
-        rtc_file = value
-      when '--scm'
-        scm_files = File.directory?(value) ? read_infiles(value) : [value]
+      when '--marginal'
+        rtc_files = File.directory?(value) ? read_infiles(value) : [value]
+        type = 'marginal'
+      when '--joint'
+        rtc_files = File.directory?(value) ? read_infiles(value) : [value]
+        type = 'joint'
+      when /^--r?rtc(file)?$/
+        rtc_files = File.directory?(value) ? read_infiles(value) : [value]
       when '--mcmctxt'
         mcmctxt_file = value
-      when '--is_rtc', '--is_rtc'
+      when '--is_rtc', '--is_rrtc'
         is_rtc = value =~ /^true|T$/i ? true : false
+      when '--is_strict', '--strict'
+        is_strict = true
+        STDERR.puts "is_strict:\t" + "true".colorize(:yellow)
+      when '--no_renum', '--no_re_num'
+        is_renum = false
     end
   end
 
@@ -231,7 +268,14 @@ if __FILE__ == $0
   unless indir.nil?
     infile = File.join(indir, 'out') # file 'out' from the mcmctree output
     mcmctxt_file = File.join(indir, 'mcmc.txt')
+    if is_output
+      outdir = File.join(File.dirname(mcmctxt_file), '')
+      #outfile = File.join(outdir, '')
+      out_fh = File.open(outfile, 'w')
+    end
   end
+
+  type = auto_detect_mj(rtc_files) if type.nil? # identify whether marginal or joint
 
 
   ##############################################
@@ -239,10 +283,15 @@ if __FILE__ == $0
 
   root_two_children_names = tree.children(tree.root).map{|i|tree.tips(i)[0].name}
 
-  if not rtc_file.nil?
-    rtc_info = get_rtc(rtc_file, root_two_children_names)
-  elsif not scm_files.empty?
-    scm_files.each do |scm_file|
+  case type
+    when 'marginal'
+      #rtc_info = get_rtc(rtc_file, root_two_children_names)
+      rtc_files.each do |rtc_file|
+        rtc_info.merge! get_rtc(rtc_file, root_two_children_names)
+      end
+    when 'joint'
+    rtc_files.each do |scm_file|
+      # note scm_info
       scm_info.merge! get_scm(scm_file, root_two_children_names)
     end
   else
@@ -291,19 +340,24 @@ if __FILE__ == $0
     if is_rtc
       if not rtc_info.empty?
         #col_data << row if rtc_info.all?{|rtc_name, rtcs| rtcs.all?{|rtc| rtc.is_co_evolve?(data)} }
-        col_data << row if rtc_info.all?{|rtc_name, rtc| rtc.is_co_evolve?(data) }
+        col_data << row if rtc_info.all?{|rtc_name, rtc| rtc.is_co_evolve?(data:data, is_strict:is_strict) }
       elsif not scm_info.empty?
-        col_data << row if scm_info.all?{|rtc_name, rtc| rtc.is_co_evolve2?(data) }
+        col_data << row if scm_info.all?{|rtc_name, rtc| rtc.is_co_evolve2?(data:data, is_strict:is_strict) }
       end
     else
       col_data << row
     end
   end
 
-  STDERR.puts col_data.size
+  STDERR.puts "# of samples after filtering\t" + col_data.size.to_s.colorize(:red)
 
-  col_data.each do |i|
-    puts i
+  col_data.each_with_index do |row_arr, index| # row_arr: single-element array
+    if is_renum and index > 0
+      posteriors = row_arr[0].split("\t")
+      posteriors[0] = index
+      row_arr = [posteriors.join("\t")]
+    end
+    puts row_arr
   end
 end
 

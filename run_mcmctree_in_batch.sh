@@ -16,7 +16,7 @@ w_arg=''
 
 
 ###############################################################################################
-cmd="[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree.nwk; mcmctree > mcmctree.final; bash ~/project/Rhizobiales/scripts/dating/figtree2tree.sh -i FigTree.tre > figtree.nwk"
+cmd="[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree*.nwk; mcmctree > mcmctree.final; bash ~/project/Rhizobiales/scripts/dating/figtree2tree.sh -i FigTree.tre > figtree.nwk"
 
 
 while [ $# -gt 0 ]; do
