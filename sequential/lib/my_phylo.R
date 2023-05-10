@@ -18,28 +18,46 @@ de_tip_no_for_tree <- function(t){
 
 
 ###################################################
-get_node_to_two_taxon_name <- function(t, is_de_tip_no=F){
+get_node_to_two_taxon_name <- function(t, is_de_tip_no=F, is_sort=F, is_tip=F){
 	library(phangorn)
 	suppressMessages(library(phytools))
 	suppressMessages(library(phylobase))
+
+	Sys.setlocale(, "C") # case-sensitive sorting
 
 	node_to_two_taxon_name <- vector()
 	t.pb <- phylo4(t) # phylobase
 	n_tips <- length(t$tip.label)
 	n_all_nodes <- t$Nnode + length(t$tip.label)
+
+	if(is_tip){
+		node_to_two_taxon_name <- sapply(1:n_tips, function(x){t$tip.label[x]})
+		node_to_two_taxon_name <- if(is_de_tip_no) sapply(node_to_two_taxon_name, de_tip_no) else node_to_two_taxon_name
+	}
+
 	for(i in (n_tips+1):n_all_nodes){
+	#for(i in 1:n_all_nodes){
 		children <- children(t.pb, i)
-		tips <- NULL
+		tips.selected <- vector()
 		for(child in children){
-			tip_node <- unlist(Descendants(t, child, type = c("tips")))[1]
-			tip <- t$tip.label[tip_node] # could be 6_Homo_sapiens
-			if(is_de_tip_no){tip <- de_tip_no(tip)}
-			tips <- append(tips, tip)
-			#tips <- append(tips, t$tip.label[tip_node])
+			tip_nodes <- unlist(Descendants(t, child, type = c("tips")))
+			tips <- t$tip.label[ tip_nodes ]
+			tips <- if(is_de_tip_no) sapply(tips, de_tip_no) else tips
+			tip <- if(is_sort) sort(tips)[1] else tips[1]
+			tips.selected <- append(tips.selected, tip)
 		}
 		# note that here internal node index starts from 1, which differs from the default in ape
-		node_to_two_taxon_name[i-n_tips] <- paste(tips, collapse="|")
+		if(is_sort){tips.selected <- sort(tips.selected)}
+		if(sum(nchar(tips.selected)) >= 90-1){
+			tips.selected <- sapply(tips.selected, function(x){substr(x,1,30)} )
+		}
+		#new_i <- if(is_tip) i else i-n_tips
+		#node_to_two_taxon_name[new_i] <- paste(tips.selected, collapse="|")
+		node_to_two_taxon_name <- append(node_to_two_taxon_name, paste(tips.selected, collapse="|"))
 	}
+
+	names(node_to_two_taxon_name) <- NULL
+
 	return(node_to_two_taxon_name)
 }
 

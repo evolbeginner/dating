@@ -196,7 +196,7 @@ def auto_detect_mj(rtc_files) # identify whether marginal or joint
   first_file = rtc_files[0]
   in_fh = File.open(first_file, 'r')
   first_line = in_fh.readline.chomp
-  if first_line =~ /:[10]\.\d+/
+  if first_line =~ /:[10] (\b | \.\d+)/x
     type = 'marginal'
   else
     type = 'joint'

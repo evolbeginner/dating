@@ -138,6 +138,8 @@ if(any(names(m) %in% c('lnL'))){
 	m <- m[,-which(names(m) %in% c('lnL'))]
 }
 
+m[which(m == 0, arr.ind=T)] <- 1e-10
+
 
 #############################################
 #res <- sapply(m, fit_posterior_by_aic)

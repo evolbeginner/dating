@@ -1,0 +1,28 @@
+#! /bin/env Rscript
+
+
+############################################################
+library(getopt)
+
+library(MCMCtreeR, quietly = TRUE, warn.conflicts = FALSE)
+data(MCMCtree.output)
+attach(MCMCtree.output)
+
+
+############################################################
+phy <- readMCMCtree(MCMCtree.phy, from.file = FALSE)
+
+
+pdf("haha.pdf", height=20)
+par(mfrow = c(6,2), mai=rep(0.01,4))
+
+
+for(i in 1:12){
+	max=(1+rbeta(1,1,5))*2
+	print(max)
+	par(pin=c(max, 3.1))
+	MCMC.tree.plot(phy, analysis.type = "MCMCtree", cex.tips = 0.2, plot.type = "phylogram", lwd.bar = 2, scale.res = c("Eon", "Period"), show.tip.label = F)
+}
+
+dev.off()
+
