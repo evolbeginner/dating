@@ -62,6 +62,7 @@ end
 ###############################################################
 infile = nil
 ref_tree_file = nil
+is_output_branch = false
 
 name2bl = Hash.new
 name2order, order2names = [Hash.new, Hash.new]
@@ -71,6 +72,7 @@ name2order, order2names = [Hash.new, Hash.new]
 opts = GetoptLong.new(
   ['-i', GetoptLong::REQUIRED_ARGUMENT],
   ['--ref', GetoptLong::REQUIRED_ARGUMENT],
+  ['--output_branch', GetoptLong::NO_ARGUMENT],
 )
 
 
@@ -80,6 +82,8 @@ opts.each do |opt, value|
       infile = value
     when '--ref'
       ref_tree_file = value
+    when '--output_branch'
+      is_output_branch = true
   end
 end
 
@@ -91,7 +95,6 @@ bls = Array.new
 ref_tree = get_child(ref_tree, ref_tree.root, bls, name2bl, name2order, order2names, true)
 NAME2ORDER = name2order
 ORDER2NAMES = order2names
-
 
 name2bl = Hash.new
 
@@ -108,13 +111,17 @@ trees.each do |tree|
   ORDER2NAMES.each_pair do |order, names|
     names = order2names[order]
     bls2 << names.map{|name| name2bl[name] }.compact[0]
-    if names.map{|name| name2bl[name] }.any?{|i|i.nil?}
-      p names
-      p names.map{|name| name2bl[name] }
+    if is_output_branch
+      puts [[names.map{|a|a.join('-')}].join(','), bls2[-1]].join("\t")
+    else
+      if names.map{|name| name2bl[name] }.any?{|i|i.nil?}
+        p names
+        p names.map{|name| name2bl[name] }
+      end
     end
     #p [bls[-1], names]
   end
-  puts bls2.join(' ')
+  puts bls2.join(' ') if not is_output_branch
 end
 
 

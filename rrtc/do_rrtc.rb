@@ -14,7 +14,6 @@
 ##############################################
 require 'getoptlong'
 require 'csv'
-require 'smarter_csv'
 require 'parallel'
 require 'bio-nwk'
 require 'colorize'
@@ -270,7 +269,6 @@ if __FILE__ == $0
     mcmctxt_file = File.join(indir, 'mcmc.txt')
     if is_output
       outdir = File.join(File.dirname(mcmctxt_file), '')
-      #outfile = File.join(outdir, '')
       out_fh = File.open(outfile, 'w')
     end
   end

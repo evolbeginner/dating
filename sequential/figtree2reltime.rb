@@ -9,12 +9,14 @@ require 'bio-nwk'
 ##############################################
 infile = nil
 type = 'uniform'
+is_fastdate = false
 
 
 ##############################################
 opts = GetoptLong.new(
   ['-i', GetoptLong::REQUIRED_ARGUMENT],
   ['-t', '--type', GetoptLong::REQUIRED_ARGUMENT],
+  ['--fastdate', '--FastDate', GetoptLong::NO_ARGUMENT]
 )
 
 
@@ -24,6 +26,8 @@ opts.each do |opt, value|
       infile = value
     when '-t', '--type'
       type = value
+    when /--fastdate/i
+      is_fastdate = true
   end
 end
 
@@ -33,13 +37,19 @@ t = getTreeObjs(infile)[0]
 t.internal_nodes.each do |node|
   #next if node.isTip?(t)
   taxa = t.twoTaxaNodeName(node).map{|i|i.gsub(' ', '_')}
+  next if node.name == ''
   times = node.name.split('-')
   calib_name = 'calibrationName=' + [taxa,'split'].flatten.join('-')
 
   case type
-    when 'uniform'
-      puts ["!MRCA='" + taxa.join('-') + "'", 'TaxonA='+taxa[0], 'TaxonB='+taxa[1], 'Distribution=uniform mintime='+times[0], 'maxtime='+times[1], calib_name].join(' ')
-    when 'normal'
+    when 'uniform', 'unif'
+      if not is_fastdate
+        puts ["!MRCA='" + taxa.join('-') + "'", 'TaxonA='+taxa[0], 'TaxonB='+taxa[1], 'Distribution=uniform mintime='+times[0], 'maxtime='+times[1], calib_name].join(' ')
+      else
+        puts [taxa.join(','), 'uni' + '(' + times.join(',') + ')'].join(' ')
+      end
+
+    when 'normal', 'norm'
       mean = times.map(&:to_f).sum/2
       std = (times.map(&:to_f)[0] - mean).abs/1.96
       puts ["!MRCA='" + taxa.join('-') + "'", 'TaxonA='+taxa[0], 'TaxonB='+taxa[1], 'Distribution=normal mean='+mean.to_s, 'stddev='+std.to_s, calib_name].join(' ')
