@@ -37,6 +37,8 @@ plot_fit <- function(x, show_param=F){
 		curve(dsn(x, params[1], params[2], params[3]), col=color$fit, add=T)
 	}else if( grepl(pattern="^ST", x=param) ){
 		curve(dst(x, params[1], params[2], params[3], params[4]), col=color$fit, add=T)
+	}else if( grepl(pattern='^B', x=param) ){
+		curve(dunif(x, params[1], params[2]), col=color$fit, add=T)
 	}
 
 	if(show_param){
@@ -155,8 +157,9 @@ for(i in 1:n_nodes){
 
 	if(! is.null(fit_df)){
 		row <- fit_df[,1] == node1
-		#print(as.list(fit_df[row, ]))
-		plot_fit(as.list(fit_df[row, ]), show_param)
+		if(row == T){
+			plot_fit(as.list(fit_df[row, ]), show_param)
+		}
 	}
 }
 

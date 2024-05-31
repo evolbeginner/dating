@@ -9,8 +9,8 @@ require 'tmpdir'
 require 'find'
 require 'colorize'
 
-require_relative 'Dir'
-require_relative 'processbar'
+require_relative 'lib/Dir'
+require_relative 'lib/processbar'
 require_relative 'lib/do_mcmctree.rb'
 
 
@@ -151,6 +151,7 @@ opts = GetoptLong.new(
   ['--force', GetoptLong::NO_ARGUMENT],
   ['--cpu', GetoptLong::REQUIRED_ARGUMENT],
   ['--run_mcmctree', GetoptLong::NO_ARGUMENT],
+  ['--no_mcmctree', GetoptLong::NO_ARGUMENT],
   ['--add_cmd', '--add_argu', GetoptLong::REQUIRED_ARGUMENT],
 )
 
@@ -184,6 +185,8 @@ opts.each do |opt, value|
       cpu = value.to_i
     when '--run_mcmctree'
       is_run_mcmctree = true
+    when '--no_mcmctree'
+      is_run_mcmctree = false
     when '-h'
       help()
     when '--add_cmd', '--add_argu'
@@ -205,15 +208,29 @@ STDERR.puts "CPU:\t#{cpu}".colorize(:red)
 
 
 ############################################################
-ali2lines.each_pair do |count, lines|
+#ali2lines.each_pair do |count, lines|
+ali2lines.to_a.reverse.each do |count, lines|
   outdir_split1 = File.join(outdir_split, count.to_s)
   mkdir_with_force(outdir_split1)
   ali_file1 = File.join(outdir_split1, 'combined.phy')
   out_fh = File.open(ali_file1, 'w')
-  lines.each do |line|
+
+  out_fh_all_gap_seq = File.open(File.join(outdir_split1, 'all_gap_seq.list'), 'w')
+  #num_sites = nil
+  lines.each_with_index do |line, index|
+    #num_sites = line.split(/\s+/)[1] if index == 0
+    line =~ /^(\S+)(\s+)(\S+)$/
+    seq_name = $1; space = $2; seq = $3
+    if seq =~ /^[-]+$/
+      out_fh_all_gap_seq.puts [seq_name].join("\t")
+      k = 1
+      seq.sub!(/-{#{k}}/, 'A'*k)
+      line = seq_name + space + seq
+    end
     out_fh.puts line
   end
   out_fh.close
+  out_fh_all_gap_seq.close
 
   iqtree_outdir = File.join(outdir_split1, 'iqtree')
   mcmctree_outdir = File.join(outdir_split1, 'mcmctree')

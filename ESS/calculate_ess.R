@@ -3,6 +3,12 @@
 library(coda)
 library(data.table)
 
+
+############################################
+byRow <- T
+
+
+############################################
 args <- commandArgs(T)
 
 df <- data.frame()
@@ -23,15 +29,29 @@ df <- df[,-1] # delete the last col (lnL)
 df <- df[names(df[grep("t_n", names(df))])]
 df <- df[grep("t_n", names(df))]
 
-tryCatch( { sapply(df, FUN=function(x){ess <- coda::effectiveSize(x); }) }, error=function(e){print(e); cat("probably infile csv error!", fill=T)})
-q()
+#tryCatch( { sapply(df, FUN=function(x){ess <- coda::effectiveSize(x); }) }, error=function(e){print(e); cat("probably infile csv error!", fill=T)})
 
-ess=coda::effectiveSize(df$lnL); print(ess)
+
+if(byRow){
+	column_names <- colnames(df)
+	ess_values <- numeric(length(column_names))
+	for(i in seq_along(column_names)) {
+	    ess_values[i] = coda::effectiveSize(df[[column_names[i]]])
+	}
+	# Print the column names and their effective sizes as two rows
+	cat(paste(column_names, collapse="\t"), "\n", paste(ess_values, collapse="\t"), "\n", sep="")
+	q()
+}
+
 
 #lapply(df, coda::effectiveSize)
-
 for(i in colnames(df)){
 	ess=coda::effectiveSize(df[[i]])
-	print(ess)
+	#print(ess)
+	#names(ess) <- NULL
+	cat(i, "\t", ess,"\n")
 }
+
+#ess=coda::effectiveSize(df$lnL); print(ess)
+
 

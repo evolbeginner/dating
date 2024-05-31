@@ -31,6 +31,9 @@ while [ $# -gt 0 ]; do
 		--hpc|--HPC)
 			type=hpc
 			;;
+		--wait)
+			type=wait
+			;;
 		--pre|--prefix)
 			prefix=$2
 			shift
@@ -66,6 +69,9 @@ for i in `find $indir -name mcmctree.ctl`; do
 			;;
 		hpc)
 			submitHPC.sh --cmd "$cmd" -n 1 -l $prefix$d_b.lsf $w_arg
+			;;
+		wait)
+			sh -c "$cmd"
 			;;
 		*)
 			exit 1

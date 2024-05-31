@@ -10,7 +10,7 @@ scale=1
 # time unit 100 Ma
 birth=0.4
 death=0.2
-rho=0.01
+rho=0.1
 ntips=30
 age=10
 

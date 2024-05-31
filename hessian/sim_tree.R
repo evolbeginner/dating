@@ -2,9 +2,9 @@
 
 
 ###################################################
-library(ape)
-library(TreeSim)
-library(getopt)
+suppressMessages(library(ape))
+suppressMessages(library(TreeSim))
+suppressMessages(library(getopt))
 
 
 ###################################################

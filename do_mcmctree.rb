@@ -63,6 +63,9 @@ sampfreq = '2'
 nsample = '20000'
 sub_model = 'lg'
 is_one_codeml = false
+inBV_dir = nil
+inBV_file = nil
+is_inBV = false
 other_args = Hash.new
 cpu = 1
 is_force = false
@@ -97,6 +100,7 @@ def usage()
   pf ['--nsample', "the no. of samples"]
   pf ['--sub_model', "substitution model (default: LG for protein)"]
   pf ['--one_codeml', "only a single codeml is performed."]
+  pf ['--inBV', '--inbv', "specify the in.BV folder/file (automatically determined)."]
   pf ['--cpu', "cpu no."]
   pf ['--force', "remove the outdir if it exists"]
   pf ['--tolerate', "keep the outdir if it exists"]
@@ -231,6 +235,7 @@ if __FILE__ == $0
     ['--regular', GetoptLong::NO_ARGUMENT],
     ['--fastest', GetoptLong::NO_ARGUMENT],
     ['--one_codeml', GetoptLong::NO_ARGUMENT],
+    ['--inBV', '--inbv', GetoptLong::REQUIRED_ARGUMENT],
     ['--stop_before_mcmctree', GetoptLong::NO_ARGUMENT],
     ['-h', GetoptLong::NO_ARGUMENT],
   )
@@ -298,6 +303,14 @@ if __FILE__ == $0
       when '--one_codeml'
         is_one_codeml = true
         STDOUT.puts "one codeml!".colorize(:blue)
+      when '--inBV', '--inbv'
+        if File.directory?(value)
+          inBV_dir = value
+        else
+          inBV_file = value
+        end      
+        is_inBV = true
+        puts "is inBV".colorize(:green)
       when '--stop_before_mcmctree'
         is_stop_before_mcmctree = true
       when '-h'
@@ -359,6 +372,18 @@ if __FILE__ == $0
     #prepare_paml_ctl(ctl_file, sub_outdir, {'seqfile'=>seqfile_b, 'treefile'=>treefile_b, 'ndata'=>ndata, 'seqtype'=>seqtype, 'usedata'=>3, 'clock'=>clock, 'BDparas'=>bd_paras, 'rgene_gamma'=>rgene_gamma, 'sigma2_gamma'=>sigma2_gamma})
     prepare_paml_ctl(ctl_file, '', {'seqfile'=>seqfile_b, 'treefile'=>'species.trees', 'ndata'=>ndata, 'seqtype'=>seqtype, 'usedata'=>3, 'clock'=>clock, 'BDparas'=>bd_paras, 'rgene_gamma'=>rgene_gamma, 'sigma2_gamma'=>sigma2_gamma, 'burnin'=>burnin, 'sampfreq'=>sampfreq, 'nsample'=>nsample, 'alpha'=>alpha, 'ncatG'=>ncatG, 'print'=>print}, {})
 
+    # for inBV
+    if not inBV_file.nil?
+      `cp #{inBV_file} #{sub_outdir}`
+      next
+    elsif not inBV_dir.nil?
+      `cp -r #{inBV_indir}/* #{sub_outdir}`
+      Dir.chdir(sub_outdir)
+      `rm FigTree.tre figtree.nwk mcmctree.final`
+      Dir.chdir($PWD)
+      next
+    end
+
     Dir.chdir(sub_outdir)
     `echo $$ > mcmctree.first`
     # Disable codeml
@@ -381,11 +406,13 @@ if __FILE__ == $0
     puts "baseml"
   end
 
-  if is_one_codeml
-    run_codeml(outdir1, seqtype, ndata, alpha, ncatG, cpu)
-  else
-    sub_outdirs.each do |sub_outdir|
-      run_codeml(sub_outdir, seqtype, ndata, alpha, ncatG, cpu)
+  if not is_inBV
+    if is_one_codeml
+      run_codeml(outdir1, seqtype, ndata, alpha, ncatG, cpu)
+    else
+      sub_outdirs.each do |sub_outdir|
+        run_codeml(sub_outdir, seqtype, ndata, alpha, ncatG, cpu)
+      end
     end
   end
 
@@ -411,10 +438,11 @@ if __FILE__ == $0
     prepare_paml_ctl('mcmctree.ctl', '', {'seqfile'=>seqfile_b, 'treefile'=>'species.trees', 'ndata'=>ndata, 'seqtype'=>seqtype, 'usedata'=>"2 in.BV 1", 'clock'=>clock, 'BDparas'=>bd_paras, 'rgene_gamma'=>rgene_gamma, 'sigma2_gamma'=>sigma2_gamma, 'burnin'=>burnin, 'sampfreq'=>sampfreq, 'nsample'=>nsample, 'alpha'=>alpha, 'ncatG'=>ncatG, 'print'=>print}, other_args)
     #---------------------------------------------------------------#
     if is_stop_before_mcmctree
-      puts "As required, stop before the final MCMCTree run!"
-      next
+      puts "As required, stop before the final MCMCTree run!"; next
     end
     #---------------------------------------------------------------#
+
+    # no matter if is_inBV or not
     `echo $$ > mcmctree.final; #{MCMCTREE} mcmctree.ctl >> mcmctree.final`
     $? == 0 and `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
     Dir.chdir($PWD)
