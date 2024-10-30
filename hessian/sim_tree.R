@@ -2,9 +2,13 @@
 
 
 ###################################################
-suppressMessages(library(ape))
-suppressMessages(library(TreeSim))
-suppressMessages(library(getopt))
+suppressPackageStartupMessages(
+    suppressWarnings({
+        library(ape)
+        library(TreeSim)
+        library(getopt)
+    })
+)
 
 
 ###################################################
@@ -83,6 +87,7 @@ if (is.null(args[["timetree"]])){
 }
 
 tree$edge.length <- tree$edge.length * scale
+#tree$edge.length[ tree$edge.length == 0 ] <- 1e-5
 
 
 ###################################################

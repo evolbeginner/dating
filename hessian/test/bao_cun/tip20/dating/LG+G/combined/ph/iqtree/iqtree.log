@@ -1,0 +1,72 @@
+IQ-TREE multicore version 2.3.4 COVID-edition for Linux x86 64-bit built Apr 26 2024
+Developed by Bui Quang Minh, James Barbetti, Nguyen Lam Tung, Olga Chernomor,
+Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
+
+Host:    mic-r750 (AVX512, FMA3, 1007 GB RAM)
+Command: iqtree -te haha/sim/tree/time.tre -m LG+G -s haha/sim/alignment/combined.fas -pre haha/dating/LG+G/ph/iqtree/iqtree -redo -wsl -quiet -mdef /mnt/hd1/home/sishuo/project/asr/substitution_model/mfm/C2.nex
+Seed:    951093 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Tue Oct 29 18:50:49 2024
+Kernel:  AVX+FMA - 1 threads (128 CPU cores detected)
+
+HINT: Use -nt option to specify number of threads because your CPU has 128 cores!
+HINT: -nt AUTO will automatically determine the best number of threads to use.
+
+Reading alignment file haha/sim/alignment/combined.fas ... Fasta format detected
+Reading fasta file: done in 4.91142e-05 secs
+Alignment most likely contains protein sequences
+Alignment has 20 sequences with 100 columns, 87 distinct patterns
+41 parsimony-informative, 36 singleton sites, 23 constant sites
+     Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 6.91414e-06 secs
+   1  t12    0.00%    passed     93.86%
+   2  t1     0.00%    passed     99.99%
+   3  t9     0.00%    passed    100.00%
+   4  t17    0.00%    passed     95.29%
+   5  t14    0.00%    passed     99.99%
+   6  t10    0.00%    passed     99.94%
+   7  t20    0.00%    passed     99.94%
+   8  t5     0.00%    passed     99.94%
+   9  t8     0.00%    passed     99.99%
+  10  t15    0.00%    passed    100.00%
+  11  t6     0.00%    passed     96.32%
+  12  t18    0.00%    passed     99.30%
+  13  t11    0.00%    passed     99.07%
+  14  t2     0.00%    passed     98.90%
+  15  t16    0.00%    passed     99.41%
+  16  t13    0.00%    passed     99.99%
+  17  t3     0.00%    passed    100.00%
+  18  t7     0.00%    passed    100.00%
+  19  t4     0.00%    passed    100.00%
+  20  t19    0.00%    passed     99.99%
+****  TOTAL    0.00%  0 sequences failed composition chi2 test (p-value<5%; df=19)
+Reading model definition file /mnt/hd1/home/sishuo/project/asr/substitution_model/mfm/C2.nex ... 87 models and 216 frequency vectors loaded
+Reading input tree file haha/sim/tree/time.tre ... rooted tree
+
+NOTE: 1 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -2673.051
+2. Current log-likelihood: -1639.704
+3. Current log-likelihood: -1610.526
+4. Current log-likelihood: -1608.317
+5. Current log-likelihood: -1608.303
+Optimal log-likelihood: -1608.303
+Gamma shape alpha: 0.998
+Parameters optimization took 5 rounds (0.071 sec)
+Wrote distance file to... 
+BEST SCORE FOUND : -1608.303
+Site log-likelihoods printed to haha/dating/LG+G/ph/iqtree/iqtree.sitelh
+Total tree length: 3.080
+
+Total number of iterations: 0
+CPU time used for tree search: 0.000 sec (0h:0m:0s)
+Wall-clock time used for tree search: 0.000 sec (0h:0m:0s)
+Total CPU time used: 0.078 sec (0h:0m:0s)
+Total wall-clock time used: 0.079 sec (0h:0m:0s)
+
+Analysis results written to: 
+  IQ-TREE report:                haha/dating/LG+G/ph/iqtree/iqtree.iqtree
+  Maximum-likelihood tree:       haha/dating/LG+G/ph/iqtree/iqtree.treefile
+  Site log-likelihoods:          haha/dating/LG+G/ph/iqtree/iqtree.sitelh
+  Screen log file:               haha/dating/LG+G/ph/iqtree/iqtree.log
+
+Date and Time: Tue Oct 29 18:50:50 2024

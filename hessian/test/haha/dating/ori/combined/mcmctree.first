@@ -1,0 +1,100 @@
+3951400
+/mnt/hd1/home/sishuo/software/phylo/paml/latest/src//codeml
+
+AAML in paml version 4.10.6, November 2022
+ns = 5  	ls = 49
+Reading sequences, sequential format..
+Reading seq # 1: t1       Reading seq # 2: t5       Reading seq # 3: t4       Reading seq # 4: t3       Reading seq # 5: t2       
+Sequences read..
+
+49 site patterns read, 100 sites
+Counting frequencies..
+Counting site patterns again, for JC69..  0:00
+Compressing,     14 patterns at     49 /     49 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     14 patterns at     49 /     49 sites (100.0%),  0:00
+
+       80 bytes for distance
+     4480 bytes for conP
+      448 bytes for fhK
+  5000000 bytes for space
+
+TREE #  1
+(1, 2, ((3, 4), 5));   MP score: 38
+ns = 5  nnode = 8
+   dad  node   nson:   sons
+     5     0      0: 
+     5     1      0: 
+     7     2      0: 
+     7     3      0: 
+     6     4      0: 
+    -1     5      3:   0  1  6
+     5     6      2:   7  4
+     6     7      2:   2  3
+(1, 2, ((3, 4), 5));
+(t1, t5, ((t4, t3), t2));
+(t1: 0.000000, t5: 0.000000, ((t4: 0.000000, t3: 0.000000): 0.000000, t2: 0.000000): 0.000000);
+
+     6720 bytes for conP, adjusted
+
+    0.020000    0.040000    0.087500    0.042500    0.025000    0.025000    0.102500    0.500000
+
+ntime & nrate & np:     7     0     8
+
+Bounds (np=8):
+   0.000004   0.000004   0.000004   0.000004   0.000004   0.000004   0.000004   0.020000
+  50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  49.000000
+
+np =     8
+lnL0 =  -544.211683
+
+Iterating by ming2
+Initial: fx=   544.211683
+x=  0.02000  0.04000  0.08750  0.04250  0.02500  0.02500  0.10250  0.50000
+
+  1 h-m-p  0.0000 0.0013  55.9953 +++CYC   543.276685  2 0.0006    19 | 0/8
+  2 h-m-p  0.0039 1.9520  33.5979 -YCCC   543.107484  3 0.0004    36 | 0/8
+  3 h-m-p  0.0008 0.0042  17.4236 CYC     543.021813  2 0.0008    50 | 0/8
+  4 h-m-p  0.0013 0.0066   7.7432 YC      543.007051  1 0.0006    62 | 0/8
+  5 h-m-p  0.0014 0.0245   3.3471 CY      543.005352  1 0.0004    75 | 0/8
+  6 h-m-p  0.0008 0.1888   1.6522 +YC     542.999473  1 0.0056    88 | 0/8
+  7 h-m-p  0.0014 0.0676   6.7601 +YC     542.983884  1 0.0039   101 | 0/8
+  8 h-m-p  0.0016 0.0745  16.5363 +YCC    542.940518  2 0.0048   116 | 0/8
+  9 h-m-p  1.6000 8.0000   0.0100 CC      542.932300  1 1.2887   129 | 0/8
+ 10 h-m-p  1.6000 8.0000   0.0010 YC      542.932190  1 1.0639   149 | 0/8
+ 11 h-m-p  1.6000 8.0000   0.0002 C       542.932190  0 1.4145   168 | 0/8
+ 12 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1911   187 | 0/8
+ 13 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1509   206 | 0/8
+ 14 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1992   225 | 0/8
+ 15 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 0.2500   244
+Out..
+lnL  =  -542.932190
+245 lfun, 0 eigenQcodon, 0 P(t)
+Calculating SE's
+
+Time used:  0:00
+MCMCTREE in paml version 4.10.6, November 2022
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+
+Reading main tree.
+((t1, t5), ((t4, t3), t2));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 5  	ls = 100
+Reading sequences, sequential format..
+Reading seq # 1: t1       Reading seq # 2: t5       Reading seq # 3: t4       Reading seq # 4: t3       Reading seq # 5: t2       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,     49 patterns at    100 /    100 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     49 patterns at    100 /    100 sites (100.0%),  0:00
+Counting frequencies..
+ 49 patterns, clean
+
+
+
+*** Locus 1 ***
+running codeml tmp0001.ctl

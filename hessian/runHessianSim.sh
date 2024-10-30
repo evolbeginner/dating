@@ -2,6 +2,10 @@
 
 
 #####################################################
+CREATE_HESSIAN_BS=~/practice/figshare_btl/bs_inBV/create_hessian_by_bootstrapping.rb
+
+
+#####################################################
 simulated_tree_dir=''
 sl=1000
 cpu=4
@@ -18,8 +22,9 @@ mu=-3.7 # mu for lnorm
 sd=0.2 # sd for lnorm
 
 sim_model=LG+G+C20
+bs=1000
 
-bsn=100000,5,100000
+bsn=10000,100,600
 
 is_stop_compare=false
 
@@ -79,6 +84,10 @@ while [ $# -gt 0 ]; do
 			bsn=$2
 			shift
 			;;
+		-b|--bs)
+			bs=$2
+			shift
+			;;
 		--stop_compare)
 			is_stop_compare=true
 			;;
@@ -105,36 +114,50 @@ fi
 # generate aln
 bash ~/project/Rhizobiales/scripts/dating/hessian/do_iqtree_sim_mcmctree.sh --force --outdir sim/alignment/ --indir sim/tree/ -m $sim_model --length $sl
 
-
 #####################################################
 # ori ncatG=4
-ruby ~/project/Rhizobiales/scripts/dating/do_mcmctree.rb --outdir dating/ori --tree_indir sim/alignment/ -i sim/alignment/combined.phy --force --prot --clock IR --bsn $bsn; mv dating/ori/combined dating/ori/mcmctree; sed '4!d' dating/ori/mcmctree/in.BV > ref.tre
+# print=2 added
+ruby ~/project/Rhizobiales/scripts/dating/do_mcmctree.rb --outdir dating/ori --tree_indir sim/alignment/ -i sim/alignment/combined.phy --force --prot --clock IR --bsn $bsn --print 2; mv dating/ori/combined dating/ori/mcmctree; sed '4!d' dating/ori/mcmctree/in.BV > ref.tre
 
-# ori ncatG=0
-ruby ~/project/Rhizobiales/scripts/dating/do_mcmctree.rb --outdir dating/ori_woG --tree_indir sim/alignment/ -i sim/alignment/combined.phy --force --prot --clock IR --bsn $bsn --ncatG 0; mv dating/ori_woG/combined dating/ori_woG/mcmctree
+if false; then
+	#ori ncatG=0
+	ruby ~/project/Rhizobiales/scripts/dating/do_mcmctree.rb --outdir dating/ori_woG --tree_indir sim/alignment/ -i sim/alignment/combined.phy --force --prot --clock IR --bsn $bsn --ncatG 0 --print 2; mv dating/ori_woG/combined dating/ori_woG/mcmctree
 
-# LG
-model=LG
-echo $model
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+	# LG
+	model=LG; echo $model
+	ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+fi
 
 # LG+G
 model=LG+G
 echo $model
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
 
 [ $is_stop_compare == true ] && exit
 
 # LG+C20+G
 model=LG+C20+G
-echo $model
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+echo "$model w/o pmsf"
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
 
+# LG+C20+G
+model=LG+C20+G
+echo "$model w/ pmsf"
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model-pmsf --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree --pmsf
+
+# EX2+G
+model=EX2+G
+echo $model
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+
+
+exit
+exit
 
 # LG+C40+G
 model=LG+C40+G
 echo $model
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
 
 
 ############################################
@@ -144,12 +167,12 @@ exit
 ############################################
 # LG*H4
 model=LG*H4
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/H4 --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/H4 --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
 
 # LG4M
 model=LG4M
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
 
 # LG+EHO+G
 model=LG+EHO+G
-ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b 1000 --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree
+ruby ~/project/Rhizobiales/scripts/dating/hessian/create_hessian_by_bootstrapping.rb --ali sim/alignment/combined.phy --ref ref.tre --outdir dating/$model --force -b $bs --cpu $cpu -m $model --mcmctree_ctl dating/ori/mcmctree/mcmctree.ctl --calibrated_tree sim/alignment/species.trees --run_mcmctree

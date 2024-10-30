@@ -2,6 +2,17 @@
 
 
 ################################################################
+DIR=`dirname $0`
+
+
+################################################################
+if which MFAtoPHY.pl >/dev/null; then
+	MFATOPHY='MFAtoPHY.pl'
+else
+	MFATOPHY=$DIR/additional_scripts/MFAtoPHY.pl
+fi
+
+
 indir=''
 model=''
 length=1000
@@ -60,10 +71,11 @@ species_tree=$outdir/species.trees
 
 
 ################################################################
-#echo "iqtree -pre $outdir/iqtree -af fasta -quiet --alisim alignment -m $model -t $sub_intree --length $length"; exit
-iqtree -pre $outdir/iqtree -af fasta -quiet --alisim alignment -m $model -t $sub_intree --length $length
-MFAtoPHY.pl $indir/alignment.fa; rm $indir/alignment.fa
-mv $indir/alignment.fa.phy $outdir/combined.phy #combined.phy to mcmctree.phy
+# do alisim
+iqtree -pre $outdir/iqtree -af fasta -quiet --alisim $indir/alignment -m $model -t $sub_intree --length $length
+mv $indir/alignment.fa $outdir/combined.fas
+$MFATOPHY $outdir/combined.fas; mv $outdir/combined.fas.phy $outdir/combined.phy
+#mv $indir/alignment.fa.phy $outdir/combined.phy #combined.phy to mcmctree.phy
 
 num=`nw_distance -n $time_intree | wc -l | awk '{print $1}'`
 echo -e "$num\t1" > $species_tree

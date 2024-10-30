@@ -1,0 +1,100 @@
+3951371
+MCMCTREE in paml version 4.10.6, November 2022
+
+Reading options from mcmctree.ctl..
+finetune is deprecated now.
+
+Reading main tree.
+((t1, t5), ((t4, t3), t2));
+
+Reading sequence data..  1 loci
+
+
+*** Locus 1 ***
+ns = 5  	ls = 1
+Reading sequences, sequential format..
+Reading seq # 1: t1       Reading seq # 2: t5       Reading seq # 3: t4       Reading seq # 4: t3       Reading seq # 5: t2       
+Sequences read..
+Counting site patterns..  0:00
+Compressing,      1 patterns at      1 /      1 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],      1 patterns at      1 /      1 sites (100.0%),  0:00
+Counting frequencies..
+  1 patterns, clean
+
+
+Fossil calibration information used.
+Node   6:   B (  8.0000, 12.0000,  0.0250,  0.0250 )
+72 bytes for rates.
+
+Reading branch lengths, Gradient & Hessian from in.BV.
+Locus 1: 5 species
+1 burnin, sampled every 2, 3 samples
+Approximating posterior
+(Settings: cleandata=1  print=2  saveconP=0)
+
+getting initial values to start MCMC.
+
+************
+Species tree
+ns = 5  nnode = 9
+ father   node  name              time     sons          fossil
+      7      1  t1                0.00000
+      7      2  t5                0.00000
+      9      3  t4                0.00000
+      9      4  t3                0.00000
+      8      5  t2                0.00000
+      0      6                    9.90576  ( 7  8)  B ( 8.0000, 12.0000, 0.0250, 0.0250 ) 
+      6      7                    4.56295  ( 1  2)
+      6      8                    3.58151  ( 9  5)
+      8      9                    1.76166  ( 3  4)
+
+((1, 2), ((3, 4), 5));
+((t1, t5), ((t4, t3), t2));
+((t1: 4.562954, t5: 4.562954): 5.342802, ((t4: 1.761659, t3: 1.761659): 1.819849, t2: 3.581507): 6.324250);
+
+priors: 
+	mu_i ~ gammaDir(1.000, 50.000, 1.000), SD(mu_i) =  0.02000, corr(mu_i,mu_j) = 0.00000
+	sigma2 ~ gammaDir(1.0000, 10.0000, 1.0000)
+
+Initial parameters (np = 14):
+  9.905757  4.562954  3.581507  1.761659  0.061925  0.275698  0.008654  0.006754  0.040938  0.016894  0.026346  0.008555  0.026602  0.005103
+
+lnL0 =      0.00
+
+Starting MCMC (np = 14) . . .
+paras: 4 times, 1 mu, 1 sigma2 (& rates, kappa, alpha)
+  0% 1.00 1.00 1.00 1.00 1.00  10.226 4.838 3.679 1.934 0.054 0.298 - 0.025 0.005  0.0 33% 1.00 1.00 1.00 1.00 0.00  8.995 4.568 3.449 1.892 0.057 0.312 - 0.026 0.006  0.0 67% 0.75 1.00 1.00 1.00 0.25  8.654 4.565 3.268 1.773 0.055 0.341 - 0.027 0.006  0.0100% 0.83 1.00 1.00 1.00 0.33  8.713 4.678 3.290 1.829 0.054 0.373 - 0.027 0.006  0.0
+Time used:  0:00
+Summarizing MCMC samples . ..
+
+Data file has a header line.
+4 records, 16 variables
+Collecting mean, median, min, max, percentiles, etc.
+			    16/    16 done   0:00
+
+
+Posterior means (95% Equal-tail CI) (95% HPD CI) HPD-CI-width
+
+t_n6           8.9120 ( 8.4285,  9.5621) ( 8.4285,  9.5621)  1.1337  (Jnode  8)
+t_n7           4.6794 ( 4.4462,  4.9064) ( 4.4462,  4.9064)  0.4603  (Jnode  7)
+t_n8           3.3129 ( 3.0863,  3.6696) ( 3.0863,  3.6696)  0.5834  (Jnode  6)
+t_n9           1.8586 ( 1.6492,  2.0022) ( 1.6492,  2.0022)  0.3530  (Jnode  5)
+mu             0.0543 ( 0.0504,  0.0590) ( 0.0504,  0.0590)  0.0086
+sigma2         0.3677 ( 0.2977,  0.4563) ( 0.2977,  0.4563)  0.1586
+r_n1           0.0083 ( 0.0077,  0.0088) ( 0.0077,  0.0088)  0.0011
+r_n2           0.0069 ( 0.0063,  0.0078) ( 0.0063,  0.0078)  0.0015
+r_n3           0.0347 ( 0.0269,  0.0393) ( 0.0269,  0.0393)  0.0124
+r_n4           0.0171 ( 0.0152,  0.0179) ( 0.0152,  0.0179)  0.0027
+r_n5           0.0259 ( 0.0255,  0.0265) ( 0.0255,  0.0265)  0.0009
+r_n7           0.0085 ( 0.0082,  0.0088) ( 0.0082,  0.0088)  0.0007
+r_n8           0.0265 ( 0.0251,  0.0275) ( 0.0251,  0.0275)  0.0024
+r_n9           0.0058 ( 0.0054,  0.0061) ( 0.0054,  0.0061)  0.0007
+lnL            0.0000 ( 0.0000,  0.0000) ( 0.0000,  0.0000)  0.0000
+
+mean	8.9120	4.6794	3.3129	1.8586	0.0543	0.3677	0.0083	0.0069	0.0347	0.0171	0.0259	0.0085	0.0265	0.0058	0.0000
+Eff 	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	1.0000	0.2500
+time prior: Birth-Death-Sampling
+rate prior: Log-Normal
+square root transform is used in approx like calculation.
+
+Time used:  0:00
