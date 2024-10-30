@@ -1,16 +1,16 @@
 
-         5         49  P
+         5         54  P
 
-t1                              AAACCDDEEE EFGHIIIKKL LLLLMMMNNP PQQRRRRSSS TTTTVVVWY
-t5                              AAACCDDEEE EFGHIIIKRI LLLLMMMKNP SQQRRRSSSS TTTTLVVWY
-t4                              AAMCCDTDEE SFGHIILKFR ILLRKMMNNP PKQNRRLAQS ATTTNVVWY
-t3                              AAMCCDTDEE SFGHIILKYR ILLRKLMNNP PKQQRRLASS ASTTNVVWY
-t2                              ASACIDTDEQ TFGHIVLKYI LLMRKMMNNP PKQRKRRASS ASRTRTVWY
+t1                              AAAAACDDEE EEEFFFFGGG GGHHIIIKKL LLLMMNNNPQ QQRRRRSSTT TVVY
+t2                              AMSSSKDQEE KKTFFLYAGG STHHIIVEKF LLWMMGNNPF QSRRRRPSKT TIVY
+t3                              AMASSADEEQ EKEFFFFGGG SGHHIIVKKF LLVMVGNQPL QKARRRSSTT TVVY
+t4                              AMASSSDEEE EKEFFFFGGN SGHHIIVKKF LVVMLGNNPV QKRKKRSSST TVVY
+t5                              AMAASKDEEE EKEFVFLGGN SGDHITTNKF LLVMMGNRPA QKKKRRASTT VVVY
 
 
 
-   10    1    1    1    1    2    1    1    7    1    1    2    9    2    1
-    1    1    1    1    1    1    6    1    1    1    1    2    1    3    7
-    1    1    4    1    1    2    1    1    1    2    1    1    1    4    1
-    1    4    1    1
+    6    1    1    1    1    1    5    1    5    1    1    1    1    4    1
+    1    1    3    4    1    1    1    1    1    1    1    1    1    2    1
+    8    1    1    2    1    1    3    1    4    1    1    1    1    1    1
+    4    1    4    1    1    1    2    2    4
 

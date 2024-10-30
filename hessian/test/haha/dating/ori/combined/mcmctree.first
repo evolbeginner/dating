@@ -1,42 +1,42 @@
-3951400
+3951688
 /mnt/hd1/home/sishuo/software/phylo/paml/latest/src//codeml
 
 AAML in paml version 4.10.6, November 2022
-ns = 5  	ls = 49
+ns = 5  	ls = 54
 Reading sequences, sequential format..
-Reading seq # 1: t1       Reading seq # 2: t5       Reading seq # 3: t4       Reading seq # 4: t3       Reading seq # 5: t2       
+Reading seq # 1: t1       Reading seq # 2: t2       Reading seq # 3: t3       Reading seq # 4: t4       Reading seq # 5: t5       
 Sequences read..
 
-49 site patterns read, 100 sites
+54 site patterns read, 100 sites
 Counting frequencies..
 Counting site patterns again, for JC69..  0:00
-Compressing,     14 patterns at     49 /     49 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],     14 patterns at     49 /     49 sites (100.0%),  0:00
+Compressing,     16 patterns at     54 /     54 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     16 patterns at     54 /     54 sites (100.0%),  0:00
 
        80 bytes for distance
-     4480 bytes for conP
-      448 bytes for fhK
+     5120 bytes for conP
+      512 bytes for fhK
   5000000 bytes for space
 
 TREE #  1
-(1, 2, ((3, 4), 5));   MP score: 38
+(2, (3, (4, 5)), 1);   MP score: 56
 ns = 5  nnode = 8
    dad  node   nson:   sons
      5     0      0: 
      5     1      0: 
-     7     2      0: 
+     6     2      0: 
      7     3      0: 
-     6     4      0: 
-    -1     5      3:   0  1  6
-     5     6      2:   7  4
-     6     7      2:   2  3
-(1, 2, ((3, 4), 5));
-(t1, t5, ((t4, t3), t2));
-(t1: 0.000000, t5: 0.000000, ((t4: 0.000000, t3: 0.000000): 0.000000, t2: 0.000000): 0.000000);
+     7     4      0: 
+    -1     5      3:   1  6  0
+     5     6      2:   2  7
+     6     7      2:   3  4
+(2, (3, (4, 5)), 1);
+(t2, (t3, (t4, t5)), t1);
+(t2: 0.000000, (t3: 0.000000, (t4: 0.000000, t5: 0.000000): 0.000000): 0.000000, t1: 0.000000);
 
-     6720 bytes for conP, adjusted
+     7680 bytes for conP, adjusted
 
-    0.020000    0.040000    0.087500    0.042500    0.025000    0.025000    0.102500    0.500000
+    0.161667    0.012500    0.052500    0.002500    0.061667    0.108333    0.108333    0.500000
 
 ntime & nrate & np:     7     0     8
 
@@ -45,31 +45,38 @@ Bounds (np=8):
   50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  49.000000
 
 np =     8
-lnL0 =  -544.211683
+lnL0 =  -638.790420
 
 Iterating by ming2
-Initial: fx=   544.211683
-x=  0.02000  0.04000  0.08750  0.04250  0.02500  0.02500  0.10250  0.50000
+Initial: fx=   638.790420
+x=  0.16167  0.01250  0.05250  0.00250  0.06167  0.10833  0.10833  0.50000
 
-  1 h-m-p  0.0000 0.0013  55.9953 +++CYC   543.276685  2 0.0006    19 | 0/8
-  2 h-m-p  0.0039 1.9520  33.5979 -YCCC   543.107484  3 0.0004    36 | 0/8
-  3 h-m-p  0.0008 0.0042  17.4236 CYC     543.021813  2 0.0008    50 | 0/8
-  4 h-m-p  0.0013 0.0066   7.7432 YC      543.007051  1 0.0006    62 | 0/8
-  5 h-m-p  0.0014 0.0245   3.3471 CY      543.005352  1 0.0004    75 | 0/8
-  6 h-m-p  0.0008 0.1888   1.6522 +YC     542.999473  1 0.0056    88 | 0/8
-  7 h-m-p  0.0014 0.0676   6.7601 +YC     542.983884  1 0.0039   101 | 0/8
-  8 h-m-p  0.0016 0.0745  16.5363 +YCC    542.940518  2 0.0048   116 | 0/8
-  9 h-m-p  1.6000 8.0000   0.0100 CC      542.932300  1 1.2887   129 | 0/8
- 10 h-m-p  1.6000 8.0000   0.0010 YC      542.932190  1 1.0639   149 | 0/8
- 11 h-m-p  1.6000 8.0000   0.0002 C       542.932190  0 1.4145   168 | 0/8
- 12 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1911   187 | 0/8
- 13 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1509   206 | 0/8
- 14 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 1.1992   225 | 0/8
- 15 h-m-p  1.6000 8.0000   0.0000 Y       542.932190  0 0.2500   244
+  1 h-m-p  0.0000 0.0002 518.9984 +YYCCCC   636.559372  5 0.0000    22 | 0/8
+  2 h-m-p  0.0000 0.0002  63.3048 ++      635.816529  m 0.0002    33 | 1/8
+  3 h-m-p  0.0003 0.0274  25.4709 +CYC    635.565686  2 0.0011    48 | 1/8
+  4 h-m-p  0.0058 0.0808   5.0420 YCC     635.526233  2 0.0032    62 | 1/8
+  5 h-m-p  0.0014 0.0217  11.3495 CCC     635.471714  2 0.0023    77 | 1/8
+  6 h-m-p  0.0013 0.1256  20.3654 +YCCC   635.191014  3 0.0082    94 | 1/8
+  7 h-m-p  0.0432 0.2617   3.8679 --YC    635.184210  1 0.0013   108 | 1/8
+  8 h-m-p  0.0582 3.1417   0.0876 ++YYYCC   634.401218  4 0.8901   126 | 1/8
+  9 h-m-p  1.6000 8.0000   0.0331 YCCC    634.367731  3 0.8724   149 | 1/8
+ 10 h-m-p  1.6000 8.0000   0.0132 CC      634.363523  1 1.4209   169 | 1/8
+ 11 h-m-p  1.6000 8.0000   0.0041 CC      634.362914  1 2.1729   189 | 1/8
+ 12 h-m-p  1.6000 8.0000   0.0016 C       634.362856  0 1.9051   207 | 1/8
+ 13 h-m-p  1.6000 8.0000   0.0001 Y       634.362851  0 3.1527   225 | 1/8
+ 14 h-m-p  1.6000 8.0000   0.0001 C       634.362847  0 2.3436   243 | 1/8
+ 15 h-m-p  1.6000 8.0000   0.0000 Y       634.362847  0 1.0764   261 | 1/8
+ 16 h-m-p  1.6000 8.0000   0.0000 C       634.362847  0 1.3653   279 | 1/8
+ 17 h-m-p  1.6000 8.0000   0.0000 Y       634.362847  0 1.6000   297 | 1/8
+ 18 h-m-p  1.6000 8.0000   0.0000 N       634.362847  0 0.4000   315 | 1/8
+ 19 h-m-p  0.6601 8.0000   0.0000 Y       634.362847  0 0.6601   333 | 1/8
+ 20 h-m-p  1.5794 8.0000   0.0000 N       634.362847  0 0.3949   351
 Out..
-lnL  =  -542.932190
-245 lfun, 0 eigenQcodon, 0 P(t)
+lnL  =  -634.362847
+352 lfun, 0 eigenQcodon, 0 P(t)
 Calculating SE's
+
+Warning: Hessian matrix may be unreliable for zero branch lengths
 
 Time used:  0:00
 MCMCTREE in paml version 4.10.6, November 2022
@@ -78,7 +85,7 @@ Reading options from mcmctree.ctl..
 finetune is deprecated now.
 
 Reading main tree.
-((t1, t5), ((t4, t3), t2));
+(t1, (t2, (t3, (t4, t5))));
 
 Reading sequence data..  1 loci
 
@@ -86,13 +93,13 @@ Reading sequence data..  1 loci
 *** Locus 1 ***
 ns = 5  	ls = 100
 Reading sequences, sequential format..
-Reading seq # 1: t1       Reading seq # 2: t5       Reading seq # 3: t4       Reading seq # 4: t3       Reading seq # 5: t2       
+Reading seq # 1: t1       Reading seq # 2: t2       Reading seq # 3: t3       Reading seq # 4: t4       Reading seq # 5: t5       
 Sequences read..
 Counting site patterns..  0:00
-Compressing,     49 patterns at    100 /    100 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],     49 patterns at    100 /    100 sites (100.0%),  0:00
+Compressing,     54 patterns at    100 /    100 sites (100.0%),  0:00
+Collecting fpatt[] & pose[],     54 patterns at    100 /    100 sites (100.0%),  0:00
 Counting frequencies..
- 49 patterns, clean
+ 54 patterns, clean
 
 
 

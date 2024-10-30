@@ -4,47 +4,47 @@ Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
 
 Host:    mic-r750 (AVX512, FMA3, 1007 GB RAM)
 Command: iqtree -keep-ident -te haha/sim/tree/time.tre -m LG+G -s haha/sim/alignment/combined.fas -pre haha/dating/LG+G/ph/iqtree/iqtree -redo -wsl -quiet -mdef /mnt/hd1/home/sishuo/project/asr/substitution_model/mfm/C2.nex
-Seed:    640226 (Using SPRNG - Scalable Parallel Random Number Generator)
-Time:    Wed Oct 30 16:44:21 2024
+Seed:    478094 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Wed Oct 30 16:45:03 2024
 Kernel:  AVX+FMA - 1 threads (128 CPU cores detected)
 
 HINT: Use -nt option to specify number of threads because your CPU has 128 cores!
 HINT: -nt AUTO will automatically determine the best number of threads to use.
 
 Reading alignment file haha/sim/alignment/combined.fas ... Fasta format detected
-Reading fasta file: done in 2.71797e-05 secs
+Reading fasta file: done in 2.59876e-05 secs using 50.02% CPU
 Alignment most likely contains protein sequences
-Alignment has 5 sequences with 100 columns, 49 distinct patterns
-14 parsimony-informative, 15 singleton sites, 71 constant sites
+Alignment has 5 sequences with 100 columns, 54 distinct patterns
+3 parsimony-informative, 36 singleton sites, 61 constant sites
     Gap/Ambiguity  Composition  p-value
-Analyzing sequences: done in 4.05312e-06 secs
-   1  t1    0.00%    passed    100.00%
-   2  t5    0.00%    passed    100.00%
-   3  t4    0.00%    passed    100.00%
-   4  t3    0.00%    passed    100.00%
-   5  t2    0.00%    passed    100.00%
+Analyzing sequences: done in 3.8147e-06 secs using 78.64% CPU
+   1  t1    0.00%    passed     99.12%
+   2  t2    0.00%    passed     98.63%
+   3  t3    0.00%    passed    100.00%
+   4  t4    0.00%    passed     99.98%
+   5  t5    0.00%    passed     99.99%
 ****  TOTAL    0.00%  0 sequences failed composition chi2 test (p-value<5%; df=19)
 Reading model definition file /mnt/hd1/home/sishuo/project/asr/substitution_model/mfm/C2.nex ... 87 models and 216 frequency vectors loaded
 Reading input tree file haha/sim/tree/time.tre ... rooted tree
 
 NOTE: 0 MB RAM (0 GB) is required!
 Estimate model parameters (epsilon = 0.010)
-1. Initial log-likelihood: -819.131
-2. Current log-likelihood: -506.276
-3. Current log-likelihood: -505.610
-Optimal log-likelihood: -505.610
-Gamma shape alpha: 0.532
-Parameters optimization took 3 rounds (0.005 sec)
+1. Initial log-likelihood: -951.177
+2. Current log-likelihood: -576.944
+3. Current log-likelihood: -573.812
+Optimal log-likelihood: -573.811
+Gamma shape alpha: 0.835
+Parameters optimization took 3 rounds (0.007 sec)
 Wrote distance file to... 
-BEST SCORE FOUND : -505.610
+BEST SCORE FOUND : -573.811
 Site log-likelihoods printed to haha/dating/LG+G/ph/iqtree/iqtree.sitelh
-Total tree length: 0.508
+Total tree length: 0.716
 
 Total number of iterations: 0
 CPU time used for tree search: 0.000 sec (0h:0m:0s)
 Wall-clock time used for tree search: 0.000 sec (0h:0m:0s)
-Total CPU time used: 0.012 sec (0h:0m:0s)
-Total wall-clock time used: 0.013 sec (0h:0m:0s)
+Total CPU time used: 0.013 sec (0h:0m:0s)
+Total wall-clock time used: 0.014 sec (0h:0m:0s)
 
 Analysis results written to: 
   IQ-TREE report:                haha/dating/LG+G/ph/iqtree/iqtree.iqtree
@@ -52,4 +52,4 @@ Analysis results written to:
   Site log-likelihoods:          haha/dating/LG+G/ph/iqtree/iqtree.sitelh
   Screen log file:               haha/dating/LG+G/ph/iqtree/iqtree.log
 
-Date and Time: Wed Oct 30 16:44:21 2024
+Date and Time: Wed Oct 30 16:45:03 2024

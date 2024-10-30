@@ -37,8 +37,8 @@ $PWD = Dir.getwd
 DIR = File.dirname(__FILE__)
 FIGTREE2NWK = File.join(DIR, "figtree2tree.sh")
 
-PAML_DIR = File.expand_path("~/software/phylo/paml/")
-MCMCTREE_CTL = File.join(PAML_DIR, 'mcmctree.ctl')
+PAML_DIR = File.expand_path("~/software/phylo/paml/latest")
+MCMCTREE_CTL = File.join(PAML_DIR, 'src', 'mcmctree.ctl')
 CODEML_CTL = File.join(PAML_DIR, 'codeml.ctl')
 MCMCTREE = "mcmctree"
 
@@ -156,7 +156,7 @@ def prepare_paml_ctl(ctl_file, outdir, h, other_args={})
     lines << sprintf_argu_line(i, other_args[i], 14)
   end
 
-  if Dir.exists?(outdir)
+  if Dir.exist?(outdir)
     FileUtils.cp(ctl_file, outdir)
     ctl_file = File.join(outdir, File.basename(ctl_file)) # note the ctl is changed!
   end
@@ -169,7 +169,7 @@ end
 
 def run_codeml(outdir, seqtype, ndata, alpha, ncatG, cpu)
   Dir.chdir(outdir)
-  `rm in.BV` if File.exists?('in.BV')
+  `rm in.BV` if File.exist?('in.BV')
 
   Parallel.map(1..ndata, in_processes: cpu) do |i|
     Dir.chdir(outdir)
@@ -179,7 +179,7 @@ def run_codeml(outdir, seqtype, ndata, alpha, ncatG, cpu)
     `mkdir #{c}; mv #{c}.* #{c}`
 
     if $is_aa
-      prepare_paml_ctl(File.join(sub_outdir, b), '', {'model'=>2,'aaRatefile'=>AA_RATE_FILE,'fix_alpha'=>0,'alpha'=>alpha, 'ncatG'=>ncatG}, {'method'=>1})
+      prepare_paml_ctl(File.join(sub_outdir, b), '', {'model'=>2,'aaRatefile'=>AA_RATE_FILE,'fix_alpha'=>0,'alpha'=>alpha, 'ncatG'=>ncatG, 'method'=>1})
       if ncatG == 0
         ctl_file = File.join(sub_outdir, b)
         `sed -i '/alpha/d' #{ctl_file}; sed -i '/ncatG/d' #{ctl_file}`
@@ -387,6 +387,7 @@ if __FILE__ == $0
     Dir.chdir(sub_outdir)
     `echo $$ > mcmctree.first`
     # Disable codeml
+    # the last MCMCTREE might cause error "Error: ncatG" if ncatG==0 but it doesn't matter
     `mkdir disabled_bin; cd disabled_bin; touch {codeml,baseml}; chmod +x {codeml,baseml}; export PATH=$PWD:$PATH; cd ../; which codeml >> #{sub_outdir}/mcmctree.first; #{MCMCTREE} mcmctree.ctl >> #{sub_outdir}/mcmctree.first`
     `mv out.BV in.BV`
     Dir.chdir($PWD)

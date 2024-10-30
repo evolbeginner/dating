@@ -4,8 +4,8 @@ Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
 
 Host:    mic-r750 (AVX512, FMA3, 1007 GB RAM)
 Command: iqtree -pre haha/sim/alignment/iqtree -af fasta -quiet --alisim haha/sim/tree/alignment -m LG+G -t haha/sim/tree/sub.tre --length 100
-Seed:    264633 (Using SPRNG - Scalable Parallel Random Number Generator)
-Time:    Wed Oct 30 16:44:20 2024
+Seed:    118141 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Wed Oct 30 16:45:02 2024
 Kernel:  AVX+FMA - 1 threads (128 CPU cores detected)
 
 [Alignment Simulator] Executing
@@ -32,4 +32,4 @@ Relative rates are computed as MEAN of the portion of the Gamma distribution fal
 
 [Alignment Simulator] Done
 Simulation time: 0.007s
-Date and Time: Wed Oct 30 16:44:20 2024
+Date and Time: Wed Oct 30 16:45:02 2024
