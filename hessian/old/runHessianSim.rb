@@ -62,15 +62,14 @@ rho=1e-3
 ntips=10
 age=40
 
-mu = -3.7 # mu for lnorm
-sd = 0.2 # sd for lnorm
-s2 = 0.032 # s2 for AR model
+mu=-3.7 # mu for lnorm
+sd=0.2 # sd for lnorm
 
 sim_model = 'LG+G'
 bs=1000
 
 clock = 'IR'
-bsn = '1000,10,500'
+bsn = "1000,10,500"
 
 is_stop_compare=false
 
@@ -92,7 +91,6 @@ opts = GetoptLong.new(
   ['--ntips', GetoptLong::REQUIRED_ARGUMENT],
   ['--mu', GetoptLong::REQUIRED_ARGUMENT],
   ['--sd', GetoptLong::REQUIRED_ARGUMENT],
-  ['--s2', GetoptLong::REQUIRED_ARGUMENT],
   ['--sim_model', GetoptLong::REQUIRED_ARGUMENT],
   ['--clock', GetoptLong::REQUIRED_ARGUMENT],
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
@@ -129,8 +127,6 @@ begin
       mu = value
     when '--sd'
       sd = value
-    when '--s2'
-      s2 = value
     when '--sim_model'
       sim_model = value
     when '--clock'
@@ -171,7 +167,7 @@ if not simulated_tree_dir.nil? and Dir.exist?(simulated_tree_dir); then
 	`cp #{input_tree} #{sim_tree_outdir}`
   sim_tree_arg_add = "--timetree #{sim_tree_outdir}/time.tre"
 end
-`Rscript #{SIM_TREE} -n #{ntips} -m #{mu} --sd #{sd} --s2 #{s2} -b #{birth} -d #{death} --age #{age} --rho #{rho} -o #{sim_tree_outdir} --clock #{clock} #{sim_tree_arg_add}`
+`Rscript #{SIM_TREE} -n #{ntips} -m #{mu} --sd #{sd} -b #{birth} -d #{death} --age #{age} --rho #{rho} -o #{sim_tree_outdir} --clock #{clock} #{sim_tree_arg_add}`
 
 
 #####################################################
@@ -189,7 +185,7 @@ ori_unrooted_tree = File.join(sim_tree_outdir, 'unrooted.tre')
 create_pseudo_phylip(ori_phylip, pseudo_phylip)
 
 # create ref.tre
-create_ref_tre(pseudo_phylip, File.join(outdirs[:dating], 'test'), sim_ali_outdir, clock)
+create_ref_tre(pseudo_phylip, File.join(outdirs[:dating], 'test'), sim_ali_outdir, 'IR')
 ref_tre = File.join(outdir, 'ref.tre')
 
 models = %w[ori LG LG+G EX2+G LG+C20+G LG+C40+G LG+C60+G]
@@ -209,7 +205,7 @@ Parallel.map(models, in_processes: cpu) do |model|
   else
     sub_outdir = File.join(outdirs[:dating], model)
     ph_sub_outdir = File.join(outdirs[:dating], model, 'ph')
-    puts " #{RUBY} #{PHYLO_HESSIAN} -s #{ori_fasta} -t #{ori_unrooted_tree} --outdir #{ph_sub_outdir} --force --reftree #{ref_tre} --cpu #{real_cpu} -m #{model} --run_mcmctree --bsn #{bsn} --clock #{clock} --phylip #{sim_ali_outdir}/combined.phy --tree_indir #{sim_ali_outdir}"
+    puts " #{RUBY} #{PHYLO_HESSIAN} -s #{ori_fasta} -t #{ori_unrooted_tree} --outdir #{ph_sub_outdir} --force --reftree #{ref_tre} --cpu #{real_cpu} -m #{model} --run_mcmctree --bsn #{bsn} --clock #{clock} --phylip #{sim_ali_outdir}/combined.phy --tree_indir #{sim_ali_outdir} "
     ` #{RUBY} #{PHYLO_HESSIAN} -s #{ori_fasta} -t #{ori_unrooted_tree} --outdir #{ph_sub_outdir} --force --reftree #{ref_tre} --cpu #{real_cpu} -m #{model} \
         --run_mcmctree --bsn #{bsn} --clock #{clock} --phylip #{sim_ali_outdir}/combined.phy --tree_indir #{sim_ali_outdir} `
     ` rm -rf #{sub_outdir}/combined*; mv #{ph_sub_outdir}/date/* #{sub_outdir} `
@@ -228,12 +224,12 @@ end
 
 figtrees = models.map{|m| File.join(outdirs[:dating], m, 'combined/figtree.nwk') }
 puts "Rscript ~/project/Rhizobiales/scripts/dating/hessian/calculate_branch_score_dist.R #{figtrees[0]} #{figtrees[1]}; Rscript ~/project/Rhizobiales/scripts/dating/graph/convergence_plot_two_trees.R -i #{figtrees[0]} -j #{figtrees[1]} -o #{outdirs[:dating]}/convergence.pdf"
+
+exit
+
 `
   Rscript ~/project/Rhizobiales/scripts/dating/hessian/calculate_branch_score_dist.R #{figtrees[0]} #{figtrees[1]} 2>/dev/null
   Rscript ~/project/Rhizobiales/scripts/dating/graph/convergence_plot_two_trees.R -i #{figtrees[0]} -j #{figtrees[1]} -o #{outdirs[:dating]}/convergence.pdf 2>/dev/null
 `
-
-# __FILE__
-end
 
 

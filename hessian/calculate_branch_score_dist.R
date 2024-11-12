@@ -2,10 +2,14 @@
 
 
 #####################################################
-library(ape)
+suppressWarnings({
+    library(ape)
+})
 
 
 #####################################################
+is_branch <- F
+
 args <- commandArgs(TRUE)
 
 
@@ -13,13 +17,21 @@ args <- commandArgs(TRUE)
 t1 <- ape::read.tree(args[1])
 t2 <- ape::read.tree(args[2])
 titles <- args[3:4]
+if(!is.null(args[5])){
+    is_branch <- T
+}
 
 root_no <- length(t1$tip.label) + 1
 
-#d1 <- dist.nodes(t1)[root_no, (root_no+1):(root_no+t1$Nnode-1)]
-d1 <- dist.nodes(t1)[root_no, 1] - dist.nodes(t1)[root_no, (root_no):(root_no+t1$Nnode-1)]
-#d2 <- dist.nodes(t2)[root_no, (root_no+1):(root_no+t2$Nnode-1)]
-d2 <- dist.nodes(t2)[root_no, 1] - dist.nodes(t2)[root_no, (root_no):(root_no+t2$Nnode-1)]
+if (!is_branch){
+    #d1 <- dist.nodes(t1)[root_no, (root_no+1):(root_no+t1$Nnode-1)]
+    d1 <- dist.nodes(t1)[root_no, 1] - dist.nodes(t1)[root_no, (root_no):(root_no+t1$Nnode-1)]
+    #d2 <- dist.nodes(t2)[root_no, (root_no+1):(root_no+t2$Nnode-1)]
+    d2 <- dist.nodes(t2)[root_no, 1] - dist.nodes(t2)[root_no, (root_no):(root_no+t2$Nnode-1)]
+} else{
+    d1 <- t1$edge.length
+    d2 <- t2$edge.length
+}
 
 c <- abs(d1-d2)
 max <- max(c(d1,d2))
