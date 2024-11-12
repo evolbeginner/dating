@@ -1,92 +1,0 @@
-3951635
-/mnt/hd1/home/sishuo/software/phylo/paml/latest/src//codeml
-
-AAML in paml version 4.10.6, November 2022
-ns = 5  	ls = 1
-Reading sequences, sequential format..
-Reading seq # 1: t1       Reading seq # 2: t2       Reading seq # 3: t3       Reading seq # 4: t4       Reading seq # 5: t5       
-Sequences read..
-Counting frequencies..Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-
-Counting site patterns again, for JC69..  0:00
-Compressing,      1 patterns at      1 /      1 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],      1 patterns at      1 /      1 sites (100.0%),  0:00
-
-       80 bytes for distance
-      320 bytes for conP
-       32 bytes for fhK
-  5000000 bytes for space
-
-TREE #  1
-(2, (3, (4, 5)), 1);   MP score: 0
-ns = 5  nnode = 8
-   dad  node   nson:   sons
-     5     0      0: 
-     5     1      0: 
-     6     2      0: 
-     7     3      0: 
-     7     4      0: 
-    -1     5      3:   1  6  0
-     5     6      2:   2  7
-     6     7      2:   3  4
-(2, (3, (4, 5)), 1);
-(t2, (t3, (t4, t5)), t1);
-(t2: 0.000000, (t3: 0.000000, (t4: 0.000000, t5: 0.000000): 0.000000): 0.000000, t1: 0.000000);
-
-      480 bytes for conP, adjusted
-
-    0.000000    0.000001    0.000003    0.000001    0.000004    0.000004    0.000002    0.500000
-
-ntime & nrate & np:     7     0     8
-
-Bounds (np=8):
-   0.000004   0.000004   0.000004   0.000004   0.000004   0.000004   0.000004   0.020000
-  50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  50.000000  49.000000
-
-np =     8
-lnL0 =    -0.000000
-
-Iterating by ming2
-Initial: fx=     0.000000
-x=  0.00000  0.00000  0.00000  0.00000  0.00000  0.00000  0.00000  0.50000
-
-  1 h-m-p  0.0040 8.0000   0.0000 N         0.000000  0 0.0040    13 | 7/8
-  2 h-m-p  0.0160 8.0000   0.0000 N         0.000000  0 0.0160    32
-Out..
-lnL  =    -0.000000
-33 lfun, 0 eigenQcodon, 0 P(t)
-Calculating SE's
-
-Warning: Hessian matrix may be unreliable for zero branch lengths
-
-xmax = 6.0130e-154 close to zero at   1!	
-MCMCTREE in paml version 4.10.6, November 2022
-
-Reading options from mcmctree.ctl..
-finetune is deprecated now.
-
-Reading main tree.
-(t1, (t2, (t3, (t4, t5))));
-
-Reading sequence data..  1 loci
-
-
-*** Locus 1 ***
-ns = 5  	ls = 1
-Reading sequences, sequential format..
-Reading seq # 1: t1       Reading seq # 2: t2       Reading seq # 3: t3       Reading seq # 4: t4       Reading seq # 5: t5       
-Sequences read..
-Counting site patterns..  0:00
-Compressing,      1 patterns at      1 /      1 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],      1 patterns at      1 /      1 sites (100.0%),  0:00
-Counting frequencies..
-  1 patterns, clean
-
-
-
-*** Locus 1 ***
-running codeml tmp0001.ctl

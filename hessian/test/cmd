@@ -1,1 +1,0 @@
-time ruby ~/lab-tools/dating/hessian/create_hessian_by_bootstrapping.rb --ali haha/dating/ori/combined/combined.phy --calibrated_tree haha/dating/ori/combined/species.trees --outdir bs_haha --ref ref.tre --force -b 1000 --cpu 20 -m LG+G --mcmctree_ctl haha/dating/ori/combined/mcmctree.ctl --run_mcmctree --force --ref haha/ref.tre

@@ -1,1 +1,0 @@
-Gen	t_n6	t_n7	t_n8	t_n9	mu	sigma2	r_n1	r_n2	r_n3	r_n4	r_n5	r_n7	r_n8	r_n9	lnL

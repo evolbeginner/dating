@@ -1,247 +1,0 @@
-3933907
-/mnt/hd1/home/sishuo/software/phylo/paml/latest/src//codeml
-MCMCTREE in paml version 4.10.6, November 2022
-
-Reading options from mcmctree.ctl..
-finetune is deprecated now.
-
-Reading main tree.
-((((t7, (((((t23, t116), ((t108, t60), (t63, t84))), t11), ((t134, t110), t92)), t148)), (((t144, t51), (t102, t74)), ((t14, t82), t101))), (t28, t41)), ((((((t136, ((t104, t141), t57)), (t143, (((t73, t128), t42), (t65, t127)))), ((t105, t30), t107)), (((t48, t93), (((t54, (t52, t53)), t66), ((t131, t112), t33))), (t94, t95))), ((((t121, t13), (((((t49, (t47, t18)), t79), t123), t90), (t35, t68))), (t76, (t86, t89))), ((((t96, t10), (t142, (t80, t39))), (t98, (t78, t17))), ((t122, (t126, (((t114, t113), (t91, t22)), (t6, (t36, t56))))), (((t88, ((t129, t12), t125)), t19), (((t139, (t75, t135)), t130), ((t85, (t20, t77)), t138))))))), (((t109, t27), ((t132, t97), (((((t50, t147), (t120, (t64, (((t117, t43), t103), t8)))), ((((t111, t2), t26), (t99, ((t37, t46), ((t133, t118), t115)))), ((t100, t119), (t38, (t137, t45))))), t140), ((t72, (t1, t124)), (t61, t145))))), (((((t16, ((t146, t149), t44)), (((t55, t29), t15), t4)), ((t69, t3), ((t62, t106), (t81, (t59, t150))))), (((t34, t87), ((t58, t24), t5)), (t31, t71))), (((t40, t70), ((t32, t25), t21)), ((t9, t67), t83))))));
-
-Reading sequence data..  1 loci
-
-
-*** Locus 1 ***
-ns = 150  	ls = 1
-Reading sequences, sequential format..
-Reading seq # 1: t7       Reading seq # 2: t23       Reading seq # 3: t116       Reading seq # 4: t108       Reading seq # 5: t60       Reading seq # 6: t63       Reading seq # 7: t84       Reading seq # 8: t11       Reading seq # 9: t134       Reading seq #10: t110       Reading seq #11: t92       Reading seq #12: t148       Reading seq #13: t144       Reading seq #14: t51       Reading seq #15: t102       Reading seq #16: t74       Reading seq #17: t14       Reading seq #18: t82       Reading seq #19: t101       Reading seq #20: t28       Reading seq #21: t41       Reading seq #22: t136       Reading seq #23: t104       Reading seq #24: t141       Reading seq #25: t57       Reading seq #26: t143       Reading seq #27: t73       Reading seq #28: t128       Reading seq #29: t42       Reading seq #30: t65       Reading seq #31: t127       Reading seq #32: t105       Reading seq #33: t30       Reading seq #34: t107       Reading seq #35: t48       Reading seq #36: t93       Reading seq #37: t54       Reading seq #38: t52       Reading seq #39: t53       Reading seq #40: t66       Reading seq #41: t131       Reading seq #42: t112       Reading seq #43: t33       Reading seq #44: t94       Reading seq #45: t95       Reading seq #46: t121       Reading seq #47: t13       Reading seq #48: t49       Reading seq #49: t47       Reading seq #50: t18       Reading seq #51: t79       Reading seq #52: t123       Reading seq #53: t90       Reading seq #54: t35       Reading seq #55: t68       Reading seq #56: t76       Reading seq #57: t86       Reading seq #58: t89       Reading seq #59: t96       Reading seq #60: t10       Reading seq #61: t142       Reading seq #62: t80       Reading seq #63: t39       Reading seq #64: t98       Reading seq #65: t78       Reading seq #66: t17       Reading seq #67: t122       Reading seq #68: t126       Reading seq #69: t114       Reading seq #70: t113       Reading seq #71: t91       Reading seq #72: t22       Reading seq #73: t6       Reading seq #74: t36       Reading seq #75: t56       Reading seq #76: t88       Reading seq #77: t129       Reading seq #78: t12       Reading seq #79: t125       Reading seq #80: t19       Reading seq #81: t139       Reading seq #82: t75       Reading seq #83: t135       Reading seq #84: t130       Reading seq #85: t85       Reading seq #86: t20       Reading seq #87: t77       Reading seq #88: t138       Reading seq #89: t109       Reading seq #90: t27       Reading seq #91: t132       Reading seq #92: t97       Reading seq #93: t50       Reading seq #94: t147       Reading seq #95: t120       Reading seq #96: t64       Reading seq #97: t117       Reading seq #98:
-AAML in paml version 4.10.6, November 2022
-ns = 150  	ls = 1
-Reading sequences, sequential format..
-Reading seq # 1: t7       Reading seq # 2: t23       Reading seq # 3: t116       Reading seq # 4: t108       Reading seq # 5: t60       Reading seq # 6: t63       Reading seq # 7: t84       Reading seq # 8: t11       Reading seq # 9: t134       Reading seq #10: t110       Reading seq #11: t92       Reading seq #12: t148       Reading seq #13: t144       Reading seq #14: t51       Reading seq #15: t102       Reading seq #16: t74       Reading seq #17: t14       Reading seq #18: t82       Reading seq #19: t101       Reading seq #20: t28       Reading seq #21: t41       Reading seq #22: t136       Reading seq #23: t104       Reading seq #24: t141       Reading seq #25: t57       Reading seq #26: t143       Reading seq #27: t73       Reading seq #28: t128       Reading seq #29: t42       Reading seq #30: t65       Reading seq #31: t127       Reading seq #32: t105       Reading seq #33: t30       Reading seq #34: t107       Reading seq #35: t48       Reading seq #36: t93       Reading seq #37: t54       Reading seq #38: t52       Reading seq #39: t53       Reading seq #40: t66       Reading seq #41: t131       Reading seq #42: t112       Reading seq #43: t33       Reading seq #44: t94       Reading seq #45: t95       Reading seq #46: t121       Reading seq #47: t13       Reading seq #48: t49       Reading seq #49: t47       Reading seq #50: t18       Reading seq #51: t79       Reading seq #52: t123       Reading seq #53: t90       Reading seq #54: t35       Reading seq #55: t68       Reading seq #56: t76       Reading seq #57: t86       Reading seq #58: t89       Reading seq #59: t96       Reading seq #60: t10       Reading seq #61: t142       Reading seq #62: t80       Reading seq #63: t39       Reading seq #64: t98       Reading seq #65: t78       Reading seq #66: t17       Reading seq #67: t122       Reading seq #68: t126       Reading seq #69: t114       Reading seq #70: t113       Reading seq #71: t91       Reading seq #72: t22       Reading seq #73: t6       Reading seq #74: t36       Reading seq #75: t56       Reading seq #76: t88       Reading seq #77: t129       Reading seq #78: t12       Reading seq #79: t125       Reading seq #80: t19       Reading seq #81: t139       Reading seq #82: t75       Reading seq #83: t135       Reading seq #84: t130       Reading seq #85: t85       Reading seq #86: t20       Reading seq #87: t77       Reading seq #88: t138       Reading seq #89: t109       Reading seq #90: t27       Reading seq #91: t132       Reading seq #92: t97       Reading seq #93: t50       Reading seq #94: t147       Reading seq #95: t120       Reading seq #96: t64       Reading seq #97: t117       Reading seq #98: t43       Reading seq #99: t103       Reading seq #100: t8       Reading seq #101: t111       Reading seq #102: t2       Reading seq #103: t26       Reading seq #104: t99       Reading seq #105: t37       Reading seq #106: t46       Reading seq #107: t133       Reading seq #108: t118       Reading seq #109: t115       Reading seq #110: t100       Reading seq #111: t119       Reading seq #112: t38       Reading seq #113: t137       Reading seq #114: t45       Reading seq #115: t140       Reading seq #116: t72       Reading seq #117: t1       Reading seq #118: t124       Reading seq #119: t61       Reading seq #120: t145       Reading seq #121: t16       Reading seq #122: t146       Reading seq #123: t149       Reading seq #124: t44       Reading seq #125: t55       Reading seq #126: t29       Reading seq #127: t15       Reading seq #128: t4       Reading seq #129: t69       Reading seq #130: t3       Reading seq #131: t62       Reading seq #132: t106       Reading seq #133: t81       Reading seq #134: t59       Reading seq #135: t150       Reading seq #136: t34       Reading seq #137: t87       Reading seq #138: t58       Reading seq #139: t24       Reading seq #140: t5       Reading seq #141: t31       Reading seq #142: t71       Reading seq #143: t40       Reading seq #144: t70       Reading seq #145: t32       Reading seq #146: t25       Reading seq #147: t21       Reading seq #148: t9       Reading seq #149: t67       Reading seq #150: t83       
-Sequences read..
-Counting frequencies..Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-Some sequences are empty.
-
-Counting site patterns again, for JC69..  0:00
-Compressing,      1 patterns at      1 /      1 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],      1 patterns at      1 /      1 sites (100.0%),  0:00
-
-    89400 bytes for distance
-      320 bytes for conP
-       32 bytes for fhK
-  5000000 bytes for space
-
-TREE #  1
-
-    94720 bytes for conP, adjusted
-
-2 node(s) used for scaling (Yang 2000 J Mol Evol 51:423-432):
- 172 238
-
-ntime & nrate & np:   297     0   298
-
-np =   298
-lnL0 =    -0.000000
-
-
-Round 1a: Paras (1) (e=5)
-Iterating by ming2
-Initial: fx=     0.000000
-x=  0.50000
-
-  1 h-m-p  0.0040 8.0000   0.0000 Y         0.000000  0 0.0040     6
-
-    0.500000         0:00
-
-Round 1b: Blengths (297, e=5)
-	lnL0 =         -0.000000
-	Cycle  1:      -0.000000
-
- 0:00
-
-
-Round 2a: Paras (1) (e=0.001)
-Iterating by ming2
-Initial: fx=     0.000000
-x=  0.50000
-
-  1 h-m-p  0.0040 8.0000   0.0000 N         0.000000  0 0.0040    13
-
-    0.500000         0:00
-
-Round 2b: Blengths (297, e=0.001)
-	lnL0 =         -0.000000
-	Cycle  1:      -0.000000
-
- 0:00
-
-lnL  =    -0.000000
-Out..
-lnL  =    -0.000000
-16 lfun, 0 eigenQcodon, 0 P(t)
-Calculating SE's
-
-Warning: Hessian matrix may be unreliable for zero branch lengths
-
-xmax = 5.9915e-154 close to zero at   1!	
- t43       Reading seq #99: t103       Reading seq #100: t8       Reading seq #101: t111       Reading seq #102: t2       Reading seq #103: t26       Reading seq #104: t99       Reading seq #105: t37       Reading seq #106: t46       Reading seq #107: t133       Reading seq #108: t118       Reading seq #109: t115       Reading seq #110: t100       Reading seq #111: t119       Reading seq #112: t38       Reading seq #113: t137       Reading seq #114: t45       Reading seq #115: t140       Reading seq #116: t72       Reading seq #117: t1       Reading seq #118: t124       Reading seq #119: t61       Reading seq #120: t145       Reading seq #121: t16       Reading seq #122: t146       Reading seq #123: t149       Reading seq #124: t44       Reading seq #125: t55       Reading seq #126: t29       Reading seq #127: t15       Reading seq #128: t4       Reading seq #129: t69       Reading seq #130: t3       Reading seq #131: t62       Reading seq #132: t106       Reading seq #133: t81       Reading seq #134: t59       Reading seq #135: t150       Reading seq #136: t34       Reading seq #137: t87       Reading seq #138: t58       Reading seq #139: t24       Reading seq #140: t5       Reading seq #141: t31       Reading seq #142: t71       Reading seq #143: t40       Reading seq #144: t70       Reading seq #145: t32       Reading seq #146: t25       Reading seq #147: t21       Reading seq #148: t9       Reading seq #149: t67       Reading seq #150: t83       
-Sequences read..
-Counting site patterns..  0:00
-Compressing,      1 patterns at      1 /      1 sites (100.0%),  0:00
-Collecting fpatt[] & pose[],      1 patterns at      1 /      1 sites (100.0%),  0:00
-Counting frequencies..
-  1 patterns, clean
-
-
-
-*** Locus 1 ***
-running codeml tmp0001.ctl

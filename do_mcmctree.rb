@@ -8,6 +8,9 @@
 # Copyright: CC 4.0 (https://creativecommons.org/licenses/by/4.0/)
 # To see the usage, run the script with '-h'
 
+# v1.5 2024-11-08
+#   rate.tre
+
 # v1.4 2021-02-24
 #   1. allows stopping before the final mcmctree (--stop_before_mcmctree)
 
@@ -388,7 +391,7 @@ if __FILE__ == $0
     `echo $$ > mcmctree.first`
     # Disable codeml
     # the last MCMCTREE might cause error "Error: ncatG" if ncatG==0 but it doesn't matter
-    `mkdir disabled_bin; cd disabled_bin; touch {codeml,baseml}; chmod +x {codeml,baseml}; export PATH=$PWD:$PATH; cd ../; which codeml >> #{sub_outdir}/mcmctree.first; #{MCMCTREE} mcmctree.ctl >> #{sub_outdir}/mcmctree.first`
+    `mkdir disabled_bin; cd disabled_bin; touch codeml; touch baseml; chmod +x codeml; chmod +x baseml; export PATH=$PWD:$PATH; cd ../; which codeml >> #{sub_outdir}/mcmctree.first; #{MCMCTREE} mcmctree.ctl >> #{sub_outdir}/mcmctree.first`
     `mv out.BV in.BV`
     Dir.chdir($PWD)
 
@@ -446,6 +449,8 @@ if __FILE__ == $0
     # no matter if is_inBV or not
     `echo $$ > mcmctree.final; #{MCMCTREE} mcmctree.ctl >> mcmctree.final`
     $? == 0 and `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
+
+    `grep rategram out.txt && grep -A1 rategram out.txt | tail -1 > rate.tre`
     Dir.chdir($PWD)
   end
 
