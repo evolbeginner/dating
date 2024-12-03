@@ -37,13 +37,16 @@ vcv_branches <- function(tree) {
                 node2 <- tree$edge[j, 2]
                 #mrca <- getMRCA(tree, c(node1, node2))
                 lca <- node_dist_m[node1, node2]
+                
                 #print(c(node1, node2, lca))
                 shared_distance <- node_depths[lca]
+                if(lca %in% c(node1, node2)){shared_distance <- shared_distance - 0.5*tree$edge.length[tree$edge[,2]==lca ]}
                 vcv_matrix[i, j] <- shared_distance
             }
         }
     }
     
+    vcv_matrix <- vcv_matrix - 0.5*diag(tree$edge.length)
     return(vcv_matrix)
 }
 
@@ -99,9 +102,7 @@ if(is.null(args[["sd"]])){
 	sd <- args$sd
 }
 
-if(is.null(args[["s2"]])){
-	s2 <- s2
-}else{
+if(!is.null(args[["s2"]])){
 	s2 <- args$s2
 }
 
@@ -143,13 +144,13 @@ if (is.null(args[["timetree"]])){
 # generate time tree
 timetree$edge.length <- timetree$edge.length * scale
 
-
+# if AR is indicated as the clock but s2 not specified, then calculate s2 based on IR's sd
 if (clock == 'AR' && is.null(s2)){
     #c <- vcv(timetree)
     c <- vcv_branches(timetree)
     s2 <- sd^2 / calculate_var_AR(c)
 }
-print(s2)
+cat(paste("s2", s2, sep="\t"), "\n")
 
 
 ###################################################

@@ -215,14 +215,14 @@ if __FILE__ == $0
 
   opts = GetoptLong.new(
     ['-i', GetoptLong::REQUIRED_ARGUMENT],
-    ['-t', GetoptLong::REQUIRED_ARGUMENT],
+    ['-t', '--tree', GetoptLong::REQUIRED_ARGUMENT],
     ['--tree_indir', GetoptLong::REQUIRED_ARGUMENT],
     ['--prefix', GetoptLong::REQUIRED_ARGUMENT],
     ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
     ['--nucl', GetoptLong::NO_ARGUMENT],
     ['--pep', '--prot', GetoptLong::NO_ARGUMENT],
     ['--clock', GetoptLong::REQUIRED_ARGUMENT],
-    ['--BDparas', '--BD', GetoptLong::REQUIRED_ARGUMENT],
+    ['--BDparas', '--BD', '--bd', GetoptLong::REQUIRED_ARGUMENT],
     ['--rgene', '--rgene_gamma', GetoptLong::REQUIRED_ARGUMENT],
     ['--sigma', '--sigma2', '--sigma_gamma', '--sigma2_gamma', GetoptLong::REQUIRED_ARGUMENT],
     ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
@@ -248,7 +248,7 @@ if __FILE__ == $0
     case opt
       when '-i'
         seqfile = File.expand_path(value)
-      when '-t'
+      when '-t', '--tree'
         treefiles << File.expand_path(value)
       when '--tree_indir'
         tree_indir = value
@@ -270,7 +270,7 @@ if __FILE__ == $0
         clock = 2 if clock == 'IR'
         clock = 3 if clock == 'AR'
         STDOUT.puts "clock = #{clock}".colorize(:red)
-      when '--BDparas', '--BD'
+      when '--BDparas', '--BD', '--bd'
         bd_paras = value.gsub(",", ' ')
       when '--rgene', '--rgene_gamma'
         rgene_gamma = value.gsub(",", ' ')

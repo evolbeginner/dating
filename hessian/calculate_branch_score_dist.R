@@ -17,7 +17,7 @@ args <- commandArgs(TRUE)
 t1 <- ape::read.tree(args[1])
 t2 <- ape::read.tree(args[2])
 titles <- args[3:4]
-if(!is.null(args[5])){
+if(args[5] == "TRUE" || args[5] == "T" || args[5] == 'branch'){
     is_branch <- T
 }
 

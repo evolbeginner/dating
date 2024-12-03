@@ -68,7 +68,7 @@ for i in `find $outdir -name 'species.trees'`; do
 	d=`dirname $i`
 	cd $d
 	echo -e "$tipN\t1\n$new_tree" > species.trees
-	[ "$is_run_mcmctree" == true ] && bash ~/project/Rhizobiales/scripts/dating/run_mcmctree_in_batch.sh --indir . --hpc
+	[ "$is_run_mcmctree" == true ] && bash ~/project/Rhizobiales/scripts/dating/run_mcmctree_in_batch.sh --indir . --nohup
 	cd - >/dev/null
 done
 

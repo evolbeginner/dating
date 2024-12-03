@@ -47,6 +47,13 @@ def make_argu(argu, value)
 end
 
 
+def parse_pmsf(model_argu)
+  argu = model_argu.split('+').reject{|i|i=~/pmsf/i}.join('+')
+  is_pmsf = model_argu =~ /pmsf/i ? true : false
+  return([argu, is_pmsf])
+end
+
+
 def processbar_for_bootstrapping(file:, b:)
   thr = Thread.new do |i|
     count = 0
@@ -131,7 +138,7 @@ bootstrap = 1000
 bootstrap_argu = "-b #{bootstrap}"
 te_argu = nil
 is_pmsf = false
-add_argu = nil
+add_argu = '-mwopt'
 calib_tree_file = nil
 ref_tree_file = nil
 
@@ -142,6 +149,8 @@ is_run_mcmctree = false
 
 
 ############################################################
+ARGV_COPY = Marshal.load(Marshal.dump(ARGV))
+
 opts = GetoptLong.new(
   ['--mcmctree_indir', GetoptLong::REQUIRED_ARGUMENT],
   ['--mcmctree_ctl', GetoptLong::REQUIRED_ARGUMENT],
@@ -173,6 +182,7 @@ opts.each do |opt, value|
       te_argu = make_argu('-te', value)
     when '-m'
       model_argu = make_argu('-m', value)
+      model_argu, is_pmsf = parse_pmsf(model_argu)
     when '-b'
       bootstrap = value.to_i
       bootstrap_argu = make_argu('-b', value)
@@ -200,8 +210,13 @@ opts.each do |opt, value|
 end
 
 
+
 ############################################################
 mkdir_with_force(outdir, is_force)
+
+cmd_out_fh = File.open(File.join(outdir, 'cmd'), 'w')
+cmd_out_fh.puts [__FILE__, ARGV_COPY].flatten.join(" ")
+cmd_out_fh.close
 
 ali2lines = split_ali_file(ali_file)
 
@@ -295,6 +310,7 @@ if is_run_mcmctree
   if $? == 0
     Thread.kill(thr) and puts
     `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
+    `grep rategram out* >/dev/null && grep -A1 rategram out* | tail -1 > rate.tre`
     puts "Done!" if $? == 0
   end
 end

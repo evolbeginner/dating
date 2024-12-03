@@ -2,8 +2,10 @@
 
 
 #####################################################
-library(getopt)
-library(ape)
+suppressWarnings({
+    library(getopt)
+    library(ape)
+})
 
 
 #####################################################
@@ -62,7 +64,9 @@ d <- dist.nodes(tree)[root_no, 1] - dist.nodes(tree)[root_no, (root_no):(root_no
 
 d.order <- order(d)
 
+#tree$node.label <- vector(mode="character")
 tree$node.label <- vector(mode="character")
+tree$node.label <- rep("NA", length(tree$tip.label))
 
 
 #####################################################
