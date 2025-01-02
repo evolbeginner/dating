@@ -104,12 +104,12 @@ def prepare_hessian(sim_ali_outdir, ori_mcmctree_outdir)
 end
 
 
-def do_create_hessian(bs_models, phylip, species_tree, mcmctree_ctl, ref_tre, cpu, outdir0)
+def do_create_hessian(bs_models, bs, phylip, species_tree, mcmctree_ctl, ref_tre, cpu, outdir0)
   # outdir0: dating/
   Parallel.map(bs_models, in_threads:cpu) do |bs_model|
     outdir = File.join(outdir0, bs_model+'+bs_inBV')
     sub_cpu = (cpu.to_f/bs_models.size).to_i
-    cmd = "#{RUBY} #{CREATE_HESSIAN_BS} --ali #{phylip} --calibrated_tree #{species_tree} --outdir #{outdir} --force --ref #{ref_tre} -b 1000 --cpu #{sub_cpu} -m #{bs_model} --mcmctree_ctl #{mcmctree_ctl} --run_mcmctree"
+    cmd = "#{RUBY} #{CREATE_HESSIAN_BS} --ali #{phylip} --calibrated_tree #{species_tree} --outdir #{outdir} --force --ref #{ref_tre} -b #{bs} --cpu #{sub_cpu} -m #{bs_model} --mcmctree_ctl #{mcmctree_ctl} --run_mcmctree"
     ` #{cmd} >/dev/null `
     ` mv #{outdir}/mcmctree #{outdir}/combined `
   end
@@ -136,12 +136,19 @@ age=40
 mu = -3.7 # mu for lnorm
 sd = 0.2 # sd for lnorm
 s2 = '' # s2 for AR
+# for Gamma
+alpha = 2.5
+beta = 100
 
 sim_model = 'LG+G'
 bs=1000
 
 clock = 'IR'
+sim_clock = nil
 bsn = '1000,10,500'
+
+# bs_inBV
+bs = 1000
 
 is_stop_compare=false
 
@@ -169,11 +176,13 @@ opts = GetoptLong.new(
   ['--mu', GetoptLong::REQUIRED_ARGUMENT],
   ['--sd', GetoptLong::REQUIRED_ARGUMENT],
   ['--s2', GetoptLong::REQUIRED_ARGUMENT],
-  ['--sim_model', GetoptLong::REQUIRED_ARGUMENT],
+  ['--alpha', GetoptLong::REQUIRED_ARGUMENT],
+  ['--beta', GetoptLong::REQUIRED_ARGUMENT],
   ['--clock', GetoptLong::REQUIRED_ARGUMENT],
+  ['--sim_clock', GetoptLong::REQUIRED_ARGUMENT],
+  ['--sim_model', GetoptLong::REQUIRED_ARGUMENT],
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
-  ['-b', GetoptLong::REQUIRED_ARGUMENT],
-  ['--bs', GetoptLong::REQUIRED_ARGUMENT],
+  ['-b', '--bs', GetoptLong::REQUIRED_ARGUMENT],
   ['--stop_compare', GetoptLong::NO_ARGUMENT],
   ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
   ['--force', GetoptLong::NO_ARGUMENT]
@@ -209,10 +218,16 @@ begin
         sd = value
       when '--s2'
         s2 = value
+      when '--alpha'
+        alpha = value
+      when '--beta'
+        beta = value
       when '--sim_model'
         sim_model = value
       when '--clock'
         clock = value
+      when '--sim_clock'
+        sim_clock = value
       when '--bsn'
         bsn = value
       when '-b', '--bs'
@@ -228,6 +243,10 @@ begin
   rescue GetoptLong::InvalidOption => e
     STDERR.puts "Wrong argument #{e.message}!"
     exit 1
+end
+
+if sim_clock.nil?
+  sim_clock = clock
 end
 
 
@@ -262,8 +281,12 @@ if not simulated_tree_dir.nil? and Dir.exist?(simulated_tree_dir); then
   sim_tree_arg_add = "--timetree #{sim_tree_outdir}/time.tre"
 end
 
+if sim_clock == 'GAMMA'
+  sim_tree_arg_add = [sim_tree_arg_add, '--alpha '+alpha.to_s, '--beta '+beta.to_s].join(' ')
+end
+
 s2_arg = s2 == '' ? '' : s2
-cmd = " Rscript #{SIM_TREE} -n #{ntips} -m #{mu} --sd #{sd} #{s2_arg} -b #{birth} -d #{death} --age #{age} --rho #{rho} -o #{sim_tree_outdir} --clock #{clock} #{sim_tree_arg_add} "
+cmd = " Rscript #{SIM_TREE} -n #{ntips} -m #{mu} --sd #{sd} #{s2_arg} -b #{birth} -d #{death} --age #{age} --rho #{rho} -o #{sim_tree_outdir} --clock #{sim_clock} #{sim_tree_arg_add} "
 cmd_out_fh1.puts cmd + "\n\n"
 `#{cmd}`
 
@@ -305,7 +328,7 @@ Parallel.map(models, in_processes: cpu) do |model|
     run_mcmctree(sub_outdir, sim_ali_outdir, "#{sim_ali_outdir}/combined.phy", clock, bd, bsn, sub_cmd_out_fh)
     print_processing_time(model, s_time)
     phylip, species_tree, mcmctree_ctl = prepare_hessian(sim_ali_outdir, sub_outdir+'/combined')
-    do_create_hessian(bs_models, phylip, species_tree, mcmctree_ctl, ref_tre, 
+    do_create_hessian(bs_models, bs, phylip, species_tree, mcmctree_ctl, ref_tre, 
       (cpu/2).floor, outdirs[:dating])
   else
     ph_sub_outdir = File.join(sub_outdir, 'ph')

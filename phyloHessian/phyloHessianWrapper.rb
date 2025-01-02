@@ -2,6 +2,14 @@
 
 
 #########################################
+# 2024-12-06
+
+
+#########################################
+require 'tempfile'
+
+
+#########################################
 $VERBOSE = nil
 DIR = File.dirname($0)
 ADD_SCRIPTS_DIR = File.join(DIR, "additional_scripts")
@@ -18,7 +26,7 @@ RUBY = 'ruby'
 REGULAR_DIR = File.join(DIR, 'substitution_model', 'regular')
 MFM_DIR = File.join(DIR, 'substitution_model', 'mfm')
 
-DO_MCMCTREE = File.expand_path("~/project/Rhizobiales/scripts/dating/do_mcmctree.rb")
+DO_MCMCTREE = File.expand_path("~/lab-tools/dating/do_mcmctree.rb")
 BS_INBV = File.expand_path("~/lab-tools/dating/hessian/create_hessian_by_bootstrapping.rb")
 
 
@@ -68,9 +76,8 @@ def run_mcmctree(outdirs, tree_indir, phylip, clock, bd, bsn)
   mkdir_with_force(outdirs[:date])
   inBV_file = File.join(outdirs[:inBV], 'in.BV')
   add_argu = "--inBV #{inBV_file}"
-  cmd = " #{RUBY} #{DO_MCMCTREE} --outdir #{outdirs[:date]} --tree_indir #{tree_indir} -i #{phylip} --prot --clock #{clock} --bd #{bd} --bsn #{bsn} --print 2 #{add_argu} --force "
+  cmd = "#{RUBY} #{DO_MCMCTREE} --outdir #{outdirs[:date]} --tree_indir #{tree_indir} -i #{phylip} --prot --clock #{clock} --bd #{bd} --bsn #{bsn} --print 2 #{add_argu} --force"
   ` #{cmd} `
-
 end
 
 
@@ -83,6 +90,7 @@ model = 'POISSON'
 mfm = 'nothing'
 ref_treefile = nil
 pmsf = nil
+is_mwopt = true
 cpu = 4
 outdir = nil
 is_force = false
@@ -121,6 +129,7 @@ opts = GetoptLong.new(
   ['--clock', GetoptLong::REQUIRED_ARGUMENT],
   ['--bd', GetoptLong::REQUIRED_ARGUMENT],
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
+  ['--no_mwopt', GetoptLong::NO_ARGUMENT],
   ['-h', GetoptLong::NO_ARGUMENT]
 )
 
@@ -160,7 +169,14 @@ opts.each do |opt, value|
       bd = value
     when '--bsn'
       bsn = value
+    when '--no_mwopt'
+      is_mwopt = false
   end
+end
+
+if not is_mwopt
+  iqtree_add_arg0.gsub!(' -mwopt', '')
+  iqtree_add_arg.gsub!(' -mwopt', '')
 end
 
 
@@ -195,7 +211,7 @@ if ! pmsf.nil?
 end
 
 `#{IQTREE} -blfix #{treefile} -m POISSON -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg0}`
-`#{IQTREE} -te #{outdirs[:iqtree]}/iqtree.treefile -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg} -blmin #{blmin} -mwopt`
+`#{IQTREE} -te #{outdirs[:iqtree]}/iqtree.treefile -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg} -blmin #{blmin}`
 out_treefile = File.join(outdirs[:iqtree], 'iqtree.treefile')
 
 # do_bl_my_try.R to generate julia_outdir (basics)
@@ -211,7 +227,17 @@ puts "#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st}
 `#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st} --tree #{out_treefile} -b #{branchout_matrix} -m #{non_mfm} --mfm #{mfm} --outdir #{outdirs[:inBV]} --force #{julia_bl_add_arg} 2>#{outdir}/error`
 
 # do_mcmctree
-run_mcmctree(outdirs, tree_indir, phylip, clock, bd, bsn) if is_run_mcmctree
+def create_phylip(seqfile)
+  tmp_dir = Dir.mktmpdir
+  `MFAtoPHY.pl #{seqfile}; mv #{seqfile}.phy #{tmp_dir}`
+  phylip = File.join(tmp_dir, File.basename(seqfile)+'.phy')
+  return(phylip)
+end
 
+if phylip.nil?
+  phylip = create_phylip(seqfile)
+end
+
+run_mcmctree(outdirs, tree_indir, phylip, clock, bd, bsn) if is_run_mcmctree
 
 

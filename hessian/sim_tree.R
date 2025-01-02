@@ -8,7 +8,7 @@ suppressPackageStartupMessages(
         library(TreeSim)
         library(getopt)
         library(simclock)
-        library(psych)
+        #library(psych)
     })
 )
 
@@ -56,6 +56,10 @@ mu <- -2.3 # corresponding to E(x) = 1
 sd <- 0.2
 s2 <- NULL
 
+# gamma_rate
+alpha <- 2.5
+beta <- 100
+
 rho <- 0.01
 age <- 10
 clock <- 'IR'
@@ -70,10 +74,12 @@ command=matrix(c(
     'death', 'd', 2, 'numeric',
     'rho', 'r', 2, 'numeric',
     'age', 'a', 2, 'numeric',
-    'mu', 'm', 2, 'numeric',
     'clock', 'c', 2, 'character',
+    'mu', 'm', 2, 'numeric',
     'sd', '', 2, 'numeric',
     's2', 'S', 2, 'numeric',
+    'alpha', 'A', 2, 'numeric',
+    'beta', 'B', 2, 'numeric',
     'scale', 's', 2, 'numeric',
     'outdir', 'o', 2, 'character',
     'timetree', 't', 2, 'character'),
@@ -100,6 +106,13 @@ if(is.null(args[["sd"]])){
 	sd <- sd
 }else{
 	sd <- args$sd
+}
+
+if(!is.null(args[["alpha"]])){
+	alpha <- args$alpha
+}
+if(!is.null(args[["beta"]])){
+	beta <- args$beta
 }
 
 if(!is.null(args[["s2"]])){
@@ -149,17 +162,20 @@ if (clock == 'AR' && is.null(s2)){
     #c <- vcv(timetree)
     c <- vcv_branches(timetree)
     s2 <- sd^2 / calculate_var_AR(c)
+    cat(paste("s2", s2, sep="\t"), "\n")
 }
-cat(paste("s2", s2, sep="\t"), "\n")
 
 
 ###################################################
 # create sub tree
 subs_tree <- timetree
-if(clock == 'IR'){
-    lnorm_rate <- rlnorm(length(subs_tree$edge.length), mu, sd)
-    subs_tree$edge.length <- subs_tree$edge.length * lnorm_rate
-}else if(clock == 'AR'){
+if(clock == 'IR' || clock == 'ILN'){
+    rate <- rlnorm(length(subs_tree$edge.length), mu, sd)
+    subs_tree$edge.length <- subs_tree$edge.length * rate
+} else if(clock == 'GAMMA' || clock == 'gamma'){
+    rate <- rgamma(length(subs_tree$edge.length), alpha, beta)
+    subs_tree$edge.length <- subs_tree$edge.length * rate
+} else if(clock == 'AR'){
     #s2 <- sd^2 / (tr(vcv(timetree)) - 0.5*sum(timetree$edge.length))
     subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu), s2=s2)
 }
@@ -169,7 +185,6 @@ unrooted_tree <- unroot(subs_tree)
 
 # create rate tree
 rate_tree <- subs_tree
-#rate_tree$edge.length <- lnorm_rate
 rate_tree$edge.length <- subs_tree$edge.length/timetree$edge.length
 
 

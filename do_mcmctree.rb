@@ -267,8 +267,8 @@ if __FILE__ == $0
       when '--clock'
         clock = value
         clock = 1 if clock =~ /^SR|STR$/
-        clock = 2 if clock == 'IR'
-        clock = 3 if clock == 'AR'
+        clock = 2 if clock == 'IR' or clock == 'ILN'
+        clock = 3 if clock == 'AR' or clock == 'GBM'
         STDOUT.puts "clock = #{clock}".colorize(:red)
       when '--BDparas', '--BD', '--bd'
         bd_paras = value.gsub(",", ' ')

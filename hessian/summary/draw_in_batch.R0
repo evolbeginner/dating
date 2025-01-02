@@ -1,0 +1,78 @@
+#! /bin/env Rscript
+
+library(GetoptLong)
+library(ggplot2)
+library(cowplot)
+#library(ggpubr)
+
+#############################################
+r_merge_list <- function(d, y='score'){
+    m <- as.matrix(d)
+    r = matrix()
+    for(i in 1:ncol(m)){r <- rbind(r, as.matrix(m[,i]))}
+    r <- as.matrix(r[-1])
+    d <- data.frame(r, y=as.character(rep(1:ncol(m), each=nrow(m))))
+    names(d) <- c(y, 'model')
+    d
+}
+
+#############################################
+infiles = NULL
+y <- NULL
+ymin <- 0
+ymax <- NULL
+outlier_shape <- 19 # change to NA if no outlier is wanted
+mu <- FALSE
+
+#############################################
+GetoptLong(
+    "infiles=s@", "infiles",
+    "y=s", "y axis name",
+    "ymin=f", "ymin",
+    "ymax=f", "ymax",
+    "mu!", "mu"
+)
+
+if(is.null(y)){
+    stop("y has to be given! Exiting ......")
+}
+
+#############################################
+par(mfrow = c(2, 2))
+
+p <- list()
+
+# Add your categories here
+categories <- c("root", "calib-2_0.2", "calib-5_0.2") # Add more categories as needed
+
+# Prepare a dummy plot for the legend
+legend_plot <- ggplot(data.frame(x = 1, y = 1, id = factor(categories, levels = categories)), aes(x = x, y = y, color=id, fill=id)) + geom_point() + theme_void() + theme(legend.position = 'top')
+
+for(i in 1:4){
+    df_list <- list()
+    for(cat in categories){
+        file <- paste(cat, "-", i*10, ".", y, sep="")
+        data <- read.table(file)
+        merged_data <- r_merge_list(data)
+        merged_data$id <- cat
+        df_list[[cat]] <- merged_data
+    }
+    df <- do.call(rbind, df_list)
+    df$id <- factor(df$id, levels = categories)
+
+    p[[i]] <- ggplot(df, aes(x=model, y=score, fill=id, color=id)) + geom_boxplot(alpha=0.2, outlier.shape = outlier_shape) +
+            scale_x_discrete(labels=c('1' = 'LG+G (MCMCTree)', '2'= 'LG+G (bs)', '3'= 'LG+G+C20 (bs)', '4'='LG+G+C40 (bs)')) +
+            ggtitle(paste('root age:', i, 'Ga')) + theme_bw() + 
+            theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 15, hjust = 0.5, vjust = 0.5), plot.title = element_text(hjust = 0.5), legend.position = 'none') +
+            ylab(y) + ylim(ymin, ymax)
+            #stat_compare_means(comparisons = df)
+            #aes(group = "model", label = 'p.signif')
+    if(mu) { p[[i]] <- p[[i]] + geom_abline(intercept = 0.25, slope = 0, linetype="dashed", color='grey') }
+}
+
+combined_plot <- plot_grid(plotlist = p, labels = "AUTO")
+final_plot <- plot_grid(legend_plot, combined_plot, ncol = 1, rel_heights = c(0.1, 1))
+
+ggsave(paste(y, ".pdf", sep=''), final_plot)
+
+

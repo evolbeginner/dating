@@ -9,10 +9,9 @@ suppressWarnings({
 
 
 #####################################################
-get_calib_interval <- function(x, y=0.2){
-	# y: percent
-	bottom <- round(x * (1-y), 5)
-	top <- round(x * (1+y), 5)
+get_calib_interval <- function(x, percent=0.2, sp=0){
+	bottom <- round(x * (1-percent+sp), 5)
+	top <- round(x * (1+percent+sp), 5)
 	return(c(bottom, top))
 }
 
@@ -22,8 +21,10 @@ get_calib_interval <- function(x, y=0.2){
 treefile <- NULL
 outfile <- NULL
 percent <- 0.2
+shift_percent <- 0
 num <- 2
 is_only_min <- F
+is_only_max <- F
 
 
 #####################################################
@@ -31,7 +32,9 @@ command=matrix(c(
     'tree', 't', 2, 'character',
     'outfile', 'o', 2, 'character',
     'num', 'n', 2, 'integer',
-    'only_min', '', 0, 'logical',
+    'only_min', 'm', 0, 'logical',
+    'only_max', 'M', 0, 'logical',
+    'shift', 's', 2, 'double',
     'percent', 'p', 2, 'double'),
     byrow=T, ncol=4
 )
@@ -50,9 +53,18 @@ if(! is.null(args$num)){
 if(! is.null(args$only_min)){
 	is_only_min <- T
 }
+if(! is.null(args$only_max)){
+	is_only_max <- T
+}
+if(! is.null(args$shift)){
+	shift_percent <- args$shift
+}
 if(! is.null(args$percent)){
 	percent <- args$percent
 }
+
+#print(percent)
+#percent <- sapply( 1:length(percent), function(i){shift_percent[i] + percent[i]} )
 
 
 #####################################################
@@ -81,9 +93,11 @@ for(i in nodes){
 	index <- d.order[i]
 	#print(index)
 	#d[d.order[20]] <- paste('>', d[d.order[20]]-, )
-	ages <- get_calib_interval(age, percent)
+	ages <- get_calib_interval(age, percent, shift_percent)
 	if(is_only_min && c < length(nodes)){
 		tree$node.label[index] <- paste(">", ages[1], sep="")
+    } else if(is_only_max){
+		tree$node.label[index] <- paste("<", ages[2], sep="")
 	} else{
 		tree$node.label[index] <- paste(">", ages[1], "<", ages[2], sep="")
 	}
