@@ -50,6 +50,7 @@ fi
 ##################################################
 nw_topology -Ib $treefile | ruby ~/lab-tools/dating/hessian/reorder_node.rb -i - --ref $ref_tree --output_branch > $outdir/branch_out
 
+echo "Rscript $ALIGN_BL $treefile $outdir/branch_out > $outdir/branch_out.matrix"
 Rscript $ALIGN_BL $treefile $outdir/branch_out > $outdir/branch_out.matrix
 
 

@@ -7,6 +7,7 @@
 #include(joinpath(DIR, "lib-julia", "util.jl"))
 dir = dirname(@__FILE__)
 include(joinpath(dir, "util.jl"))
+
 using ArgParse
 
 
@@ -16,6 +17,8 @@ iqtree_file = nothing
 basics_indir = nothing
 branchout_matrix = nothing
 hessian_outfile = nothing
+hessian_type = "SKT2004"
+hessian_infile = nothing
 
 pmsf_file = nothing
 is_pmsf = false
@@ -76,6 +79,17 @@ function parse_commandline()
 			help = "hessian file in the mcmctree order"
 			arg_type = String
 			default = nothing
+		"--hessian_type"
+			help = "SKT2004 (default) or fd (finite_difference)"
+			arg_type = String
+			default = "SKT2004"
+		"--read_hessian", "--read_inBV", "--read_in_BV"
+			help = "read the in.BV file"
+			arg_type = String
+			default = nothing
+		"--transform"
+			help = "transform method"
+			action = :store_true
     end
 
     return(parse_args(opt))
@@ -110,11 +124,15 @@ treefile = opt["tree"]
 iqtree_file = opt["iqtree"]
 branchout_matrix = opt["branchout_matrix"]
 sub_model = opt["model"]
+transform_method = "nothing"
 
 outdir = opt["outdir"]
 is_force = opt["force"]
 is_tolerate = opt["tolerate"]
 #hessian_outfile = opt["hessian"]
+hessian_type = opt["hessian_type"]
+hessian_infile = opt["read_hessian"]
+
 
 if outdir == nothing
 	error("outdir not specified. exiting ......")
@@ -143,4 +161,5 @@ mix_freq_model = (mix_freq_model == "nothing") ? nothing : mix_freq_model
 pmsf_file = opt["pmsf"]
 is_pmsf = (pmsf_file != nothing) ? true : false
 
+transform_method = opt["transform"]
 

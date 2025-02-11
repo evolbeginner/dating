@@ -1,1 +1,1 @@
-/home-user/sswang/project/Rhizobiales/scripts/dating/sequential/find_node_no.rb
+../sequential/find_node_no.rb

@@ -39,6 +39,8 @@ max <- max(c(d1,d2))
 
 a <- d1 - d2
 max_bls <- apply(matrix(c(d1, d2), ncol=2), 1, max)
+#order = rev(order(abs(a)/max_bls))
+#print(d1[order])
 
 score <- sum(a^2)^0.5
 

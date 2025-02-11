@@ -16,7 +16,7 @@ w_arg=''
 
 
 ###############################################################################################
-cmd="[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree*.nwk; [ -f rate.tre ] && rm rate.tre;mcmctree > mcmctree.final; bash ~/project/Rhizobiales/scripts/dating/figtree2tree.sh -i FigTree.tre > figtree.nwk; grep rategram out.txt >/dev/null && grep -A1 rategram out.txt | tail -1 > rate.tre"
+cmd="[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree*.nwk; [ -f rate.tre ] && rm rate.tre;mcmctree > mcmctree.final; bash ~/project/Rhizobiales/scripts/dating/figtree2tree.sh -i FigTree.tre > figtree.nwk; ln -s out out.txt 2>/dev/null; grep rategram out.txt >/dev/null && grep -A1 rategram out.txt | tail -1 > rate.tre"
 
 
 while [ $# -gt 0 ]; do

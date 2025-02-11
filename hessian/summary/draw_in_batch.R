@@ -23,6 +23,20 @@ r_merge_list <- function(d, y='score'){
 }
 
 
+determine_yminmax <- function(df, ymin, ymax){
+    sorted_score <- sort(df$score)
+    if(is.null(ymin)){
+        ind <- ceiling(0.05 * length(sorted_score))
+        ymin <- sort(sorted_score)[ind]
+    }
+    if(is.null(ymax)){
+        ind <- ceiling(0.95 * length(sorted_score))
+        ymax <- max(sort(df$score))
+    }
+    return(c(ymin, ymax))
+}
+
+
 #############################################
 infiles = NULL
 y <- NULL
@@ -31,8 +45,11 @@ ymax <- NULL
 outlier_shape <- 19 # change to NA if no outlier is wanted
 categories <- NULL
 mu <- FALSE
+by <- 'model'
+age_name = 'age'
 
 ages <- c(10, 20, 30, 40)
+types <- c("rate", "time")
 
 
 #############################################
@@ -43,7 +60,9 @@ GetoptLong(
     "ymin=f", "ymin",
     "ymax=f", "ymax",
     "cat=s", "cat",
-    "mu!", "mu"
+    "by=s", "x axis: by model/calib",
+    "age_name=s", "age|mu (default: age)"
+    #"mu!", "mu"
 )
 
 if(is.null(y)){
@@ -60,6 +79,10 @@ if(is.null(m)){
     selected_models <- strsplit(m, ',')[[1]]
 }
 
+if(age_name == 'rate' || age_name == 'mu'){
+    ages <- rev(c(-1.6, -2.3, -3, -3.7))
+}
+
 
 #############################################
 par(mfrow = c(2, 2))
@@ -73,72 +96,84 @@ p <- list()
 # Prepare a dummy plot for the legend
 df <- data.frame(x = 1, y = 1, Calibration = factor(categories, levels = categories))
 
-legend_plot <- ggplot(df, aes(x = x, y = y, color = Calibration, fill = Calibration)) +
-    geom_point(alpha = 0, size = 5) +  # Set alpha to 0 to make the point fully transparent, adjust size for visibility in legend
-    #scale_color_manual(values = c("red", "green", "blue")) +  # Set manual colors for the legend
-    #scale_fill_manual(values = c("red", "green", "blue")) +
-    guides(
-        color = guide_legend(override.aes = list(alpha = 1)),  # Override alpha for legend
-        fill = guide_legend(override.aes = list(alpha = 1)) 
-    ) + 
-    theme_void() +
-    theme(legend.position = 'bottom')
 
-determine_yminmax <- function(df, ymin, ymax){
-    sorted_score <- sort(df$score)
-    if(is.null(ymin)){
-        ind <- ceiling(0.05 * length(sorted_score))
-        ymin <- sort(sorted_score)[ind]
+# note: by calib then legend = model, vice versa
+get_legend <- function(by){
+    if(by == 'model'){
+        legend_plot <- ggplot(df, aes(x = x, y = y, color = Calibration, fill = Calibration))
+    } else if(by == 'calib'){
+        tmp_df <- data.frame(x=1, y=1, model=factor(selected_models, levels=selected_models))
+        legend_plot <- ggplot(tmp_df, aes(x=x, y=y, color = model, fill = model))
     }
-    if(is.null(ymax)){
-        ind <- ceiling(0.95 * length(sorted_score))
-        ymax <- max(sort(df$score))
-    }
-    return(c(ymin, ymax))
+    legend_plot <- legend_plot +
+        geom_point(alpha = 0, size = 5) +  # Set alpha to 0 to make the point fully transparent, adjust size for visibility in legend
+        #scale_color_manual(values = c("red", "green", "blue")) +  # Set manual colors for the legend
+        #scale_fill_manual(values = c("red", "green", "blue")) +
+        guides(
+            color = guide_legend(override.aes = list(alpha = 1)),  # Override alpha for legend
+            fill = guide_legend(override.aes = list(alpha = 1)) 
+        ) + 
+        theme_void() +
+        theme(legend.position = 'bottom')
+    return(legend_plot)
 }
 
+legend_plot <- get_legend(by)
 #a <- determine_yminmax(df, ymin, ymax)
 #ymin <- a[1]; ymax <- a[2]
 
-for(ind in 1:length(ages)){
-    age <- ages[ind]
-    
-    df_list <- list()
-    for(cat in categories){
-        file <- paste(cat, "-", age, ".", y, sep="")
-        if (!file.exists(file)) {
-            file <- paste(cat, "/", age, ".", y, sep="")
+
+
+for(type in types){
+    for(ind in 1:length(ages)){
+        age <- ages[ind]
+        
+        df_list <- list()
+        for(cat in categories){
+                file <- paste(cat, '-', type, '.', age, '.', y, sep="")
+                if (!file.exists(file)) {
+                    file <- paste(cat, "/", type, '.', age, ".", y, sep="")
+                }
+            data <- read.table(file, header=T)
+            colnames(data) <- gsub("\\.", "\\+", colnames(data))
+            models <- rep(names(data), each=nrow(data))
+            merged_data <- r_merge_list(data)
+            merged_data$Calibration <- cat
+            merged_data$model <- models
+            df_list[[cat]] <- merged_data
         }
+        df <- do.call(rbind, df_list)
+        df$Calibration <- factor(df$Calibration, levels = categories)
 
-        data <- read.table(file, header=T)
-        colnames(data) <- gsub("\\.", "\\+", colnames(data))
-        models <- rep(names(data), each=nrow(data))
-        merged_data <- r_merge_list(data)
-        merged_data$Calibration <- cat
-        merged_data$model <- models
-        df_list[[cat]] <- merged_data
+        #selected_models <- c('LG+G', 'LG')  # Replace with the actual model names you want to select
+        df <- df %>% filter(model %in% selected_models)
+        df$model <- factor(df$model, levels = selected_models)
+
+        if(by == 'model'){
+            p[[ind]] <- ggplot(df, aes(x=model, y=score, fill=Calibration, color=Calibration)) + geom_boxplot(alpha=0.2, outlier.shape = outlier_shape)
+        } else if(by == 'calib'){
+            p[[ind]] <- ggplot(df, aes(x=Calibration, y=score, fill=model, color=model)) + geom_boxplot(alpha=0.2, outlier.shape = outlier_shape)
+        }
+            if(age_name == 'age'){
+                title <- paste('root age:', age, 'Ga')
+            }else if(age_name == 'rate' || age_name == 'mu'){
+                title <- paste('mean rate:', age, 'AA/site/Ga')
+            }
+            p[[ind]] <- p[[ind]] + 
+                #ggtitle(paste('root age:', age, 'Ga')) + theme_bw() + 
+                ggtitle(title) + theme_bw() + 
+                theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 15, hjust = 0.5, vjust = 0.5), plot.title = element_text(hjust = 0.5), legend.position = 'none') +
+                ylab(y) + ylim(ymin, ymax)
+                #stat_compare_means(comparisons = df)
+                #aes(group = "model", label = 'p.signif')
+        if(mu) { p[[i]] <- p[[i]] + geom_abline(intercept = 0.25, slope = 0, linetype="dashed", color='grey') }
     }
-    df <- do.call(rbind, df_list)
-    df$Calibration <- factor(df$Calibration, levels = categories)
 
-    #selected_models <- c('LG+G', 'LG')  # Replace with the actual model names you want to select
-    df <- df %>% filter(model %in% selected_models)
-    df$model <- factor(df$model, levels = selected_models)
+    combined_plot <- plot_grid(plotlist = p, labels = "AUTO")
+    final_plot <- plot_grid(legend_plot, combined_plot, ncol = 1, rel_heights = c(0.1, 1))
 
-    p[[ind]] <- ggplot(df, aes(x=model, y=score, fill=Calibration, color=Calibration)) + geom_boxplot(alpha=0.2, outlier.shape = outlier_shape) +
-            #scale_x_discrete(labels=c('1' = 'LG+G (MCMCTree)', '2'= 'LG+G (bs)', '3'= 'LG+G+C20 (bs)', '4'='LG+G+C40 (bs)')) +
-            ggtitle(paste('root age:', age, 'Ga')) + theme_bw() + 
-            theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 15, hjust = 0.5, vjust = 0.5), plot.title = element_text(hjust = 0.5), legend.position = 'none') +
-            ylab(y) + ylim(ymin, ymax)
-            #stat_compare_means(comparisons = df)
-            #aes(group = "model", label = 'p.signif')
-    if(mu) { p[[i]] <- p[[i]] + geom_abline(intercept = 0.25, slope = 0, linetype="dashed", color='grey') }
+    ggsave(paste(type, '.', y, '.pdf', sep=''), final_plot, width = 8.27)
+
 }
-
-combined_plot <- plot_grid(plotlist = p, labels = "AUTO")
-final_plot <- plot_grid(legend_plot, combined_plot, ncol = 1, rel_heights = c(0.1, 1))
-
-
-ggsave(paste(y, ".pdf", sep=''), final_plot, width = 8.27)
 
 

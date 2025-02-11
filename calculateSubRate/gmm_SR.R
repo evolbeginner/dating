@@ -19,7 +19,7 @@ find_index <- function(x){m = matrix(x, ncol=n); index = apply(m, 1, max); which
 
 ########################################################
 a = read.table(infile)
-b <- unlist(a$V2)
+b <- unlist(log(a$V2))
 
 gmm = GMM(as.matrix(b), n)
 #gmm = GMM(as.matrix(c(1,2,3,4,5)), n)

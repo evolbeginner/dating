@@ -167,6 +167,7 @@ opts = GetoptLong.new(
   ['--run_mcmctree', GetoptLong::NO_ARGUMENT],
   ['--no_mcmctree', GetoptLong::NO_ARGUMENT],
   ['--add_cmd', '--add_argu', GetoptLong::REQUIRED_ARGUMENT],
+  ['--no_mwopt', GetoptLong::NO_ARGUMENT],
 )
 
 opts.each do |opt, value|
@@ -206,6 +207,8 @@ opts.each do |opt, value|
       is_run_mcmctree = false
     when '--add_cmd', '--add_argu'
       add_argu = value
+    when '--no_mwopt'
+      add_argu.sub!('-mwopt', '')
   end
 end
 

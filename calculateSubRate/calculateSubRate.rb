@@ -7,36 +7,7 @@ require 'parallel'
 
 require 'Dir'
 require 'SSW_bio'
-
-
-#################################################################
-$PWD = Dir.getwd
-DIR = File.dirname($0)
-
-
-#################################################################
-PAML_DIR = File.expand_path("~/software/phylo/paml4.7/")
-
-PROG = File.join(PAML_DIR, 'bin', 'codeml')
-CTL = File.join(DIR, 'codeml4CalculateSubRate.ctl')
-AA_RATE_FILE = File.join(PAML_DIR, 'dat', 'lg.dat')
-
-GET_MAP_FROM_PHYLIP = File.join(DIR, 'get_map_from_phylip.sh')
-
-
-#################################################################
-indir = nil
-treefile = nil
-outdir = nil
-is_prot = true
-is_nucl = false
-cpu = 1
-is_force = false
-is_tolerate = false
-
-
-rates = Array.new
-basenames = Array.new
+require 'bio-nwk'
 
 
 #################################################################
@@ -86,6 +57,71 @@ def prepare_paml_ctl(ctl_file, outdir, h)
   out_fh.puts lines.join("\n")
   out_fh.close
 end
+
+
+#################################################################
+def get_taxa_from_full_species_tree(treefile)
+  tree = nil
+  in_fh = File.open(treefile, 'r')
+  in_fh.each_line do |line|
+    next if $. != 2
+    line.chomp!
+    tree = Bio::Newick.new(line).tree
+  end
+  in_fh.close
+  return(tree.allTips)
+end
+
+
+def get_root_age(treefile)
+  tree = nil
+  in_fh = File.open(treefile, 'r')
+  in_fh.each_line do |line|
+    next if $. != 2
+    line.chomp!
+    tree = Bio::Newick.new(line).tree
+  end
+  in_fh.close
+  return(tree.root.name)
+end
+
+
+def set_root_age_and_output_tree(treefile2, root_age, outfile)
+  tree2 = getTreeObjs(treefile2)[0]
+  tree2.root.name = root_age
+  out_fh = File.open(outfile, 'w')
+  out_fh.write(tree2.output_newick)
+  out_fh.close
+end
+
+
+#################################################################
+$PWD = Dir.getwd
+DIR = File.dirname($0)
+
+
+#################################################################
+PAML_DIR = File.expand_path("~/software/phylo/paml/v4.7")
+
+PROG = File.join(PAML_DIR, 'bin', 'codeml')
+CTL = File.join(DIR, 'codeml4CalculateSubRate.ctl')
+AA_RATE_FILE = File.join(PAML_DIR, 'dat', 'lg.dat')
+
+GET_MAP_FROM_PHYLIP = File.join(DIR, 'get_map_from_phylip.sh')
+
+
+#################################################################
+indir = nil
+treefile = nil
+outdir = nil
+is_prot = true
+is_nucl = false
+cpu = 1
+is_force = false
+is_tolerate = false
+
+rates = Array.new
+basenames = Array.new
 
 
 #################################################################
@@ -143,6 +179,10 @@ Dir.foreach(indir) do |b|
   basenames << b
 end
 
+all_taxa = get_taxa_from_full_species_tree(treefile).map{|node|node.name.gsub(' ', '_')}
+# sometimes root_age "@10" might be removed during nw_prune so we add it back always
+root_age = get_root_age(treefile)
+
 
 results = Parallel.map(basenames, in_processes: cpu) do |b|
   ctl = b + '.ctl'
@@ -158,8 +198,11 @@ results = Parallel.map(basenames, in_processes: cpu) do |b|
   `bash #{GET_MAP_FROM_PHYLIP} #{seqfile} > #{map_file}`
 
   # generate treefile2
-  `echo #{taxa.size} 1 > #{treefile2}`
-  `sed '1d' #{treefile} | nw_prune - -v #{taxa.join(" ")} | nw_rename - #{map_file} >> #{treefile2}`
+  #taxa_excluded = all_taxa - taxa
+  #`sed '1d' #{treefile} | nw_prune - #{taxa_excluded.join(" ")} | nw_rename - #{map_file} >> #{treefile2}`
+  `sed '1d' #{treefile} | nw_prune - -v #{taxa.join(" ")} | nw_rename - #{map_file} > #{treefile2}`
+  set_root_age_and_output_tree(treefile2, root_age, treefile2)
+  `echo #{taxa.size} 1 | cat - #{treefile2} | sponge #{treefile2}`
 
   prepare_paml_ctl(ctl, outdir, {'seqfile'=>b, 'treefile'=>treefile2, 'outfile'=>outfile})
   `#{PROG} #{ctl}`

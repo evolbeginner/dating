@@ -86,6 +86,13 @@ tree$node.label <- rep("NA", length(tree$tip.label))
 nodes <- lapply(1:num, FUN=function(x){ floor( x/(num+1) * length(tree$tip.label) ) } )
 nodes <- append(nodes, length(tree$tip.label)-1)
 
+
+# for uniform only_min
+max_age <- NULL
+age <- d[d.order[nodes[length(nodes)][[1]]]]
+ages <- get_calib_interval(age, percent, shift_percent)
+max_age <- ages[2]
+
 c <- 0
 for(i in nodes){
 	c <- c + 1
@@ -96,6 +103,7 @@ for(i in nodes){
 	ages <- get_calib_interval(age, percent, shift_percent)
 	if(is_only_min && c < length(nodes)){
 		tree$node.label[index] <- paste(">", ages[1], sep="")
+		#tree$node.label[index] <- paste(">", ages[1], '<', max_age, sep="")
     } else if(is_only_max){
 		tree$node.label[index] <- paste("<", ages[2], sep="")
 	} else{

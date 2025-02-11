@@ -144,6 +144,7 @@ birth <- args$birth
 death <- args$death
 n <- args$num
 
+
 if (is.null(args[["timetree"]])){
 	#tree <- rphylo(n, birth, death)
 	trees <- sim.bd.taxa.age(n, 1, birth, death, rho, age, mrca = TRUE);
@@ -187,6 +188,8 @@ unrooted_tree <- unroot(subs_tree)
 rate_tree <- subs_tree
 rate_tree$edge.length <- subs_tree$edge.length/timetree$edge.length
 
+cat(paste0("mean_sd:\t", mean(sds),"\n")); print(var(sds))
+
 
 ###################################################
 if(is.null(args[["outdir"]])){
@@ -208,5 +211,6 @@ if(is.null(args[["outdir"]])){
 	write.tree(rate_tree, rate_tree_file)
 	#lapply(args, write, cmd_file, append=TRUE, ncolumns=1000)
 }
+
 
 

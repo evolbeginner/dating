@@ -1,5 +1,8 @@
 #! /bin/env ruby
 
+# © Sishuo Wang [2024-2025]. All rights reserved.
+puts("© Sishuo Wang [2024-2025]. All rights reserved.", "\n")
+
 
 #########################################
 # 2024-12-06
@@ -81,6 +84,14 @@ def run_mcmctree(outdirs, tree_indir, phylip, clock, bd, bsn)
 end
 
 
+def create_phylip(seqfile)
+  tmp_dir = Dir.mktmpdir
+  `MFAtoPHY.pl #{seqfile}; mv #{seqfile}.phy #{tmp_dir}`
+  phylip = File.join(tmp_dir, File.basename(seqfile)+'.phy')
+  return(phylip)
+end
+
+
 #########################################
 seqfile = nil
 st = 'AA'
@@ -107,6 +118,8 @@ iqtree_add_arg0 = ['-mwopt', '-keep-ident', "-mdef #{MFM_DIR}/C2.nex"].join(' ')
 iqtree_add_arg = iqtree_add_arg0
 julia_bl_add_arg = nil
 
+hessian_type = 'SKT2004'
+
 outdirs = Hash.new
 
 
@@ -130,6 +143,7 @@ opts = GetoptLong.new(
   ['--bd', GetoptLong::REQUIRED_ARGUMENT],
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
   ['--no_mwopt', GetoptLong::NO_ARGUMENT],
+  ['--hessian_type', GetoptLong::REQUIRED_ARGUMENT],
   ['-h', GetoptLong::NO_ARGUMENT]
 )
 
@@ -169,6 +183,8 @@ opts.each do |opt, value|
       bd = value
     when '--bsn'
       bsn = value
+    when '--hessian_type'
+      hessian_type = value
     when '--no_mwopt'
       is_mwopt = false
   end
@@ -223,16 +239,10 @@ out_treefile = File.join(outdirs[:iqtree], 'iqtree.treefile')
 `bash #{GEN_BRANCH} -t #{out_treefile} --ref_tree #{ref_treefile} --outdir #{outdirs[:bl]} --force`
 
 # julia_bl
-puts "#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st} --tree #{out_treefile} -b #{branchout_matrix} -m #{non_mfm} --mfm #{mfm} --outdir #{outdirs[:inBV]} --force #{julia_bl_add_arg} 2>#{outdir}/error"
-`#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st} --tree #{out_treefile} -b #{branchout_matrix} -m #{non_mfm} --mfm #{mfm} --outdir #{outdirs[:inBV]} --force #{julia_bl_add_arg} 2>#{outdir}/error`
+cmd = "#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st} --tree #{out_treefile} -b #{branchout_matrix} -m #{non_mfm} --mfm #{mfm} --outdir #{outdirs[:inBV]} --force #{julia_bl_add_arg} --hessian_type #{hessian_type} 2>#{outdir}/error"
+p cmd
+`#{cmd}`
 
-# do_mcmctree
-def create_phylip(seqfile)
-  tmp_dir = Dir.mktmpdir
-  `MFAtoPHY.pl #{seqfile}; mv #{seqfile}.phy #{tmp_dir}`
-  phylip = File.join(tmp_dir, File.basename(seqfile)+'.phy')
-  return(phylip)
-end
 
 if phylip.nil?
   phylip = create_phylip(seqfile)

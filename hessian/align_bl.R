@@ -47,6 +47,8 @@ for(anc in (nb.node+nb.tip):(1+nb.tip)){
     }
 }
 
+#print(branches); q()
+
 #df$ape_order <- sapply(1:nrow(df), function(i){ which(branches == df[i,]$branch) })
 df$ape_order <- sapply(
     1:nrow(df), function(i){

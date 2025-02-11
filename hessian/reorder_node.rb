@@ -31,8 +31,8 @@ def get_child(tree, node, bls, name2bl, name2order, order2names, is_name2order=f
     bls << tree.distance(node, tree.parent(node))
     tips = tree.tips(node)
 
-    tip_names = tips.map{|i|i.name.gsub(' ', '_')}.sort
-    complement_tip_names = (ORDERED_TIP_NAMES - tree.tips(node).map{|t|t.name.gsub(' ', '_')}).sort
+    tip_names = tips.map{|i|i.name.gsub(' ', '_')}.sort_by(&:downcase)
+    complement_tip_names = (ORDERED_TIP_NAMES - tree.tips(node).map{|t|t.name.gsub(' ', '_')}).sort_by(&:downcase)
     #p tree.tips(node).map{|t|t.name}
 
     name2bl[tip_names] = bls[-1]

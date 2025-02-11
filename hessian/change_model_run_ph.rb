@@ -9,7 +9,10 @@ require 'parallel'
 ####################################################
 indir = nil
 models = Array.new
+thread = nil
 cpu = 1
+is_only_root = false
+hessian_type = 'SKT2004'
 ori_model = 'LG+G'
 is_force = false
 
@@ -22,6 +25,9 @@ opts = GetoptLong.new(
   ['--indir', GetoptLong::REQUIRED_ARGUMENT],
   ['-m', '--model', GetoptLong::REQUIRED_ARGUMENT],
   ['--ori_model', GetoptLong::REQUIRED_ARGUMENT],
+  ['--only_root', GetoptLong::NO_ARGUMENT],
+  #['--hessian_type', GetoptLong::REQUIRED_ARGUMENT],
+  ['--thread', GetoptLong::REQUIRED_ARGUMENT],
   ['--cpu', GetoptLong::REQUIRED_ARGUMENT],
   ['--force', GetoptLong::NO_ARGUMENT],
 )
@@ -34,6 +40,12 @@ opts.each do |opt, value|
       models = value.split(',')
     when '--ori_model'
       ori_model = value
+    when '--only_root'
+      is_only_root = true
+    #when '--hessian_type'
+    #  hessian_type = value
+    when '--thread'
+      thread = value.to_i
     when '--cpu'
       cpu = value.to_i
     when '--force'
@@ -64,7 +76,7 @@ cmd_files.each do |file|
 end
 
 
-#dirs.select!{|a| a[0] =~ /root/}
+dirs.select!{|a| a[0] =~ /root/} if is_only_root
 
 p dirs
 
@@ -78,14 +90,20 @@ Parallel.map(dirs, in_processes:cpu) do |dir|
   cmd.gsub!(ori_model, m)
   cmd.sub!(/\n/, '')
   cmd.gsub!('/root/', '/'+root_change_to+'/')
+  cmd.gsub!(/[-][-]cpu (\d+)/, '--cpu ' + thread.to_s) if not thread.nil?
   cmd =~ /[-][-]outdir (\S+)/
+
+  if m =~ /\.fd$/
+    cmd = [cmd, '--hessian_type fd'].join(' ')
+    cmd.sub!(/-m (\S+)\.fd/, '-m \1')
+    #cmd.sub!(/--outdir (\S+)#{m}(\S+)/, '--outdir ' + '\1'+m+'.fd\2')
+  end
+
   outdir = $1
   `echo \"#{cmd}\" > #{new_dir}/cmd`
-  #p cmd
   `rm -rf #{outdir}/../combined/`
   `#{cmd}`
   `mv #{outdir}/date/combined/ #{outdir}/../`
-  #puts outdir
 end
 
 

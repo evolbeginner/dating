@@ -1,14 +1,18 @@
-#! /usr/bin/env julia
+#! /bin/env julia
+
+# © Sishuo Wang [2024-2025]. All rights reserved.
+println("© Sishuo Wang [2024-2025]. All rights reserved.", "\n")
 
 
 ######################################################################
-# can import .iqtree file by "--iqtree 1.iqtree"
-# rs, props
+# v0.18.7
+# transform_method --transform
 
 
 ######################################################################
 #DIR = Base.source_path()
 DIR = script_dir = @__DIR__
+#using MKL
 
 
 lib = "lib-julia"
@@ -30,9 +34,9 @@ using FiniteDiff
 using StatsFuns: logsumexp
 
 using Folds
-
 using ConcurrentCollections
-#using ThreadsX
+
+using Distributions
 
 
 ######################################################################
@@ -69,7 +73,7 @@ bls = Vector()
 
 
 ######################################################################
-function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::Array{Float64,2}, cherry::Dict=Dict(), flouri=Dict(), is_pmsf::Bool=false, is_flouri::Bool=true; rs::Vector{Float64}=[1.0], props::Vector{Float64}=[1.0], is_do_inv::Bool=false, inv_prop::Float64=0.0, Qrs::Vector{Float64}, freqs::Vector{Float64}, index::Int)
+function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::Array{Float64,2}, cherry::Dict=Dict(), flouri=Dict(), is_pmsf::Bool=false, is_flouri::Bool=false; rs::Vector{Float64}=[1.0], props::Vector{Float64}=[1.0], is_do_inv::Bool=false, inv_prop::Float64=0.0, Qrs::Vector{Float64}, freqs::Vector{Float64}, index::Int)
     bl = param
 
 	# gamma rate
@@ -103,8 +107,6 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 	lks = zeros(length(weights))
 	counter = 0
 
-	#println(props, freqs, weights); exit()
-
 	@inbounds for r_i in 1:length(rs)
 		for q_i in 1:length(q_pis)
 			#LG4M or LG4X
@@ -116,11 +118,11 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 			Q = q_pis[q_i].Q
 			Pi = q_pis[q_i].Pi
 			U = q_pis[q_i].U; Lambda = q_pis[q_i].Lambda; U_inv = q_pis[q_i].U_inv
-			
 			r = Qrs[q_i] * rs[r_i] # r defined
 
-			liks = similar(liks_ori)
-			[ liks[i] = liks_ori[i] for i in 1:length(liks_ori) ]
+			#liks = similar(liks_ori)
+			#[ liks[i] = liks_ori[i] for i in 1:length(liks_ori) ]
+			liks = copy(liks_ori)
 			j = 0
 
 			comp = zeros(Float64, nb.tip+nb.node)
@@ -128,39 +130,22 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 			@inbounds @simd for anc in ((nb.node + nb.tip):-1:(1 + nb.tip))
 				children = all_children[anc] # used to be "anc-nb.tip"
 				m = zeros(Float64, nl, length(children))
-				is_prev = false
 
 				desc_lik_pattern = [ liks[descendant,:] for descendant in descendants[anc] ]
-				if anc in cherry["cherry_nodes"]
-					node_v = (liks[children[1],:], liks[children[2],:])
-					m_prod = cherry["cherry_liks"][anc][node_v]
-					j += length(children)
-				else
-					haskey(flouri,anc) && haskey(flouri[anc], desc_lik_pattern) && (is_prev=true)
-					if is_prev
-						@inbounds comp[anc], liks[anc,:] = flouri[anc][desc_lik_pattern]
-						j += length(children)
+			 	@inbounds @simd for i in 1:length(children)
+					j += 1
+					if any(is_complex_matrix, [U, Lambda, U_inv])
+						#U = convert_complex_to_float_in_matrix(U)
+						#Lambda = convert_complex_to_float_in_matrix(Lambda)
+						#U_inv = convert_complex_to_float_in_matrix(U)
+						@inbounds m[:,i] = exp(Q*bl[j]*r)*liks[children[i], :]
 					else
-						 @inbounds @simd for i in 1:length(children)
-							j += 1
-							if any(is_complex_matrix, [U, Lambda, U_inv])
-								#U = convert_complex_to_float_in_matrix(U)
-								#Lambda = convert_complex_to_float_in_matrix(Lambda)
-								#U_inv = convert_complex_to_float_in_matrix(U)
-								@inbounds m[:,i] = exp(Q*bl[j]*r)*liks[children[i], :]
-							else
-								@inbounds m[:,i] = eigendecom_pt(U,Lambda,U_inv,bl[j]*r)*liks[children[i], :]
-							end
-						end
-						m_prod = prod(m, dims=2)
+						@inbounds m[:,i] = eigendecom_pt(U,Lambda,U_inv,bl[j]*r)*liks[children[i], :]
 					end
 				end
-				if ! is_prev
-					#@inbounds comp[anc] = (anc == (1 + nb.tip)) ? dot(fill(1/nl,nl), m_prod) : sum(m_prod)
-					@inbounds comp[anc] = (anc == (1 + nb.tip)) ? dot(Pi, m_prod) : sum(m_prod)
-					@inbounds liks[anc, :] = m_prod / comp[anc]
-					is_flouri && (flouri[anc][desc_lik_pattern] = (comp[anc],liks[anc,:]))
-				end
+				m_prod = prod(m, dims=2)
+				@inbounds comp[anc] = (anc == (1 + nb.tip)) ? dot(Pi, m_prod) : sum(m_prod)
+				@inbounds liks[anc, :] = m_prod / comp[anc]
 			end
 			# very rare numerical error
 			if any(x->x<0, comp)
@@ -184,8 +169,6 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 	else
 		log_lk = -logsumexp(log.(weights) .+ lks)
 	end
-
-	#println([log_lk])
 
 	#return (ismissing(log_lk) ? Inf : log_lk)
 	return ([log_lk, flouri])
@@ -232,12 +215,15 @@ end
 
 #@inline function eigendecom_pt(U::SMatrix{Float64}, Lambda::Vector{Float64}, U_inv::SMatrix{Float64}, scale::Float64=1.0)
 @inline function eigendecom_pt(U::Matrix{Float64}, Lambda::Vector{Float64}, U_inv::Matrix{Float64}, scale::Float64=1.0)
-	#nrow = size(U)[1]
+	nrow = size(U)[1]
+	P1 = similar(U)
+	P2 = similar(U)
 	#P1 = Matrix{Float64}(undef, nrow, nrow)
 	#P2 = Matrix{Float64}(undef, nrow, nrow)
-	#mul!(P1, U, Diagonal(exp.(Lambda * scale)))
+	mul!(P1, U, Diagonal(exp.(Lambda * scale)))
 	#mul!(P2, U*Diagonal(exp.(Lambda * scale)), U_inv)
-	#return(P2)
+	mul!(P2, P1, U_inv)
+	return(P2)
 	#println(typeof(U)); println(typeof(Lambda))
 	@fastmath U * Diagonal(exp.(Lambda * scale)) * U_inv
 end
@@ -245,7 +231,7 @@ end
 
 ######################################################################
 function delta_log_lk(bls::Vector{Float64}, indices::Vector{Int}, nums, i, pattern2, cherry, flouri)
-	bls_copy = deepcopy(bls)
+	bls_copy = copy(bls)
 	bls_copy[indices] .+= nums
 	rv = do_phylo_log_lk((is_pmsf ? q_pis_sites[i] : q_pis), bls_copy, pattern2[i][1], cherry, flouri, is_pmsf, false;
 		rs = rs, props = props, is_do_inv=inv_info[:is_do_inv], inv_prop=inv_info[:inv_prop],
@@ -253,7 +239,8 @@ function delta_log_lk(bls::Vector{Float64}, indices::Vector{Int}, nums, i, patte
 end
 
 
-function hessian_STK2004(bls::Vector{Float64}, pattern2::Vector, bl_order::Dict{String, Dict{Any, Any}})
+#function hessian_SKT2004(bls::Vector{Float64}, pattern2::Vector, bl_order::Dict{String, Dict{Any, Any}})
+function hessian_SKT2004(bls::Vector{Float64}, pattern2::Vector)
 	flouri=Dict()
 	#is_pmsf=false
 	cherry = Dict("cherry_nodes"=>[], "cherry_liks"=>Dict())
@@ -267,7 +254,7 @@ function hessian_STK2004(bls::Vector{Float64}, pattern2::Vector, bl_order::Dict{
 		#println(join(["site:\t", k], "\t"))
 		thetas = zeros(Float64, nb.branch)
 		for i in 1:nb.branch
-			step = (1e-3 + bls[i]) ./ 1e6
+			step = (1 + bls[i]) ./ 1e6
 			thetas[i] = (delta_log_lk2(bls,[i],(step),k) - delta_log_lk2(bls,[i],(-step),k))/(2*step)
 		end
 		h[k] += thetas .* thetas'
@@ -275,13 +262,47 @@ function hessian_STK2004(bls::Vector{Float64}, pattern2::Vector, bl_order::Dict{
 	h = -sum(values(h)) # negative Hessian
 	println()
 
-	sorted_keys = sort(collect(keys(bl_order["mcmctree2ape"])))
-	new_order = [bl_order["mcmctree2ape"][k] for k in sorted_keys]
-	h_mcmctree = h[new_order, new_order]
-	return([h, h_mcmctree])
+	return(h)
 end
 
 
+function hessian_fd(bls::Vector{Float64}, sum_phylo_log_lk2::Function)
+	h = ones(nb.branch, nb.branch)
+	function f(bls0, indices, nums)
+		a = deepcopy(bls0)
+		a[indices] .+= nums
+		loglk = sum_phylo_log_lk2(a)
+	end
+	
+	f0 = f(bls,[1],(0))
+
+	Threads.@threads for i in 1:nb.branch
+		for j in 1:nb.branch
+			if h[i,j] != 1.0
+				h[i,j] = h[j,i]
+				continue
+			end
+			bls0 = deepcopy(bls) #bls is mutable
+			△bls = max.((bls0[i], bls0[j])./1e6, 1e-6)
+			#△bls = (1, 1) ./ 1e6
+			(bl1, bl2) = △bls
+			if i == j
+				v1 = ( f(bls,[i],(bl1)) - 2*f0 + f(bls,[i],(-bl1)) ) / (reduce(*,△bls))
+			else
+				v1 = (f(bls0,[i,j],(bl1,bl2)) + f(bls0,[i,j],(-bl1,-bl2)) - f(bls0,[i,j],(-bl1,bl2)) - f(bls0,[i,j],(bl1,-bl2))) / (4*reduce(*,△bls))
+			end
+			h[i,j] = v1
+		end
+	end
+
+	println()
+	h .= -h
+
+	return(h)
+end
+
+
+######################################################################
 @inline function get_new_order(bl_order::Dict{String, Dict{Any, Any}})
 	sorted_keys = sort(collect(keys(bl_order["mcmctree2ape"])))
 	new_order = [bl_order["mcmctree2ape"][k] for k in sorted_keys]
@@ -290,13 +311,8 @@ end
 
 #function sum_phylo_log_lk(param, pattern2, q_pis, q_pis_sites)
 function sum_phylo_log_lk(param::Vector{Float64}, pattern2::Vector{Any})
-	# pattern2: v[1]=liks, v[2]=num
-	if(false)
-		cherry_liks = calculate_lk_cherry(cherry_nodes, param)
-		cherry = Dict("cherry_nodes"=>cherry_nodes, "cherry_liks"=>cherry_liks)
-	else
-		cherry = Dict("cherry_nodes"=>[], "cherry_liks"=>Dict())
-	end		
+	# pattern2: v[1]=liks, v[2]=numsum_phylo_log_lk
+	cherry = Dict("cherry_nodes"=>[], "cherry_liks"=>Dict())
 
 	flouri = ConcurrentDict{Int, ConcurrentDict}()
 	for int_node in keys(descendants)
@@ -305,7 +321,7 @@ function sum_phylo_log_lk(param::Vector{Float64}, pattern2::Vector{Any})
 	end
 	#Folds.sum(Folds.map(i->do_phylo_log_lk(param,pattern2[i][1],cherry,flouri,Q[i],is_pmsf,true)[1]*pattern2[i][2], 1:length(pattern2)))
 	if(true)
-		Folds.sum( Folds.map(i -> do_phylo_log_lk((is_pmsf ? q_pis_sites[i] : q_pis), param, pattern2[i][1], cherry, flouri, is_pmsf, false;
+		Folds.sum( Folds.map(i -> do_phylo_log_lk((is_pmsf ? q_pis_sites[i] : q_pis), param, pattern2[i][1], cherry, flouri, is_pmsf, false; 
 			rs = rs, props = props, is_do_inv=inv_info[:is_do_inv], inv_prop=inv_info[:inv_prop],
 			Qrs = Qrs, freqs = freqs, index = i
 		)[1]*pattern2[i][2], 1:length(pattern2)) )
@@ -320,6 +336,7 @@ end
 
 function calculate_gradient(bls::Vector{Float64}, sum_phylo_log_lk2::Function)
 	delta_loglks = Vector{Float64}(undef, length(bls))
+	bls = map!(x->x<=1e-6 ? 0 : x, bls, bls)
 	for i in 1:length(bls)
 		zs = zeros(length(bls))
 		step = 2*(1e-3+bls[i]) / 1e6
@@ -333,26 +350,25 @@ end
 
 
 ######################################################################
-function compare_true_vs_approx_lnL(bls, g, h, lnL0, sum_phylo_log_lk2)
-	Threads.@threads for i in 1:100
-		rs = 1 .+ 0.2 * max.(randn(length(bls)), 1e-6)
-		new_bls = bls .* rs
-		lnL = sum_phylo_log_lk2(new_bls)
+function compare_true_vs_approx_lnL(bls, g, h, lnL0, sum_phylo_log_lk2, transform_method)
+	cov = -inv( Hermitian(h+Diagonal(ones(dim(h)[1]))*1e-6) )
+	println(diag(cov))
 
-		if false
+	for i in 1:100
+		#new_bls = bls .+ sqrt.(diag(cov)) .* max.(randn(length(bls)), 1e-6)
+		#new_bls = bls .+ sqrt.(diag(cov)) .* max.(randn(length(bls)), 1e-8)
+		new_bls = max.(vec(rand(MvNormal(bls,cov),1)), 1e-6)
+		lnL = -sum_phylo_log_lk2(new_bls)
+
+		if transform_method != nothing
 			bls2 = sqrt.(bls)
-			new_bls2, g2, bl2 = transform_bl(new_bls, g, h)
+			new_bls2, gu, hu = transform_bl(new_bls, g, h)
 			delta_bls = new_bls2 - bls2
-			lnL_approx = lnL0 + (delta_bls' * g2) + (delta_bls' * bl2 * delta_bls/2)
+			lnL_approx = lnL0 + (delta_bls' * gu) + (delta_bls' * hu * delta_bls/2)
 		else
 			delta_bls = new_bls-bls
 			lnL_approx = lnL0 + (delta_bls' * g) + (delta_bls' * h * delta_bls/2)
 		end
-
-		# with Gradient
-		#lnL_approx = lnL0 + (delta_bls' * g) + (delta_bls' * h * delta_bls/2)
-		# without Gradient
-		#lnL_approx = lnL0 + (delta_bls' * h * delta_bls/2)
 
 		println(join([lnL, lnL_approx, lnL-lnL_approx], "\t"))
 	end
@@ -361,10 +377,16 @@ end
 
 function transform_bl(bls, g, h)
 	#Δ(u) = l(u) − l(u_hat) ≈ Δu'*gu + 1/2*Δu'*Hu*Δu,
+
 	u = sqrt.(bls)
-	db_over_du = 2 .* u
+	db_over_du = 2 * u
+	d2b_over_du2 = fill(2, length(u))
+	#u = asin.(sqrt.((3/4) .- (3/4) * exp.(-4bls/3)))
+	#db_over_du = cos(u/2)*sin(u/2) / (1 − 4/3*sin(u/2)^2)
+
 	gu = g .* db_over_du
-	hu = h .* (db_over_du * db_over_du')
+	hu = Diagonal(g.*d2b_over_du2) .+ h.*(db_over_du*db_over_du')
+
 	return([u, gu, hu])
 end
 
@@ -421,15 +443,24 @@ function main(rs, props, Fs, Qrs, freqs, pattern)
 		println(out_fh, "")
 		close(out_fh)
 
-		h, h_mcmctree = hessian_STK2004(bls, pattern2, bl_order)
+		if hessian_type == "SKT2004"
+			h = hessian_SKT2004(bls, pattern2)
+		elseif occursin(r"^finite_difference|fd$", hessian_type)
+			h = hessian_fd(bls, sum_phylo_log_lk2)
+			#h = -FiniteDiff.finite_difference_hessian(sum_phylo_log_lk2, bls)
+		end
+
+		sorted_keys = sort(collect(keys(bl_order["mcmctree2ape"])))
+		new_order = [bl_order["mcmctree2ape"][k] for k in sorted_keys]
+		h_mcmctree = h[new_order, new_order]
 		h_mcmctree_out = format_number.(h_mcmctree)
-		#display(h)
-		#display(h_mcmctree_out)
 
 		open(hessian_outfile, "a") do out_fh
 			writedlm(out_fh, h_mcmctree_out, ' ')
 		end
 		println()
+		
+		#compare_true_vs_approx_lnL(bls, g, h, lnL0, sum_phylo_log_lk2, transform_method)
 	end
 
 	close(std_outfh)
@@ -437,9 +468,10 @@ function main(rs, props, Fs, Qrs, freqs, pattern)
 
 	exit()
 
-	#compare_true_vs_approx_lnL(bls, g, h, lnL0, sum_phylo_log_lk2)
 
 	println()
+
+function hessian_fd2(bls)
 	function f(bls0, indices, nums)
 		a = deepcopy(bls0); a[indices] .+= nums; loglk = sum_phylo_log_lk2(a)
 		#bls0[indices] .+= nums; loglk = sum_phylo_log_lk2(bls0)
@@ -460,6 +492,8 @@ function main(rs, props, Fs, Qrs, freqs, pattern)
 		#v2 = (-f(bls,(i,j),(2bl1,2bl2)) + 16f(bls,(i,j),(bl1,bl2)) + f(bls,(i,j),(2bl1,-2bl2)) - 16f(bls,(i,j),(bl1,-bl2)) + f(bls,(i,j),(-2bl1,2bl2)) - 16f(bls,(i,j),(-bl1,bl2)) - f(bls,(i,j),(-2bl1,-2bl2)) + 16f(bls,(i,j),(-bl1,-bl2)))/(48*bl1*bl2)
 		print(i,"-",j,":",round.((v1),digits=3),"\t")
 	end
+end
+
 	println()
 	#println(i, "\t", bls[i], "\t", "order(n^2, n^4)", "\t", v1, "\t", v2)
 	#g = FiniteDiff.finite_difference_gradient(sum_phylo_log_lk, bls); println(g)
@@ -558,7 +592,7 @@ else
 
 	# solve mixture like C2, but not work when EX2+F
 
-	if mix_freq_model != nothing
+	if mix_freq_model != nothing || mix_freq_model == ""
 		Fs = isempty(Fs) ? Fs : [ first(Fs) ]
 		q_pis, is_mix_freq = generate_Q(mix_freq_model) 
 		[ push!(Fs, fs) for fs in map(x->x.Pi, q_pis) ]

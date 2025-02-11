@@ -4,7 +4,7 @@ seqtype = 2
 runmode = 0
 
 model = 2
-aaRatefile = /home-user/sswang/software/phylo/paml4.7/dat/wag.dat
+aaRatefile = /mnt/hd1/home/sishuo/software/phylo/paml/v4.7/dat/lg.dat
 Mgene = 0
 
 
