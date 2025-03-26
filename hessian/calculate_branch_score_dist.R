@@ -24,14 +24,19 @@ if(args[5] == "TRUE" || args[5] == "T" || args[5] == 'branch'){
 root_no <- length(t1$tip.label) + 1
 
 if (!is_branch){
-    #d1 <- dist.nodes(t1)[root_no, (root_no+1):(root_no+t1$Nnode-1)]
     d1 <- dist.nodes(t1)[root_no, 1] - dist.nodes(t1)[root_no, (root_no):(root_no+t1$Nnode-1)]
-    #d2 <- dist.nodes(t2)[root_no, (root_no+1):(root_no+t2$Nnode-1)]
     d2 <- dist.nodes(t2)[root_no, 1] - dist.nodes(t2)[root_no, (root_no):(root_no+t2$Nnode-1)]
 } else{
     d1 <- t1$edge.length
     d2 <- t2$edge.length
 }
+
+bs1 <- sapply(t1$node.label, function(x){ a=as.numeric(strsplit(x,"-")[[1]]); a[2]-a[1] })
+bs2 <- sapply(t2$node.label, function(x){ a=as.numeric(strsplit(x,"-")[[1]]); a[2]-a[1] })
+#d1 <- bs1/d1
+#d2 <- bs2/d2
+#print(mean(d1))
+#print(mean(d2))
 
 c <- abs(d1-d2)
 max <- max(c(d1,d2))

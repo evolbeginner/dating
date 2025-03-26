@@ -14,7 +14,23 @@ suppressPackageStartupMessages(
 
 
 ###################################################
-calculate_var_AR <- function(C) { n=nrow(C); ( sum(diag(C)) - 1/n * sum(C) ) / (n-1) }
+calculate_var_AR0 <- function(C) {
+    n=nrow(C)
+    (sum(diag(C))-1/n*sum(C)) / (n-1)
+}
+
+calculate_var_AR <- function(sd2, C) {
+    n <- nrow(C)
+    sd2*(n-1) / (sum(diag(C))-1/n*sum(C))
+}
+
+calculate_var_AR2 <- function(sd2, C) {
+    n <- nrow(C)
+    A = sum(diag(C)) - 1/n*sum(C)
+    B = 1/4 * (sum(diag(C)^2) - 1/n*sum(diag(C))^2)
+    2*(n-1)*sd2 / (sqrt(A^2+4*B*(n-1)*sd2)+A)
+    #(sqrt(A^2+4*B*(n-1)*sd2)-A)/(2*B)
+}
 
 vcv_branches <- function(tree) {
     node_dist_m <- mrca(tree, full=T)
@@ -162,7 +178,8 @@ timetree$edge.length <- timetree$edge.length * scale
 if (clock == 'AR' && is.null(s2)){
     #c <- vcv(timetree)
     c <- vcv_branches(timetree)
-    s2 <- sd^2 / calculate_var_AR(c)
+    print(calculate_var_AR(sd^2, c))
+    s2 <- calculate_var_AR2(sd^2, c)
     cat(paste("s2", s2, sep="\t"), "\n")
 }
 
@@ -178,7 +195,8 @@ if(clock == 'IR' || clock == 'ILN'){
     subs_tree$edge.length <- subs_tree$edge.length * rate
 } else if(clock == 'AR'){
     #s2 <- sd^2 / (tr(vcv(timetree)) - 0.5*sum(timetree$edge.length))
-    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu), s2=s2)
+    mu_new = mu + s2 * sum(diag(c))
+    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu_new), s2=s2)
 }
 
 # create unrooted tree
@@ -188,7 +206,7 @@ unrooted_tree <- unroot(subs_tree)
 rate_tree <- subs_tree
 rate_tree$edge.length <- subs_tree$edge.length/timetree$edge.length
 
-cat(paste0("mean_sd:\t", mean(sds),"\n")); print(var(sds))
+#cat(paste0("mean_sd:\t", mean(sds),"\n")); print(var(sds))
 
 
 ###################################################

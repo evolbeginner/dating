@@ -42,7 +42,6 @@ puts
 puts "Checking Julia packages ......"
 output = ` #{DIR}/check_dependency_julia.jl `
 is_to_install = true if output != ''
-puts output
 puts
 
 
@@ -50,7 +49,6 @@ puts
 # check R
 puts "Checking R packages ......"
 output = ` #{DIR}/check_dependency_R.R `
-puts output
 is_to_install = true if output != ''
 puts
 
@@ -79,19 +77,14 @@ puts
 
 
 ###########################################################
-begin
-  require "colorize"
-  unless is_to_install
-    sent = "Awesome! You seem to have all dependencies installed."
-  else
-    sent = 'Something not installed. See above.'.colorize(:red)
+unless is_to_install
+  begin
+    require "colorize"
+  rescue LoadError => e
+    puts e.message
+  ensure
+    puts "Awesome! You seem to have all dependencies installed.".colorize(:red)
   end
-  puts sent.colorize(:red)
-rescue LoadError => e
-  puts sent
-  puts e.message
-ensure
-  puts
 end
 
 

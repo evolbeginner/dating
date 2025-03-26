@@ -10,6 +10,7 @@ puts("© Sishuo Wang [2024-2025]. All rights reserved.", "\n")
 
 #########################################
 require 'tempfile'
+require 'fileutils'
 
 
 #########################################
@@ -79,7 +80,8 @@ def run_mcmctree(outdirs, tree_indir, phylip, clock, bd, bsn)
   mkdir_with_force(outdirs[:date])
   inBV_file = File.join(outdirs[:inBV], 'in.BV')
   add_argu = "--inBV #{inBV_file}"
-  cmd = "#{RUBY} #{DO_MCMCTREE} --outdir #{outdirs[:date]} --tree_indir #{tree_indir} -i #{phylip} --prot --clock #{clock} --bd #{bd} --bsn #{bsn} --print 2 #{add_argu} --force"
+  cmd = "#{RUBY} #{DO_MCMCTREE} --outdir #{outdirs[:date]} --tree_indir #{tree_indir} -i #{phylip} --prot --clock #{clock} --bd #{bd} --bsn #{bsn} --print 2 #{add_argu} --force --one_codeml"
+  p cmd
   ` #{cmd} `
 end
 
@@ -119,6 +121,7 @@ iqtree_add_arg = iqtree_add_arg0
 julia_bl_add_arg = nil
 
 hessian_type = 'SKT2004'
+iqtree_indir = nil
 
 outdirs = Hash.new
 
@@ -142,8 +145,9 @@ opts = GetoptLong.new(
   ['--clock', GetoptLong::REQUIRED_ARGUMENT],
   ['--bd', GetoptLong::REQUIRED_ARGUMENT],
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
-  ['--no_mwopt', GetoptLong::NO_ARGUMENT],
   ['--hessian_type', GetoptLong::REQUIRED_ARGUMENT],
+  ['--no_mwopt', GetoptLong::NO_ARGUMENT],
+  ['--iqtree_indir', GetoptLong::REQUIRED_ARGUMENT],
   ['-h', GetoptLong::NO_ARGUMENT]
 )
 
@@ -187,12 +191,20 @@ opts.each do |opt, value|
       hessian_type = value
     when '--no_mwopt'
       is_mwopt = false
+    when '--iqtree_indir'
+      iqtree_indir = value
   end
 end
 
 if not is_mwopt
   iqtree_add_arg0.gsub!(' -mwopt', '')
   iqtree_add_arg.gsub!(' -mwopt', '')
+end
+
+model = model.dup
+if model =~ /[+]PMSF/i
+  model.sub!(/[+]PMSF/, '') 
+  pmsf = 'relaxed'
 end
 
 
@@ -205,42 +217,51 @@ outdirs[:bl] = File.join(outdir, 'bl')
 outdirs[:inBV] = File.join(outdir, 'inBV')
 outdirs.values.map{|sub_outdir| mkdir_with_force(sub_outdir, is_force) }
 
+
 branchout_matrix = File.join(outdirs[:bl], 'branch_out.matrix')
 in_BV = File.join(outdir, 'in.BV')
 
 # parse mfm and regular model: LG+C20 will be parsed as mfm=C20 & non_mfm=LG
 non_mfm, mfm = parse_model_name(model)
 
-case pmsf
-  when 'relaxed'
-    #iqtree_add_arg0 = iqtree_add_arg
-    iqtree_add_arg = iqtree_add_arg + " -ft #{outdirs[:iqtree]}/iqtree.treefile" # using guide tree, which will generate .sitefreq
-    julia_bl_add_arg = "--pmsf #{outdirs[:iqtree]}/iqtree.sitefreq"
-  when 'stringent'
-    ;
+
+if not iqtree_indir.nil?
+  FileUtils.rm_rf(outdirs[:iqtree])
+  FileUtils.cp_r(iqtree_indir, outdirs[:iqtree])
+  #`cp -r #{iqtree_indir}/* #{outdirs[:iqtree]}`
+else
+  case pmsf
+    when 'relaxed'
+      iqtree_add_arg = iqtree_add_arg + " -ft #{outdirs[:iqtree]}/iqtree.treefile" # using guide tree, which will generate .sitefreq
+      julia_bl_add_arg = "--pmsf #{outdirs[:iqtree]}/iqtree.sitefreq"
+    when 'stringent'
+      ;
+  end
+
+  if ! pmsf.nil?
+    `#{IQTREE} -te #{treefile} -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg0} -T #{cpu}`
+  end
+
+  `#{IQTREE} -blfix #{treefile} -m POISSON -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg0} -T #{cpu}`
+  `#{IQTREE} -te #{outdirs[:iqtree]}/iqtree.treefile -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg} -blmin #{blmin} -T #{cpu}`
+
 end
+
+out_treefile = File.join(outdirs[:iqtree], 'iqtree.treefile')
 
 
 #########################################
-if ! pmsf.nil?
-  `#{IQTREE} -te #{treefile} -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg0}`
-end
-
-`#{IQTREE} -blfix #{treefile} -m POISSON -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg0}`
-`#{IQTREE} -te #{outdirs[:iqtree]}/iqtree.treefile -m #{model} -s #{seqfile} -pre #{outdirs[:iqtree]}/iqtree -redo -wsl -quiet #{iqtree_add_arg} -blmin #{blmin}`
-out_treefile = File.join(outdirs[:iqtree], 'iqtree.treefile')
-
 # do_bl_my_try.R to generate julia_outdir (basics)
-#puts "Rscript #{GEN_BASICS} -s #{seqfile} -t #{out_treefile} --cpu #{cpu} --julia_outdir #{outdirs[:basics]} --force --type #{st}"
+puts "Rscript #{GEN_BASICS} -s #{seqfile} -t #{out_treefile} --cpu #{cpu} --julia_outdir #{outdirs[:basics]} --force --type #{st}"
 `Rscript #{GEN_BASICS} -s #{seqfile} -t #{out_treefile} --cpu #{cpu} --julia_outdir #{outdirs[:basics]} --force --type #{st}`
 
 # generate_branch_out_mat.sh
-#puts "bash #{GEN_BRANCH} -t #{out_treefile} --ref_tree #{ref_treefile} --outdir #{outdirs[:bl]} --force"
+puts "bash #{GEN_BRANCH} -t #{out_treefile} --ref_tree #{ref_treefile} --outdir #{outdirs[:bl]} --force"
 `bash #{GEN_BRANCH} -t #{out_treefile} --ref_tree #{ref_treefile} --outdir #{outdirs[:bl]} --force`
 
 # julia_bl
 cmd = "#{JULIA} -t #{cpu} #{JULIA_BL} --basics_indir #{outdirs[:basics]} -t #{st} --tree #{out_treefile} -b #{branchout_matrix} -m #{non_mfm} --mfm #{mfm} --outdir #{outdirs[:inBV]} --force #{julia_bl_add_arg} --hessian_type #{hessian_type} 2>#{outdir}/error"
-p cmd
+puts cmd
 `#{cmd}`
 
 

@@ -5,8 +5,8 @@ println("© Sishuo Wang [2024-2025]. All rights reserved.", "\n")
 
 
 ######################################################################
-# v0.18.7
-# transform_method --transform
+# v0.19.0.special
+# now duplciate site is resolved
 
 
 ######################################################################
@@ -38,9 +38,6 @@ using ConcurrentCollections
 
 using Distributions
 
-
-######################################################################
-#BLAS.set_num_threads(1)
 
 
 ######################################################################
@@ -123,11 +120,12 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 			#liks = similar(liks_ori)
 			#[ liks[i] = liks_ori[i] for i in 1:length(liks_ori) ]
 			liks = copy(liks_ori)
+			#liks = view(liks_ori, :, :)
 			j = 0
 
 			comp = zeros(Float64, nb.tip+nb.node)
 
-			@inbounds @simd for anc in ((nb.node + nb.tip):-1:(1 + nb.tip))
+			@inbounds for anc in ((nb.node + nb.tip):-1:(1 + nb.tip))
 				children = all_children[anc] # used to be "anc-nb.tip"
 				m = zeros(Float64, nl, length(children))
 
@@ -169,6 +167,7 @@ function do_phylo_log_lk(q_pis::Vector{Any}, param::Vector{Float64}, liks_ori::A
 	else
 		log_lk = -logsumexp(log.(weights) .+ lks)
 	end
+	#println(log_lk)
 
 	#return (ismissing(log_lk) ? Inf : log_lk)
 	return ([log_lk, flouri])
@@ -189,7 +188,8 @@ function get_liks_pattern(pattern::Vector)
 		end
 		push!(pattern2, (liks, x[2]))
 	end
-	pattern2 = sort(pattern2, by=x->x[2], rev=true)
+	#pattern2 = sort(pattern2, by=x->x[2], rev=true)
+	return(pattern2)
 end
 
 
@@ -218,13 +218,10 @@ end
 	nrow = size(U)[1]
 	P1 = similar(U)
 	P2 = similar(U)
-	#P1 = Matrix{Float64}(undef, nrow, nrow)
-	#P2 = Matrix{Float64}(undef, nrow, nrow)
 	mul!(P1, U, Diagonal(exp.(Lambda * scale)))
 	#mul!(P2, U*Diagonal(exp.(Lambda * scale)), U_inv)
 	mul!(P2, P1, U_inv)
 	return(P2)
-	#println(typeof(U)); println(typeof(Lambda))
 	@fastmath U * Diagonal(exp.(Lambda * scale)) * U_inv
 end
 
@@ -235,7 +232,8 @@ function delta_log_lk(bls::Vector{Float64}, indices::Vector{Int}, nums, i, patte
 	bls_copy[indices] .+= nums
 	rv = do_phylo_log_lk((is_pmsf ? q_pis_sites[i] : q_pis), bls_copy, pattern2[i][1], cherry, flouri, is_pmsf, false;
 		rs = rs, props = props, is_do_inv=inv_info[:is_do_inv], inv_prop=inv_info[:inv_prop],
-		Qrs = Qrs, freqs = freqs, index = i)[1] * pattern2[i][2]
+		Qrs = Qrs, freqs = freqs, index = i
+	)[1] * pattern2[i][2]
 end
 
 
@@ -246,6 +244,7 @@ function hessian_SKT2004(bls::Vector{Float64}, pattern2::Vector)
 	cherry = Dict("cherry_nodes"=>[], "cherry_liks"=>Dict())
 	#h = zeros(Float64, nb.branch, nb.branch)
 	h = Dict(i => zeros(Float64, nb.branch, nb.branch) for i in 1:length(pattern2))
+	gradients = zeros(Float64, nb.branch)
 
 	# pre-assign argu
 	delta_log_lk2 = (bls, indices, nums, k) -> delta_log_lk(bls, indices, nums, k, pattern2, cherry, flouri)
@@ -257,12 +256,13 @@ function hessian_SKT2004(bls::Vector{Float64}, pattern2::Vector)
 			step = (1 + bls[i]) ./ 1e6
 			thetas[i] = (delta_log_lk2(bls,[i],(step),k) - delta_log_lk2(bls,[i],(-step),k))/(2*step)
 		end
+		gradients += thetas
 		h[k] += thetas .* thetas'
 	end
 	h = -sum(values(h)) # negative Hessian
 	println()
 
-	return(h)
+	return([h, gradients])
 end
 
 
@@ -320,6 +320,7 @@ function sum_phylo_log_lk(param::Vector{Float64}, pattern2::Vector{Any})
 		flouri[int_node]=ConcurrentDict{Any,Any}()
 	end
 	#Folds.sum(Folds.map(i->do_phylo_log_lk(param,pattern2[i][1],cherry,flouri,Q[i],is_pmsf,true)[1]*pattern2[i][2], 1:length(pattern2)))
+	#println(pattern); exit()
 	if(true)
 		Folds.sum( Folds.map(i -> do_phylo_log_lk((is_pmsf ? q_pis_sites[i] : q_pis), param, pattern2[i][1], cherry, flouri, is_pmsf, false; 
 			rs = rs, props = props, is_do_inv=inv_info[:is_do_inv], inv_prop=inv_info[:inv_prop],
@@ -411,26 +412,16 @@ function main(rs, props, Fs, Qrs, freqs, pattern)
 
 	println(now())
 
-	# Gradient
-	println("Gradients")
-	g = zeros(length(bls))
-	#g = FiniteDiff.finite_difference_gradient(sum_phylo_log_lk2, bls)
-	#g = round.(g, digits=6)
-	#g_mcmctree = g[new_bl_order]
-	#println(.-g_mcmctree)
-
-	g = calculate_gradient(bls, sum_phylo_log_lk2)
-	g = round.(g, digits=6)
-	g = .-g
-	g_mcmctree = g[new_bl_order]
-	println(g_mcmctree)
-	println()
-	println(now())
-
 	# Hessian
 	if hessian_outfile != nothing
+		h, g = hessian_SKT2004(bls, pattern2)
+		g_mcmctree = g[new_bl_order]
+		if occursin(r"^finite_difference|fd$", hessian_type)
+			h = hessian_fd(bls, sum_phylo_log_lk2)
+			#h = -FiniteDiff.finite_difference_hessian(sum_phylo_log_lk2, bls)
+		end
+
 		out_fh = open(hessian_outfile, "w")
-		#println(out_fh, lnL0)
 		println(out_fh, "")
 		println(out_fh, string(nb.tip))
 		println(out_fh, "")
@@ -442,13 +433,6 @@ function main(rs, props, Fs, Qrs, freqs, pattern)
 		println(out_fh, "Hessian")
 		println(out_fh, "")
 		close(out_fh)
-
-		if hessian_type == "SKT2004"
-			h = hessian_SKT2004(bls, pattern2)
-		elseif occursin(r"^finite_difference|fd$", hessian_type)
-			h = hessian_fd(bls, sum_phylo_log_lk2)
-			#h = -FiniteDiff.finite_difference_hessian(sum_phylo_log_lk2, bls)
-		end
 
 		sorted_keys = sort(collect(keys(bl_order["mcmctree2ape"])))
 		new_order = [bl_order["mcmctree2ape"][k] for k in sorted_keys]
@@ -558,7 +542,6 @@ nb = Nb(basics["nb.node"], basics["nb.tip"], basics["nb.node"]+basics["nb.tip"]-
 
 
 # Get cherry nodes
-#infile = "julia/cherry"
 infile = joinpath(basics_indir, "cherry")
 cherry_nodes = Vector{Int}()
 for line in eachline(infile)
@@ -567,7 +550,6 @@ end
 
 
 # Get descendants
-#infile = "julia/descendants"
 infile = joinpath(basics_indir, "descendants")
 #descendants = Dict{Int,Dict}()
 descendants = Dict()
@@ -578,20 +560,28 @@ for line in eachline(infile)
 end
 
 
+infile = joinpath(basics_indir, "site2pattern")
+site2pattern = Dict(); pattern2site = Dict()
+for line in eachline(infile)
+    line_arr = map(x->parse(Int,x), split(line,'\t'))
+    site2pattern[line_arr[1]] = line_arr[2]
+    pattern2site[line_arr[2]] = line_arr[1]
+end
+
+
 ######################################################################
 # Q
 q_pis_sites = Vector()
 
 if(is_pmsf)
 	pmsf_pis = read_pmsf_file(pmsf_file)
+	pmsf_pis = convert_pmsf_file_by_site(pmsf_pis, site2pattern)
 	# Qs q_pis_sites
 	q_pis_sites = generate_Qs(sub_model, pmsf_pis)
 	#display(q_pis_sites[3][1].Q); exit()
 else
 	is_mix_freq = false
-
 	# solve mixture like C2, but not work when EX2+F
-
 	if mix_freq_model != nothing || mix_freq_model == ""
 		Fs = isempty(Fs) ? Fs : [ first(Fs) ]
 		q_pis, is_mix_freq = generate_Q(mix_freq_model) 

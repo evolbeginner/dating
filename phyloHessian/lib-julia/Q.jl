@@ -36,6 +36,18 @@ function read_pmsf_file(pmsf_file)
 end
 
 
+function convert_pmsf_file_by_site(pmsf_pis, site2pattern)
+	pmsf_pis2 = similar(pmsf_pis)
+	for i in 1:size(pmsf_pis, 1)
+		pmsf_pis2[site2pattern[i],:] = pmsf_pis[i,:]
+	end
+	#println(length(unique(values(site2pattern)))); exit()
+	pmsf_pis2 = pmsf_pis2[1:length(unique(values(site2pattern))),:]
+	println(pmsf_pis2)
+	return(pmsf_pis2)
+end
+
+
 function generate_Qs(sub_model, pmsf_pis)
 	#Q = [-1 1/3 1/3 1/3; 1/3 -1 1/3 1/3; 1/3 1/3 -1 1/3; 1/3 1/3 1/3 -1]
 	#Qs = [Q for _ in 1:num_patterns]
@@ -208,13 +220,17 @@ function push_into_q_pis!(new_q_pis, d, Pi)
 	# old_Pi
 	old_Pi = q_pi.Pi
 	ncol = length(Pi)
+
 	q_pi.Q = [ Q[x,y] / old_Pi[y] for x in 1:ncol, y in 1:ncol ]
+	#q_pi.Q ./= old_Pi'
 
 	# new_Pi
 	#R = q_pi.R
 	#q_pi.Pi = Pi
+
 	q_pi.Pi = Pi ./ sum(Pi) # normalize
 	q_pi.Q = [ q_pi.Q[x,y]*Pi[y] for x in 1:ncol, y in 1:ncol ] # here q_pi.Q is actually R
+	#q_pi.Q .*= Pi'
 	fill_diag_for_Q!(q_pi)
 	get_eigen!(q_pi)
 	push!(new_q_pis, q_pi)

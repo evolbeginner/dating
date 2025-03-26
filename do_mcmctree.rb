@@ -30,6 +30,7 @@ require 'getoptlong'
 require 'parallel'
 require 'time'
 require 'colorize'
+require 'bio-nwk'
 
 require 'Dir'
 
@@ -206,6 +207,82 @@ def run_codeml(outdir, seqtype, ndata, alpha, ncatG, cpu)
   end
   Dir.chdir($PWD)
 end
+
+
+def output_rate()
+  output_tree = false
+  k = 0
+  IO.popen("grep -A1 rategram out.txt 2>/dev/null") do |grep_output|
+    grep_output.each_line do |line|
+      line.chomp!
+      if output_tree
+        File.write("rate#{k}.tre", line) # Create or overwrite the file
+      end
+      if line.include?("locus")
+        k += 1
+        output_tree = true
+      else
+        output_tree = false
+      end
+    end
+  end
+  
+  average_branch_lengths('rate*.tre', 'rate.tre')
+  #File.symlink("rate1.tre", "rate.tre") if File.exist?("rate1.tre")
+end
+
+
+def average_branch_lengths(file_pattern, outfile)
+  files = Dir.glob(file_pattern)
+  raise "No files found matching pattern: #{file_pattern}" if files.empty?
+
+  # Read and parse trees with error handling
+  trees = files.map do |file|
+    begin
+      Bio::Newick.new(File.read(file)).tree
+    rescue => e
+      raise "Error parsing #{file}: #{e.message}"
+    end
+  end
+
+  # Validate tree consistency
+  n_branches = trees[0].nodes.size - 1
+  trees.each_with_index do |tree, i|
+    if tree.nodes.size - 1 != n_branches
+      raise "Tree #{files[i]} has different topology (branch count mismatch)"
+    end
+  end
+
+  # Calculate average branch lengths
+  sum_branch_lengths = Array.new(n_branches+1, 0.0)
+  trees.each do |tree|
+    index = 0
+    tree.each_edge do |node1, node2, edge|
+      index += 1
+      dist = edge.distance
+      sum_branch_lengths[index] += dist
+    end
+  end
+
+  avg_branch_lengths = sum_branch_lengths.map { |sum| sum / trees.size }
+
+  # Create averaged tree
+  avg_tree = trees.first.dup
+  index = 0
+  avg_tree.each_edge do |node1, node2, edge|
+    index += 1
+    edge.distance = avg_branch_lengths[index]
+  end
+
+  # Write output with proper file handling
+  File.open(outfile, 'w') do |f|
+    #f.write(avg_tree.output_newick.gsub(/;$/, '') + ";\n")  # Ensure proper Newick format
+    newick_string = avg_tree.cleanNewick
+    #newick_string = avg_tree.output_newick.gsub(/;$/, '') + ";\n"
+    f.write(newick_string)
+  end
+end
+
 
 
 #################################################################
@@ -439,7 +516,7 @@ if __FILE__ == $0
   puts 'mcmctree' #start final mcmctree
   Parallel.map(sub_outdirs, in_processes: cpu) do |sub_outdir|
     Dir.chdir(sub_outdir)
-    prepare_paml_ctl('mcmctree.ctl', '', {'seqfile'=>seqfile_b, 'treefile'=>'species.trees', 'ndata'=>ndata, 'seqtype'=>seqtype, 'usedata'=>"2 in.BV 1", 'clock'=>clock, 'BDparas'=>bd_paras, 'rgene_gamma'=>rgene_gamma, 'sigma2_gamma'=>sigma2_gamma, 'burnin'=>burnin, 'sampfreq'=>sampfreq, 'nsample'=>nsample, 'alpha'=>alpha, 'ncatG'=>ncatG, 'print'=>print}, other_args)
+    prepare_paml_ctl('mcmctree.ctl', '', {'seqfile'=>seqfile_b, 'treefile'=>'species.trees', 'ndata'=>ndata, 'seqtype'=>seqtype, 'usedata'=>"2 in.BV 3", 'clock'=>clock, 'BDparas'=>bd_paras, 'rgene_gamma'=>rgene_gamma, 'sigma2_gamma'=>sigma2_gamma, 'burnin'=>burnin, 'sampfreq'=>sampfreq, 'nsample'=>nsample, 'alpha'=>alpha, 'ncatG'=>ncatG, 'print'=>print}, other_args)
     #---------------------------------------------------------------#
     if is_stop_before_mcmctree
       puts "As required, stop before the final MCMCTree run!"; next
@@ -450,7 +527,8 @@ if __FILE__ == $0
     `echo $$ > mcmctree.final; #{MCMCTREE} mcmctree.ctl >> mcmctree.final`
     $? == 0 and `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
 
-    `grep rategram out.txt && grep -A1 rategram out.txt | tail -1 > rate.tre`
+    #`grep rategram out.txt && grep -A1 rategram out.txt | tail -1 > rate.tre`
+    output_rate()
     Dir.chdir($PWD)
   end
 
@@ -468,3 +546,5 @@ if __FILE__ == $0
   puts
 
 end
+
+

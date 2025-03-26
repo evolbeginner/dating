@@ -2,6 +2,12 @@
 
 
 ######################################
+# Update
+# 2025-02-06
+#   make seq file (-s) and treefile phy$tip.label the same order
+
+
+######################################
 # multiple Qs
 # EX2+F now working
 # +G+I works for EX2+G+I
@@ -77,11 +83,45 @@ get_v_freq <- function(v){
 	u <- lapply(v, function(x){paste(x, collapse='!')})
 	t <- table(unlist(u))
 	t_names_split <- lapply(names(t), function(x){unlist(strsplit(x,"!"), use.name=F)})
+    print(t_names_split)
 	l <- vector("list", length(rownames(t)))
 	for(i in 1:length(rownames(t))){
 		l[[i]] <- list(as.integer(t_names_split[[i]]), t[[i]])
 	}
 	l
+}
+
+
+deduplicate_pattern <- function(v){
+    v2 <- list()
+    site <- numeric(length(v))
+
+    # Create a named vector to keep track of duplicate counts
+    duplicate_count <- setNames(integer(0), character(0))
+
+    for (i in seq_along(v)) {
+        element <- v[[i]][1]
+        element_str <- paste(element[[1]], collapse = ",")  # Convert the vector to a string
+        # Update the count of the current element
+        if (!element_str %in% names(duplicate_count)) {
+            duplicate_count[element_str] <- 1
+        } else {
+            duplicate_count[element_str] <- duplicate_count[element_str] + 1
+        }
+        site[i] <- which(names(duplicate_count) == element_str)
+    }
+    # Create v2 with unique elements and their counts
+    for (name in names(duplicate_count)) {
+        element_vector <- strsplit(name, ",")[[1]]  # Convert the string back to a vector
+        v2[[length(v2) + 1]] <- list(as.character(element_vector), unname(duplicate_count[name]))
+    }
+    return(list(v2=v2, site=site))
+}
+
+
+replace_not_in_AAs <- function(x) {
+  x[is.na(x)] <- 999
+  return(x)
 }
 
 
@@ -112,7 +152,11 @@ output_julia <- function(julia_outdir, all_children, v){
         outfile <- file.path(julia_outdir,"cherry"); out_fh <- file(outfile, "w")
         cat(paste(cherry_nodes,collapse="\n"), "\n", file=out_fh, sep="")
         close(out_fh)
-        q()
+
+        outfile <- file.path(julia_outdir,"site2pattern"); out_fh <- file(outfile, 'w')
+        output <- sapply( 1:length(site), function(i){paste(i,site[i],sep="\t")} )
+        write(output, file=out_fh)
+        close(out_fh)
     }
     else{
         return(paste("no need to create julia_outdir"))
@@ -382,7 +426,7 @@ seq <- getSequence(s) # for DNA
 v <- list()
 for(i in 1:getLength(s)[1]){
 	v[[i]] <- sapply(s, function(x) x[i])
-	names(v[[i]]) <- names(s)
+	v[[i]] <- v[[i]][match(phy$tip.label, names(v[[i]]))] # make them the same order
 }
 
 nl <- nlevels(factor(unlist(v, use.names=F)))
@@ -397,13 +441,17 @@ if(type == "DNA"){
     cat("No. of pattern:", length(v), "\n")
 } else if(type == "AA"){
     v <- lapply(v, function(x) unname(AA_list[toupper(x)]) )
+    for (i in seq_along(v)) {
+        v[[i]] <- replace_not_in_AAs(v[[i]])
+    }
     v <- lapply(v, function(x) list(x,1))
-    #v <- lapply(seq, function(x){x = toupper(x); x})
+    dedup_rv <- deduplicate_pattern(v)
+    v <- dedup_rv$v2; site <- dedup_rv$site
 } else{
     stop("unknown seq type! Exiting ......")
 }
 
-#print(v); q()
+#print(site); q()
 
 
 ######################################

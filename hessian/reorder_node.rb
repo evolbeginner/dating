@@ -21,6 +21,7 @@ def get_ordered_tips(infile)
     break
   end
   in_fh.close
+  #ordered_tips.sort_by!(&:downcase)
 
   return([ordered_tips, tree])
 end

@@ -130,6 +130,7 @@ function is_complex_matrix(A)
            return eltype(A) <: Complex
 end
 
+
 function find_nonzero_imaginary_parts(A)
     return filter(x -> isa(x,Complex) && imag(x) != 0, A)
 end
