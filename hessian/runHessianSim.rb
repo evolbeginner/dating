@@ -27,6 +27,7 @@ DO_MCMCTREE = File.expand_path("~/lab-tools/dating/do_mcmctree.rb")
 #PHYLO_HESSIAN = File.expand_path("~/project/asr/phyloHessianWrapper.rb")
 PHYLO_HESSIAN = File.expand_path("~/lab-tools/dating/phyloHessian/phyloHessianWrapper.rb")
 #PHYLO_HESSIAN = File.expand_path("phyloHessian-v0.17.8/phyloHessianWrapper.rb")
+#PHYLO_HESSIAN = File.join(DIR, '../phyloHessian/phyloHessianWrapper.rb')
 
 
 #####################################################
@@ -184,6 +185,7 @@ opts = GetoptLong.new(
   ['--bsn', GetoptLong::REQUIRED_ARGUMENT],
   ['-b', '--bs', GetoptLong::REQUIRED_ARGUMENT],
   ['--stop_compare', GetoptLong::NO_ARGUMENT],
+  ['--phw', GetoptLong::REQUIRED_ARGUMENT],
   ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
   ['--force', GetoptLong::NO_ARGUMENT]
 )
@@ -234,6 +236,11 @@ begin
         bs = value
       when '--stop_compare'
         is_stop_compare = true
+      when '--phw'
+        old_verbose = $VERBOSE
+        $VERBOSE = nil
+        PHYLO_HESSIAN = File.expand_path(value)
+        $VERBOSE = old_verbose
       when '--outdir'
         outdir = value
       when '--force'

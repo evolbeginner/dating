@@ -38,7 +38,7 @@ require 'Dir'
 #################################################################
 $PWD = Dir.getwd
 
-DIR = File.dirname(__FILE__)
+DIR ||= File.dirname(__FILE__)
 FIGTREE2NWK = File.join(DIR, "figtree2tree.sh")
 
 PAML_DIR = File.expand_path("~/software/phylo/paml/latest")
@@ -61,7 +61,7 @@ rgene_gamma = '1 50 1'
 sigma2_gamma = '1 10 1'
 alpha = 0.5
 ncatG = 4
-print = 1
+print = 2
 burnin = '2000'
 sampfreq = '2'
 nsample = '20000'
@@ -209,7 +209,7 @@ def run_codeml(outdir, seqtype, ndata, alpha, ncatG, cpu)
 end
 
 
-def output_rate()
+def output_rate(print)
   output_tree = false
   k = 0
   IO.popen("grep -A1 rategram out.txt 2>/dev/null") do |grep_output|
@@ -227,7 +227,7 @@ def output_rate()
     end
   end
   
-  average_branch_lengths('rate*.tre', 'rate.tre')
+  average_branch_lengths('rate*.tre', 'rate.tre') if print == 2
   #File.symlink("rate1.tre", "rate.tre") if File.exist?("rate1.tre")
 end
 
@@ -276,9 +276,7 @@ def average_branch_lengths(file_pattern, outfile)
 
   # Write output with proper file handling
   File.open(outfile, 'w') do |f|
-    #f.write(avg_tree.output_newick.gsub(/;$/, '') + ";\n")  # Ensure proper Newick format
     newick_string = avg_tree.cleanNewick
-    #newick_string = avg_tree.output_newick.gsub(/;$/, '') + ";\n"
     f.write(newick_string)
   end
 end
@@ -362,7 +360,7 @@ if __FILE__ == $0
       when '--ncatG'
         ncatG = value.to_i
       when '--print'
-        print = value
+        print = value.to_i
       when '--nsample'
         nsample = value
       when '--sub_model'
@@ -525,10 +523,11 @@ if __FILE__ == $0
 
     # no matter if is_inBV or not
     `echo $$ > mcmctree.final; #{MCMCTREE} mcmctree.ctl >> mcmctree.final`
+    `gzip -c mcmc.txt > mcmc.txt.gz`
     $? == 0 and `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
 
     #`grep rategram out.txt && grep -A1 rategram out.txt | tail -1 > rate.tre`
-    output_rate()
+    output_rate(print)
     Dir.chdir($PWD)
   end
 

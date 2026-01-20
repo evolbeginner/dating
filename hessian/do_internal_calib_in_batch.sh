@@ -63,7 +63,6 @@ for i in `ls`; do
 		[ ! -d root ] && echo "wrong directory $i!" && cd $DIR
 		outdir=calib-${n}_$p$s_name$only_min$only_max
 		rm -rf $outdir
-		#echo "ruby ~/project/Rhizobiales/scripts/dating/hessian/perform_calib_dating.rb --indir root/ --outdir $outdir --run_mcmctree --num $n -p $p --force --cpu $cpu"
 		ruby $PCD --indir root/ --outdir $outdir --run_mcmctree --num $n -p $p -s $s --force --cpu $cpu $only_min $only_max >/dev/null
 		cd - >/dev/null
 	done

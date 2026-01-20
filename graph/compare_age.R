@@ -6,7 +6,7 @@ library('getopt')
 
 
 ######################################################################
-circle_cex <- 0.5
+circle_cex <- 1
 pch <- 16
 point_col <- 'black'
 
@@ -77,7 +77,7 @@ if (is.null(col)){
 	col2<-as.character(d2$V5)
 } else{
 	col1<-colors[1]
-	col2<-colors[1]
+	col2<-colors[2]
 }
 
 if (noCI){

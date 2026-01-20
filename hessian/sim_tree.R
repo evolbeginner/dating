@@ -1,4 +1,4 @@
-#! /usr/bin/env Rscript
+#! /bin/env Rscript
 
 
 ###################################################
@@ -195,7 +195,7 @@ if(clock == 'IR' || clock == 'ILN'){
     subs_tree$edge.length <- subs_tree$edge.length * rate
 } else if(clock == 'AR'){
     #s2 <- sd^2 / (tr(vcv(timetree)) - 0.5*sum(timetree$edge.length))
-    mu_new = mu + s2 * sum(diag(c))
+    mu_new = mu + s2/(2*n)*sum(diag(c)) #+ s2 * sum(diag(c))
     subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu_new), s2=s2)
 }
 

@@ -1,0 +1,144 @@
+#! /mnt/hd1/home/sishuo/program/R/R-4.3.2/bin/Rscript
+
+
+#################################################
+library(ggtree)
+library(ggplot2)
+library(gridExtra)
+library(scales)
+library(phytools)  # Added for nodeHeights function
+
+
+#################################################
+args <- commandArgs(trailingOnly = TRUE)
+
+timetrees <- c()
+ratetrees <- c()
+output_file <- "output.pdf"
+
+i <- 1
+while(i <= length(args)) {
+    if(args[i] == "-t") {
+        timetrees <- c(timetrees, args[i+1])
+        i <- i + 2
+    } else if(args[i] == "-r") {
+        ratetrees <- c(ratetrees, args[i+1])
+        i <- i + 2
+    } else if(args[i] == "-o") {
+        output_file <- args[i+1]
+        i <- i + 2
+    } else {
+        i <- i + 1
+    }
+}
+
+if(length(timetrees) != length(ratetrees)) {
+    stop("Error: Number of time trees (-t) must match number of rate trees (-r)")
+}
+
+if(length(timetrees) < 1) {
+    stop("Usage: Rscript script.R -t timetree1 -r ratetree1 [-t timetree2 -r ratetree2] [-o output.pdf]")
+}
+
+#################################################
+get_rate_range <- function(rate_files) {
+    all_rates <- numeric()
+    for(file in rate_files) {
+        tree <- read.tree(file)
+        all_rates <- c(all_rates, tree$edge.length)
+    }
+    return(range(all_rates, na.rm = TRUE))
+}
+
+rate_range <- get_rate_range(ratetrees)
+rate_range[2] <- rate_range[2] * 1.2
+n_color_stops <- 9
+rate_breaks <- seq(0, rate_range[2], length.out = n_color_stops)
+rate_values <- rate_breaks
+
+#################################################
+create_tree_plot <- function(time_file, rate_file, plot_title) {
+    time_tree <- read.tree(time_file)
+    rate_tree <- read.tree(rate_file)
+
+    # Calculate tree dimensions
+    tree_height <- max(phytools::nodeHeights(time_tree))  # Added phytools::
+    max_label_length <- max(nchar(time_tree$tip.label))
+    
+    plot_data <- data.frame(
+        node = time_tree$edge[,2],
+        rate = rate_tree$edge.length
+    )
+
+    p <- ggtree(time_tree, size=1.2) %<+% plot_data +
+        geom_tree(aes(color=rate), size=1.5) +
+        scale_color_gradientn(
+            name = "Evolutionary Rate",
+            colors = c("#2b83ba", "#abdda4", "#ffffbf", "#fdae61", "#d7191c",
+                      "#a50026", "#800026", "#400026", "#000000"),
+            values = rate_values,
+            limits = rate_range,
+            breaks = pretty_breaks(n=6)(rate_range),
+            guide = guide_colorbar(
+                direction = "vertical",
+                barwidth = 1.5,
+                barheight = 15,
+                title.position = "top",
+                title.hjust = 0.5,
+                frame.colour = "black",
+                ticks.colour = "black"
+            )
+        ) +
+        geom_tiplab(
+            size = 4,                       # Larger font size
+            align = TRUE,
+            hjust = 0,                      # Left-align labels
+            offset = 0.02 * tree_height     # Dynamic offset
+        ) +
+        geom_label(
+            aes(label=round(rate, 3)),
+            size=0,
+            alpha=0.7,
+            label.padding = unit(0.1, "lines"),
+            color = "black"
+        ) +
+        theme_tree2() +
+        ggtitle(plot_title) +
+        theme(
+            legend.position = "right",
+            legend.justification = "center",
+            plot.title = element_text(size=10, hjust=0.5),
+            legend.text = element_text(size=8),
+            legend.title = element_text(size=9, face="bold"),
+            legend.margin = margin(0, 20, 0, 0),
+            plot.margin = unit(c(1, max_label_length*0.2, 1, 1), "cm")
+        ) +
+        xlim(0, tree_height*1.2)  # Fixed multiplier for expansion
+        #scale_x_reverse(limits = c(0,tree_height * 1.4))
+
+    return(p)
+}
+
+#################################################
+plot_list <- list()
+for(i in 1:length(timetrees)) {
+    plot_title <- ''
+    plot_list[[i]] <- create_tree_plot(timetrees[i], ratetrees[i], plot_title)
+}
+
+# Simplified PDF dimensions
+n_plots <- length(plot_list)
+pdf_width <- ifelse(n_plots == 1, 14, 22)
+pdf_height <- 10
+
+pdf(output_file, width=pdf_width, height=pdf_height)
+grid.arrange(
+    grobs = plot_list,
+    nrow = n_plots,  # Set number of rows to n_plots
+    ncol = 1   # Force one column layout
+)
+dev.off()
+
+cat("Successfully created", n_plots, "tree plots in", output_file, "\n")
+cat("Color scale range:", signif(rate_range[1],3), "to", signif(rate_range[2],3), "\n")
+

@@ -17,6 +17,7 @@ require 'tree'
 infile = nil
 is_minmax = false
 multiply = 1
+is_header = false
 
 
 #################################################
@@ -24,6 +25,7 @@ opts = GetoptLong.new(
   ['-i', GetoptLong::REQUIRED_ARGUMENT],
   ['--minmax', GetoptLong::NO_ARGUMENT],
   ['--multiply', GetoptLong::REQUIRED_ARGUMENT],
+  ['--header', GetoptLong::NO_ARGUMENT],
 )
 
 
@@ -35,6 +37,8 @@ opts.each do |opt, value|
       is_minmax = true
     when '--multiply'
       multiply = value.to_f
+    when '--header'
+      is_header = true
   end
 end
 
@@ -46,6 +50,9 @@ a_tip = tree.allTips[0]
 
 total_dist = tree.distance(tree.root, a_tip)
 
+if is_header
+  puts %w[node age min max].join("\t")
+end
 
 tree.internal_nodes.each do |node|
   dist = total_dist - tree.distance(tree.root, node)

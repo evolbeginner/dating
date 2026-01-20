@@ -12,7 +12,7 @@ require 'Dir'
 DIR = File.dirname($0)
 #MAKE_CALIB_TO_TREE = File.expand_path('~/project/Rhizobiales/scripts/dating/hessian/make_calib_to_tree.R')
 MAKE_CALIB_TO_TREE = File.join(DIR, 'make_calib_to_tree.R')
-RUN_MCMCTREE_IN_BATCH = File.expand_path("~/lab-tools/dating/run_mcmctree_in_batch.sh")
+RUN_MCMCTREE_IN_BATCH = File.expand_path("~/lab-tools/dating/run_mcmctree_in_batch.rb")
 
 
 ##############################################
@@ -107,25 +107,27 @@ dir = Dir.pwd
 timetree = "#{indir}/sim/tree/time.tre"
 tipN = `nw_stats #{timetree} | grep leaves | awk '{print $2}'`.strip
 cmd = "Rscript #{MAKE_CALIB_TO_TREE} -t #{timetree} -n #{num} -p #{percent} -s #{shift_percent} #{only_min_arg} #{only_max_arg} | nw_topology -".strip
-p cmd
+
+puts cmd
 new_tree = ` #{cmd} `
 
 # Find all species.trees files and process them in parallel
 species_trees_files = Dir.glob("#{outdir}/**/species.trees")
 
 Parallel.each(species_trees_files, in_processes: cpu) do |file|
-  #puts file
   dir_name = File.dirname(file)
+  next if dir_name =~ /\/ph\//
   Dir.chdir(dir_name) do
     File.open("species.trees", "w") do |f|
       f.puts "#{tipN}\t1"
       f.puts new_tree
     end
     if is_run_mcmctree
-      #system("#{RUN_MCMCTREE_IN_BATCH} --indir . --wait")
-      ` #{RUN_MCMCTREE_IN_BATCH} --indir . --wait `
+      system("#{RUN_MCMCTREE_IN_BATCH} --indir . --wait")
+      #` #{RUN_MCMCTREE_IN_BATCH} --indir . --wait `
     end
   end
 end
+
 
 

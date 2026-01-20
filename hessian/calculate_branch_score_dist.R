@@ -9,6 +9,7 @@ suppressWarnings({
 
 #####################################################
 is_branch <- F
+outfile <- 'Rplots.pdf'
 
 args <- commandArgs(TRUE)
 
@@ -19,6 +20,14 @@ t2 <- ape::read.tree(args[2])
 titles <- args[3:4]
 if(args[5] == "TRUE" || args[5] == "T" || args[5] == 'branch'){
     is_branch <- T
+}
+if(!is.na(args[6])){
+    outfile <- args[6]
+}
+
+ymax <- NULL
+if(!is.na(args[7])){
+    ymax <- as.numeric(args[7])
 }
 
 root_no <- length(t1$tip.label) + 1
@@ -40,10 +49,10 @@ bs2 <- sapply(t2$node.label, function(x){ a=as.numeric(strsplit(x,"-")[[1]]); a[
 
 c <- abs(d1-d2)
 max <- max(c(d1,d2))
-#print((c/max)[which(c/max>0.04)])
 
 a <- d1 - d2
 max_bls <- apply(matrix(c(d1, d2), ncol=2), 1, max)
+#max_bls <- d1
 #order = rev(order(abs(a)/max_bls))
 #print(d1[order])
 
@@ -59,10 +68,18 @@ lm_ <- lm(d2 ~ d1+0)
 cat(round(c(score, mean_rel_diff, unname(lm_$coefficients), summary(lm_)$r.squared), 3), sep="\t", "\n") # the single coefficient is the slope
 
 lim <- max(d1, d2) * 1.1
+if(! is.null(ymax)){
+    lim <- ymax
+}
 
+pdf(outfile)
 plot(d1, d2, xlab="", ylab="", xlim=c(0,lim), ylim=c(0,lim))
+
 abline(0,1,col="darkgrey", lty=2, lwd=2)
 if (! is.null(titles)){
 	title(xlab = titles[1], ylab = titles[2])
 }
+
+invisible( dev.off() )
+
 

@@ -68,7 +68,7 @@ def write_header(models, cat, age, type_obj, outdir)
 end
 
 
-def process_k(cats, models, age_name, ages, typesh, k, outdir, dir)
+def process_k(cats, models, age_name, ages, typesh, k, outdir, dir, ref_dir)
   subdir = File.join(dir, k.to_s)
 
   ages.each do |age|
@@ -80,7 +80,7 @@ def process_k(cats, models, age_name, ages, typesh, k, outdir, dir)
       typesh.each_pair do |type, type_obj|
         models.each do |m|
           target_tree = File.join(target_dir, "dating/#{m}/combined/", type_obj.type_infile)
-          cmd = "Rscript #{CALCULATE_BRANCH_SCORE} #{File.join(target_dir, 'sim/tree/' + type_obj.ref_tree)} #{target_tree} 1 2 #{type_obj.tf} >> #{tmp_out}"
+          cmd = "Rscript #{CALCULATE_BRANCH_SCORE} #{File.join(target_dir, ref_dir+'/'+ type_obj.ref_tree)} #{target_tree} 1 2 #{type_obj.tf} >> #{tmp_out}"
           ` #{cmd} `
           if $? != 0
             puts target_tree
@@ -110,16 +110,12 @@ ages = [10, 20, 30, 40].map(&:to_s)
 age_name = 'age'
 is_mu = false
 
+ref_type = 'sim'
+ref_dir = 'sim/tree/'
+
 outdir = nil
 is_force = false
 is_tolerate = false
-
-
-######################################################
-typesh = {
-  'time' => TYPE.new('time', 'time.tre', 'figtree.nwk', 'F'), 
-  'rate' => TYPE.new('rate', 'rate.tre', 'rate.tre', 'T')
-}
 
 
 ######################################################
@@ -131,6 +127,7 @@ opts = GetoptLong.new(
   ['--mu', GetoptLong::NO_ARGUMENT],
   ['-m', '--model', GetoptLong::REQUIRED_ARGUMENT],
   ['--range', GetoptLong::REQUIRED_ARGUMENT],
+  ['--ref_type', GetoptLong::REQUIRED_ARGUMENT],
   ['--cpu', GetoptLong::REQUIRED_ARGUMENT],
   ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
   ['--force', GetoptLong::NO_ARGUMENT],
@@ -154,6 +151,8 @@ opts.each do |opt, arg|
     when '--range'
       a = arg.split(/[-,:]/)
       range = (a[0]..a[-1])
+    when '--ref_type'
+      ref_type = arg
     when '--cpu'
       cpu = arg.to_i
     when '--outdir'
@@ -184,11 +183,26 @@ raise "range has to be given by --range! Exiting ......" if range.nil?
 
 
 ######################################################
+if ref_type == 'sim'
+  typesh = {
+    'time' => TYPE.new('time', 'time.tre', 'figtree.nwk', 'F'), 
+    'rate' => TYPE.new('rate', 'rate.tre', 'rate.tre', 'T')
+  }
+else
+  typesh = {
+    'time' => TYPE.new('time', 'figtree.nwk', 'figtree.nwk', 'F'), 
+    'rate' => TYPE.new('rate', 'rate.tre', 'rate.tre', 'T')
+  }
+  ref_dir = ['dating', ref_type, 'combined'].join('/')
+end
+
+
+######################################################
 models = get_all_models(range) if models == ['all']
 cats = get_all_cats(range) if cats == ['all']
 
 Parallel.each(range, in_processes: cpu) do |k|
-  process_k(cats, models, age_name, ages, typesh, k, outdir, dir)
+  process_k(cats, models, age_name, ages, typesh, k, outdir, dir, ref_dir)
 end
 
 cats.each do |cat|

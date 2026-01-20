@@ -2,9 +2,6 @@
 
 
 ############################################################
-
-
-############################################################
 require 'getoptlong'
 require 'parallel'
 require 'fileutils'
@@ -34,6 +31,9 @@ REORDER_NODE = File.join(DIR, 'reorder_node.rb')
 FROM_BS_TO_HESSIAN = File.join(DIR, 'from_bs_to_hessian.R')
 FIGTREE2NWK ||= File.expand_path(File.join(LIB_DIR, 'figtree2tree.sh'))
 
+SOURCE_IQTREE = File.expand_path("~/software/phylo/iqtree/source/v1.6.12/iqtree")
+#SOURCE_IQTREE = File.expand_path("~/software/phylo/iqtree/source/v2.4.0/iqtree2")
+#SOURCE_IQTREE = File.expand_path("~/software/phylo/iqtree/source/v3.0.1/iqtree3")
 
 ############################################################
 def help()
@@ -126,6 +126,11 @@ def split_ali_file(ali_file)
   end
   in_fh.close
   return(ali2lines)
+end
+
+
+def fd(lnL1, lnL2, step)
+  (lnL2-lnL1)/(2*step)
 end
 
 
@@ -239,7 +244,6 @@ ali2lines.to_a.reverse.each do |count, lines|
 
   out_fh_all_gap_seq = File.open(File.join(outdir_split1, 'all_gap_seq.list'), 'w')
   lines.each_with_index do |line, index|
-    #num_sites = line.split(/\s+/)[1] if index == 0
     line =~ /^(\S+)(\s+)(\S+)$/
     seq_name = $1; space = $2; seq = $3
     if seq =~ /^[-]+$/
@@ -269,7 +273,7 @@ ali2lines.to_a.reverse.each do |count, lines|
 
   if is_pmsf
     `#{IQTREE} -redo -s #{ali_file1} -pre #{iqtree_outdir}/guide -T #{cpu} -quiet -m LG4M+G #{te_argu} #{add_argu}`
-    `#{IQTREE} -redo -s #{ali_file1} -pre #{iqtree_outdir}/iqtree -T #{cpu} -quiet #{model_argu} #{bootstrap_argu} #{te_argu} #{add_argu} -ft #{iqtree_outdir}/guide.treefile -blmin 1e-10`
+    `#{IQTREE} -redo -s #{ali_file1} -pre #{iqtree_outdir}/iqtree -T #{cpu} -quiet #{model_argu} #{bootstrap_argu} #{te_argu} #{add_argu} -ft #{iqtree_outdir}/guide.treefile -blmin 1e-6`
   else
     STDERR.puts "pmsf not used".colorize(:blue) if model_argu =~ /C[0-9]+/
     `#{IQTREE} -redo -s #{ali_file1} -pre #{iqtree_outdir}/iqtree -T #{cpu} -quiet #{model_argu} #{bootstrap_argu} #{te_argu} #{add_argu}`
@@ -279,6 +283,29 @@ ali2lines.to_a.reverse.each do |count, lines|
 
   `#{NW_TOPOLOGY} -Ib #{boottree_file} | ruby #{REORDER_NODE} -i - --ref #{ref_tree_file} > #{iqtree_outdir}/boot.bls`
   #`ruby #{REORDER_NODE} -i #{boottree_file} --ref #{ref_tree_file} > #{iqtree_outdir}/boot.bls`
+
+  # generate bl_outdir
+  bl_outdir = File.join(iqtree_outdir, 'bl_outdir')
+  `#{NW_TOPOLOGY} -Ib #{boottree_file} | ruby #{REORDER_NODE} -i - --ref #{ref_tree_file} --bl_outdir #{bl_outdir} --force`
+  p "#{NW_TOPOLOGY} -Ib #{boottree_file} | ruby #{REORDER_NODE} -i - --ref #{ref_tree_file} --bl_outdir #{bl_outdir} --force"
+  bl_sub_outdirs = Dir.glob(File.join(bl_outdir, '*'))
+  Parallel.each(bl_sub_outdirs, in_threads: cpu) do |bl_sub_outdir|
+    bl_outdir2s = Array.new
+    1.upto(2) do |i|
+      bl_outdir2 = File.join(bl_sub_outdir, i.to_s)
+      bl_outdir2s = bl_outdir2s.push(bl_outdir2)
+      `#{SOURCE_IQTREE} -redo -s #{ali_file1} -pre #{bl_outdir2}/iqtree -nt 1 -quiet #{model_argu} -te #{bl_outdir2}/bl_changed.treefile #{add_argu} -blfix`
+    end
+    in_fh = File.open(File.join(bl_outdir2s[0], "step_size"), 'r')
+    step = in_fh.readline.to_f
+    in_fh.close
+    lnL1 = `grep BEST #{bl_outdir2s[0]}/iqtree.log | awk '{print $NF}'`.to_f
+    lnL2 = `grep BEST #{bl_outdir2s[1]}/iqtree.log | awk '{print $NF}'`.to_f
+    out_fh = File.open(File.join(bl_sub_outdir, 'gradient'), 'w')
+    out_fh.puts [lnL1, lnL2, step].flatten.join("\t")
+    out_fh.puts fd(lnL1, lnL2, step)
+    out_fh.close
+  end
 
   # for the ml tree (iqtree.treefile)
   `ruby #{REORDER_NODE} -i #{mltree_file} --ref #{ref_tree_file} > #{iqtree_outdir}/ml.bls`
@@ -297,13 +324,13 @@ mcmctree_outdir = File.join(outdir, 'mcmctree')
 mkdir_with_force(mcmctree_outdir)
 `cat #{inBV_files} > #{mcmctree_outdir}/in.BV`
 
-FileUtils.cp(ali_file, mcmctree_outdir)
+FileUtils.cp(ali_file, File.join(mcmctree_outdir,'combined.phy'))
 `cp #{calib_tree_file} #{mcmctree_outdir}/species.trees`
 
 prepare_paml_ctl(mcmctree_ctl_file, mcmctree_outdir, {'seqfile'=>'combined.phy', 'treefile'=>'species.trees'})
 
 if is_run_mcmctree
-  STDOUT.puts "Running MCMCTree ......"
+  STDOUT.puts "Running MCMCtree ......"
   Dir.chdir(mcmctree_outdir)
 
   thr = processbar_for_bootstrapping(file:'mcmc.txt', b:get_no_iter(File.basename(mcmctree_ctl_file)))

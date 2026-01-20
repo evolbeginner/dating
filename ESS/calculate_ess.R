@@ -26,8 +26,8 @@ for(i in args){
 df <- df[,-1] # delete the last col (lnL)
 
 # extract only t_nXXX
-df <- df[names(df[grep("t_n|r_n", names(df))])]
-df <- df[grep("t_n|r_n", names(df))]
+#df <- df[names(df[grep("t_n|r_n", names(df))])]
+#df <- df[grep("t_n|r_n", names(df))]
 
 #tryCatch( { sapply(df, FUN=function(x){ess <- coda::effectiveSize(x); }) }, error=function(e){print(e); cat("probably infile csv error!", fill=T)})
 

@@ -14,63 +14,69 @@ suppressPackageStartupMessages(
 args <- commandArgs(trailingOnly = T)
 
 treefile <- args[1]
-phy <- read.tree(treefile)
 
+phy_input <- read.tree(treefile)
+if (inherits(phy_input, "phylo")) {
+    phy_list <- list(phy_input)
+    class(phy_list) <- "multiPhylo"
+} else if (inherits(phy_input, "multiPhylo")) {
+    phy_list <- phy_input
+} else {
+    stop("Unsupported tree object type: ", class(phy_input))
+}
+
+
+##################################
 branch_out_infile <- args[2]
 df <- read.table(branch_out_infile, header = F)
 colnames(df) <- c('branch', 'bl')
 df <- cbind(df, "tree_order" = seq_len(nrow(df)))
 
-nb.tip <- length(phy$tip.label)
-nb.node <- phy$Nnode
 
 
 ##################################
-branches <- vector()
-j <- 0
-all_children <- Children(phy, (1 + nb.tip):(nb.node + nb.tip) )
+##################################
+for (tree_idx in seq_along(phy_list)) {
+    phy <- phy_list[[tree_idx]]
+    nb.tip <- length(phy$tip.label)
+    nb.node <- phy$Nnode
 
-new_sort <- function(v){
-    #vec <- sort(v, method = 'radix')
-    v[order(tolower(v),method='radix')]
-}
+    branches <- vector()
+    j <- 0
+    all_children <- Children(phy, (1 + nb.tip):(nb.node + nb.tip) )
 
-for(anc in (nb.node+nb.tip):(1+nb.tip)){
-    #if(anc == nb.tip+1){next}
-    children <- all_children[[anc-nb.tip]]
-
-    for(i in 1:length(children)){
-        j <- j + 1L
-        child <- children[i]
-        tips <- Descendants(phy, child, type='tip')
-        tip_names <- new_sort(as.vector(sapply(tips, function(tip){phy$tip.label[tip]})))
-        #tip_names <- sort(as.vector(sapply(tips, function(tip){phy$tip.label[tip]})), method = "radix")
-        tip_name <- paste(tip_names, collapse='-')
-        comp_tip_names <- new_sort( phy$tip.label[ !(phy$tip.label %in% tip_names) ] )
-        #comp_tip_names <- sort( phy$tip.label[ !(phy$tip.label %in% tip_names) ], method = "radix" )
-        comp_tip_name <- paste(comp_tip_names, collapse='-')
-        branch <- paste(new_sort(c(tip_name, comp_tip_name)), collapse=',')
-        #branch <- paste(sort(c(tip_name, comp_tip_name), method = "radix"), collapse=',')
-        branches <- c(branches, branch)
+    new_sort <- function(v){
+        v[order(tolower(v),method='radix')]
     }
-}
 
-#df$ape_order <- sapply(1:nrow(df), function(i){ which(branches == df[i,]$branch) })
-df$ape_order <- sapply(
-    1:nrow(df), function(i){
-        alt_branch <- paste(rev(strsplit(df[i,]$branch, ",")[[1]]), collapse = ",")
-        #alt_branch <- paste(strsplit(df[i,]$branch, ",")[[1]], collapse = ",")
-        which(branches == df[i,]$branch | branches == alt_branch)
+    for(anc in (nb.node+nb.tip):(1+nb.tip)){
+        children <- all_children[[anc-nb.tip]]
+
+        for(i in 1:length(children)){
+            j <- j + 1L
+            child <- children[i]
+            tips <- Descendants(phy, child, type='tip')
+            tip_names <- new_sort(as.vector(sapply(tips, function(tip){phy$tip.label[tip]})))
+            tip_name <- paste(tip_names, collapse='-')
+            comp_tip_names <- new_sort( phy$tip.label[ !(phy$tip.label %in% tip_names) ] )
+            comp_tip_name <- paste(comp_tip_names, collapse='-')
+            branch <- paste(new_sort(c(tip_name, comp_tip_name)), collapse=',')
+            branches <- c(branches, branch)
+        }
     }
-)
 
-#df[, 1:3] <- lapply(df[, 1:3], as.character)
-#df <- as.data.frame(lapply(df, as.character))
+    df$ape_order <- sapply(
+        1:nrow(df), function(i){
+            alt_branch <- paste(rev(strsplit(df[i,]$branch, ",")[[1]]), collapse = ",")
+            which(branches == df[i,]$branch | branches == alt_branch)
+        }
+    )
 
-write.table(df[order(df[,1]),], sep="\t", quote=F, row.names=T);
-#write.table(df);
+    if(tree_idx == 1){
+        write.table(df[order(df[,1]),], sep="\t", quote=F, row.names=T);
+    }
+    cat(paste(df[order(df$ape_order),]$bl, collapse=','))
+    cat("\n")
 
-cat(paste(df[order(df$ape_order),]$bl, collapse=','))
-cat("\n")
-
+}
 

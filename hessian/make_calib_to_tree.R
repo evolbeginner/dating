@@ -112,7 +112,6 @@ for(i in nodes){
 }
 
 a <- write.tree(tree)
-
 a <- gsub(")NA", ')', a)
 
 cat(a,"\n")

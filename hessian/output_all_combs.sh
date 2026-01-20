@@ -1,14 +1,24 @@
 #!/bin/bash
 
-# Define the parameter values
-#n_values=(0 2)
-n_values=(1)
-#p_values=(0.2 0.5)
-p_values=(0.2)
-s_values=(0 0.2 -0.2 0.5 -0.5)
-options=('--only_min' '--only_max' '')
-#options=('--only_min')
 
+################################################
+# Define the parameter values
+n_values=(0 1 2)
+#n_values=(5)
+
+#p_values=(0.5)
+p_values=(0.2)
+
+#s_values=(0 0.2 -0.2 0.5 -0.5)
+#s_values=(0.2 -0.2 0.5 -0.5)
+s_values=(0)
+
+#options=('--only_min' '--only_max' '')
+options=('--only_min' '')
+#options=('')
+
+
+################################################
 # Initialize an array to hold the combinations
 combinations=()
 

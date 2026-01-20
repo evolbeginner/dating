@@ -1,20 +1,17 @@
 #! /bin/env julia
 
-
 ############################################################
 using Pkg
 
+############################################################
 # Function to check if a package is installed
 function check_package_installed(pkg_name)
-	installed_packages = Vector()
-	#installed_packages = keys(Pkg.TOML.parsefile(Pkg.project().path)["deps"])
-	redirect_stderr(devnull) do
-		installed_packages = keys(Pkg.installed())
-	end
-	#println(installed_packages)
+    installed_packages = Vector()
+    redirect_stderr(devnull) do
+        installed_packages = keys(Pkg.installed())
+    end
     return pkg_name in installed_packages
 end
-
 
 ############################################################
 try
@@ -27,26 +24,46 @@ catch e
     end
 end
 
-
 ############################################################
 # List of package names to check
 package_names = [
     "ArgParse",
-    "ConcurrentCollections",
-    "CSV",
-    "DataFrames",
+    "Distributions",
+    #"ConcurrentCollections",
+    #"CSV",
+    #"DataFrames",
     "DelimitedFiles",
-    "FiniteDiff",
-    "Folds",
-    "StaticArrays",
+    #"FiniteDiff",
+    #"Folds",
+    #"StaticArrays",
+    "QuadGK",
     "StatsFuns"
 ]
 
 # Check each package
+pkgs_not_found = String[]
 for pkg in package_names
-    if ! check_package_installed(pkg)
-        println("Julia package $pkg not found! Try 'using Pkg; Pkg.add($pkg)' to install it.")
+    if !check_package_installed(pkg)
+        push!(pkgs_not_found, pkg)
     end
 end
 
+auto_install = "--auto-install" in ARGS
+
+if !isempty(pkgs_not_found)
+    println("Julia package(s) $pkgs_not_found not found!")
+    if auto_install
+        println("Auto-installing missing packages...")
+        Pkg.add(pkgs_not_found)
+    else
+        print("Do you wanna install all? [Y/N]: ")
+        answer = readline()
+        if lowercase(answer) == "y"
+            println("Installing missing packages...")
+            Pkg.add(pkgs_not_found)
+        else
+            println("Installation skipped.")
+        end
+    end
+end
 

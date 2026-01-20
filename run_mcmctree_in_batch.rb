@@ -2,7 +2,7 @@
 
 
 ##################################################
-DIR = File.dirname($0)
+DIR ||= File.dirname(__FILE__)
 
 
 ##################################################
@@ -62,11 +62,12 @@ end
 # Main processing
 mcmctree_files = Dir.glob(File.join(indir, '**', 'mcmctree.ctl'))
 
-cmd="[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree*.nwk; rm rate*.tre mcmc.txt*; mcmctree > mcmctree.final; bash #{FIGTREE2TREE} -i FigTree.tre > figtree.nwk; ln -s out out.txt 2>/dev/null; #{OUTPUT_MCMCTREE_RATE}"
+cmd = "[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree.nwk; rm rate*.tre 2>/dev/null; rm mcmc.txt* 2>/dev/null; mcmctree > mcmctree.final; bash #{FIGTREE2TREE} -i FigTree.tre > figtree.nwk; ln -s out out.txt 2>/dev/null; #{OUTPUT_MCMCTREE_RATE}; tar czvf mcmc.txt.gz mcmc.txt && rm mcmc.txt"
+
 
 Parallel.each(mcmctree_files, in_threads: cpu) do |ctl_file|
   dir = File.dirname(ctl_file)
-  `cd #{dir}; #{cmd}`
+  `cd #{dir}; #{cmd};`
 end
 
 

@@ -1,10 +1,7 @@
-#! /usr/bin/env julia
+#! /bin/env julia
 
 
 #####################################
-#DIR = @__DIR__
-
-#include(joinpath(DIR, "lib-julia", "util.jl"))
 dir = dirname(@__FILE__)
 include(joinpath(dir, "util.jl"))
 
@@ -47,6 +44,10 @@ function parse_commandline()
 			default = nothing
 		"--iqtree"
 			help = ".iqtree"
+			arg_type = String
+			default = nothing
+		"--phyml"
+			help = ".phy_phymls.txt"
 			arg_type = String
 			default = nothing
 		"--branchout_matrix", "-b"
@@ -98,18 +99,13 @@ end
 
 function check_input(opt)
 	if ! haskey(opt, "type")
-		error_msg("type not given")
+		error("type not given")
 	end
 	if ! (opt["type"] in ["AA", "DNA"])
-		error_msg("type has to be AA or DNA")
+		error("type has to be AA or DNA")
 	end
 end
 
-
-function error_msg(sent)
-	println(stderr, sent)
-	exit(1)
-end
 
 
 #####################################
@@ -122,6 +118,7 @@ indir = opt["indir"]
 basics_indir = opt["basics_indir"]
 treefile = opt["tree"]
 iqtree_file = opt["iqtree"]
+phyml_file = opt["phyml"]
 branchout_matrix = opt["branchout_matrix"]
 sub_model = opt["model"]
 transform_method = "nothing"
@@ -146,14 +143,19 @@ if basics_indir === nothing
 	basics_indir = "julia"
 end
 
-if iqtree_file === nothing
-	iqtree_file = joinpath( dirname(treefile), getCorename(treefile)*".iqtree" )
+if ! occursin(r"phy_phyml_tree\.txt$", treefile)
+	if iqtree_file === nothing
+		iqtree_file = joinpath( dirname(treefile), getCorename(treefile)*".iqtree" )
+	end
+else
+	if phyml_file === nothing
+		phyml_file = replace(treefile, "phy_phyml_tree" => "phy_phyml_stats")
+	end
 end
 
 if branchout_matrix === nothing
 	branchout_matrix = "branch_out.matrix"
 end
-
 
 mix_freq_model = opt["mix_freq_model"]
 mix_freq_model = (mix_freq_model == "nothing") ? nothing : mix_freq_model
@@ -162,4 +164,5 @@ pmsf_file = opt["pmsf"]
 is_pmsf = (pmsf_file != nothing) ? true : false
 
 transform_method = opt["transform"]
+
 
