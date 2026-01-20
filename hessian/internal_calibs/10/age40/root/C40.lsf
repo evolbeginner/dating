@@ -1,2 +1,0 @@
-#!/bin/bash
-bash ~/project/Rhizobiales/scripts/dating/hessian/runHessianSim.sh --sl 1000 --cpu 2 --sim_model LG+G+C40 --age 10 --mu -3.7 --sd 0.2 --age 40 --birth 0.4 --death 0.2 --rho 0.1

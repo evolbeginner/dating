@@ -1,2 +1,0 @@
-#!/bin/bash
-rm FigTree.tre; rm figtree.nwk; mcmctree > mcmctree.final; bash ~/project/Rhizobiales/scripts/dating/figtree2tree.sh -i FigTree.tre > figtree.nwk
