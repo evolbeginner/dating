@@ -4,6 +4,9 @@
 ####################################################
 require 'getoptlong'
 require 'parallel'
+require 'fileutils'
+
+require_relative 'runHessianSim'
 
 
 ####################################################
@@ -12,8 +15,9 @@ models = Array.new
 thread = nil
 cpu = 1
 is_only_root = false
-hessian_type = 'SKT2004'
+hessian_type = 'STK2004'
 ori_model = 'LG+G'
+ref = 'LG+G'
 is_force = false
 
 #cmds = Array.new
@@ -40,10 +44,13 @@ opts.each do |opt, value|
       models = value.split(',')
     when '--ori_model'
       ori_model = value
+      ref = value
     when '--only_root'
       is_only_root = true
     #when '--hessian_type'
     #  hessian_type = value
+    when '--ref'
+      ref = value
     when '--thread'
       thread = value.to_i
     when '--cpu'
@@ -55,7 +62,7 @@ end
 
 
 ####################################################
-cmd_files = Dir.glob(File.join(indir, '**/LG+G/', 'cmd'))
+cmd_files = Dir.glob(File.join(indir, '**', ref, 'cmd'))
 
 
 # Print the found files
@@ -68,7 +75,6 @@ cmd_files.each do |file|
       next if Dir.exist?(new_dir)
     else
       `rm -rf #{new_dir}` if Dir.exist?(new_dir)
-      p new_dir
     end
     dirs << [dir, new_dir, m]
     #run_cmd
@@ -78,7 +84,7 @@ end
 
 dirs.select!{|a| a[0] =~ /root/} if is_only_root
 
-p dirs
+#p dirs
 
 
 ####################################################
@@ -87,23 +93,46 @@ Parallel.map(dirs, in_processes:cpu) do |dir|
   `cp -r #{dir} #{new_dir}`
   root_change_to = File.basename(File.dirname(File.dirname(new_dir)))
   cmd = `cat #{new_dir}/cmd`
-  cmd.gsub!(ori_model, m)
+  cmd.gsub!(ref, m)
   cmd.sub!(/\n/, '')
   cmd.gsub!('/root/', '/'+root_change_to+'/')
   cmd.gsub!(/[-][-]cpu (\d+)/, '--cpu ' + thread.to_s) if not thread.nil?
-  cmd =~ /[-][-]outdir (\S+)/
 
-  if m =~ /\.fd$/
+  cmd =~ /[-][-]outdir (\S+)/
+  outdir = $1
+
+  # for bs_inBV
+  if m =~ /bs_inBV/
+    #cmd.gsub!('-b 1000', '-b 10')
+    if m !~ /best_fit|bf/
+      cmd.gsub!(/\-\-best_fit [Yy]/, '')
+    else
+      cmd = [cmd, '--best_fit y'].join(' ') if cmd !~ /--best_fit [Yy]/
+    end
+    m =~ /(\S+)\+bs_inBV/; model = $1
+    cmd.sub!(/-m (\S+)/, "-m #{model}")
+    p cmd
+  end
+
+  if m =~ /.fd$/
     cmd = [cmd, '--hessian_type fd'].join(' ')
-    cmd.sub!(/-m (\S+)\.fd/, '-m \1')
+    cmd.sub!(/-m (\S+).fd/, '-m \1')
+    outdir = $1
     #cmd.sub!(/--outdir (\S+)#{m}(\S+)/, '--outdir ' + '\1'+m+'.fd\2')
   end
 
-  outdir = $1
   `echo \"#{cmd}\" > #{new_dir}/cmd`
   `rm -rf #{outdir}/../combined/`
-  `#{cmd}`
-  `mv #{outdir}/date/combined/ #{outdir}/../`
+  ` #{cmd} `
+
+  if Dir.exist?(File.join(outdir,'mcmctree'))
+    FileUtils.mkdir_p(File.join(outdir, 'date'))
+    ` mv #{outdir}/mcmctree #{outdir}/combined `
+    extract_hessian(File.join(outdir,'combined','in.BV'), File.join(outdir,'combined','hessian'))
+  else
+    `mv #{outdir}/date/combined/ #{outdir}/../`
+    extract_hessian(File.join(outdir,'../combined','in.BV'), File.join(outdir,'../combined','hessian'))
+  end
 end
 
 

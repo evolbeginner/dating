@@ -75,6 +75,7 @@ GetoptLong(
     "cat=s", "cat",
     "color!", "color",
     "by=s", "x axis: by model/calib",
+    "outlier_shape=f", "outlier shape",
     "age_name=s", "age|mu (default: age)",
     "plot_type=s", "boxplot|violin (default: boxplot)",
     "stat_test=s", "Y/N",
@@ -121,8 +122,12 @@ category_map <- c(
     "root" = "root_only",
     "calib-1_0.2--only_min" = "single_min",
     "calib-1_0.2" = "single_interval",
-    "calib-2_0.2--only_min" = "two_min",
-    "calib-2_0.2" = "two_intervals"
+    "calib-2_0.2--only_min" = "two_mins",
+    "calib-2_0.2" = "two_intervals",
+    "calib-1_0.2--ancient" = "single_interval_anc",
+    "calib-1_0.2--only_min--ancient" = "single_min_anc",
+    "calib-2_0.2--ancient" = "two_intervals_anc",
+    "calib-2_0.2--only_min--ancient" = "two_mins_anc"
 )
 
 # Create a vector of the new category names, preserving the user-provided order.
@@ -132,6 +137,8 @@ if (!is.null(categories)) {
     names_to_change <- new_categories %in% names(category_map)
     new_categories[names_to_change] <- category_map[new_categories[names_to_change]]
 }
+
+outlier_shape <- ifelse(outlier_shape < 0 || outlier_shape >= 100, NA, outlier_shape)
 
 
 #############################################
@@ -152,14 +159,14 @@ get_legend <- function(by){
         legend_plot <- ggplot(tmp_df, aes(x=x, y=y, color = model, fill = model))
     }
     legend_plot <- legend_plot +
-        geom_point(alpha = 0, size = 5) +  # Set alpha to 0 to make the point transparent, adjust size for visibility in legend
+        geom_point(alpha = 0, size = 3) +  # Set alpha to 0 to make the point transparent, adjust size for visibility in legend
         { if(color_scheme == 'rainbow'){ scale_color_manual(values = rev(c("red", "orange", "yellow", "green", "cyan", "blue", "purple"))) } } +
         guides(
             color = guide_legend(override.aes = list(alpha = 1)),  # Override alpha for legend
             fill = guide_legend(override.aes = list(alpha = 1))
         ) +
         theme_void() +
-        theme(legend.position = 'bottom')
+        theme(legend.position = 'bottom',  legend.key.size = unit(0.3, "cm"))
     return(legend_plot)
 }
 
@@ -204,6 +211,23 @@ for(type in types){
 
         df <- df %>% filter(model %in% selected_models)
         df$model <- factor(df$model, levels = selected_models)
+        if (is_stat_test && length(selected_models) >= 2) {
+            x_for_test <- if (by == 'model') 'model' else 'Calibration'
+            test_df <- df %>% filter(model %in% c(selected_models[1], selected_models[length(selected_models)]))
+            test_df <- df %>% filter(model %in% c(selected_models[1], selected_models[2]))
+            cmp <- ggpubr::compare_means(
+                formula = as.formula(paste0("score ~ ", x_for_test)),
+                data = test_df,
+                method = "wilcox.test",
+                paired = is_paired,
+                p.adjust.method = "none"
+            )
+
+            #cat(sprintf("[type=%s] age=%s by=%s\n", type, age, x_for_test))
+            #print(cmp[, c("group1", "group2", "p", "p.adj")])
+            #cat("\n")
+            #flush.console()
+        }
 
         if(by == 'model'){
             p[[ind]] <- ggplot(df, aes(x=model, y=score, fill=Calibration, color=Calibration)) + geom_boxplot(alpha=0.2, outlier.shape = outlier_shape)
@@ -237,14 +261,27 @@ for(type in types){
         }else if(age_name == 'rate' || age_name == 'mu'){
             title <- paste('mean log(rate):', age, 'substitutions/site/Ga')
         }
+
+
+        #wilcox
+        cs = c(1,3) #change this
         p[[ind]] <- p[[ind]] +
             ggtitle(title) + theme_bw() +
             theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 3*length(categories), hjust = 0.5, vjust = 0.5), plot.title = element_text(hjust = 0.5), legend.position = 'none') +
             ylab(y) + ylim(ymin, ymax) +
             if(is_stat_test){
+                # subset used for Wilcoxon
+                df_w <- df %>% dplyr::filter(model %in% c(selected_models[cs[1]], selected_models[cs[2]]))
+                pvals <- ggpubr::compare_means(
+                  score ~ model,
+                  data = df_w,
+                  group.by = "Calibration",   # remove this line if you want only one global p-value
+                  method = "wilcox.test", paired=is_paired, label = "p.format", size=2.5, label.x.npc = "center", label.y = ymax * 0.95
+                )
+                print(pvals)   # <-- prints p-values to console
                 stat_compare_means(
                     data = function(d){
-                        d %>% filter(model %in% c(selected_models[1], selected_models[length(selected_models)]))
+                        d %>% filter(model %in% c(selected_models[cs[1]], selected_models[cs[2]])) #wilcox
                     },
                     method = "wilcox.test", paired=is_paired, label = "p.format", size=2.5, label.x.npc = "center", label.y = ymax * 0.95)
             }
@@ -263,3 +300,5 @@ for(type in types){
     }
     p <- list() # Reset plot list for the next 'type'
 }
+
+

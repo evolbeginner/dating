@@ -72,7 +72,8 @@ species_tree=$outdir/species.trees
 
 ################################################################
 # do alisim
-iqtree -pre $outdir/iqtree -af fasta -quiet --alisim $indir/alignment -m $model -t $sub_intree --length $length
+seed=$(date +%s%N) # seconds + nanoseconds
+iqtree -pre $outdir/iqtree -af fasta -quiet --alisim $indir/alignment -m $model -t $sub_intree --length $length --seed $seed
 mv $indir/alignment.fa $outdir/combined.fas
 $MFATOPHY $outdir/combined.fas; mv $outdir/combined.fas.phy $outdir/combined.phy
 #mv $indir/alignment.fa.phy $outdir/combined.phy #combined.phy to mcmctree.phy

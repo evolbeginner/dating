@@ -1,216 +1,233 @@
-#! /bin/env ruby
-
+#!/usr/bin/env ruby
 
 require 'getoptlong'
 require 'parallel'
 require 'fileutils'
-require 'Dir'
-
 
 ######################################################
-DIR = File.dirname($0)
-
-
-######################################################
-CALCULATE_BRANCH_SCORE = File.join(DIR, '../', 'calculate_branch_score_dist.R')
-
-OUTS = %w[score reldiff coefficient rs]
-
+DIR = File.dirname(__FILE__)
+CALCULATE_BRANCH_SCORE = File.join(DIR, '../calculate_branch_score_dist.R')
+OUTS = %w[score reldiff coefficient rs].freeze
 
 ######################################################
-class TYPE
-  attr_accessor :name, :ref_tree, :type_infile, :tf
-  def initialize(name, ref_tree, type_infile, tf)
-    @name = name
-    @ref_tree = ref_tree
-    @type_infile = type_infile
-    @tf = tf
-  end
-end
-
+TypeInfo = Struct.new(:name, :ref_tree, :type_infile, :tf)
 
 ######################################################
 def get_all_models(range)
-  bs = []
-  model_outdirs = Dir.glob(File.join(range.to_a[0], '**', 'LG+G'))
+  model_outdirs = Dir.glob(File.join(range.first, '**', 'LG+G'))
+  return [] if model_outdirs.empty?
   subdir = File.dirname(model_outdirs[0])
-  Dir.glob(File.join(subdir, '*/')).each do |d|
-    next if File.basename(d) == 'test'
-    bs << File.basename(d)
+  Dir.glob(File.join(subdir, '*/')).filter_map do |d|
+    name = File.basename(d)
+    name unless name == 'test'
   end
-  return(bs)
 end
-
 
 def get_all_cats(range)
-  bs = []
-  model_outdirs = Dir.glob(File.join(range.to_a[0], '**', 'root'))
+  model_outdirs = Dir.glob(File.join(range.first, '**', 'root'))
+  return [] if model_outdirs.empty?
   subdir = File.dirname(model_outdirs[0])
-  Dir.glob(File.join(subdir, '*/')).each do |d|
-    bs << File.basename(d)
-  end
-  return(bs)
+  Dir.glob(File.join(subdir, '*/')).map { |d| File.basename(d) }
 end
 
-
-def write_header(models, cat, age, type_obj, outdir)
-  OUTS.each do |out|
-    #outfile = File.join(outdir, "#{cat}-#{age}.#{out}")
-    sub_outdir = File.join(outdir, cat)
-    mkdir_with_force(sub_outdir, false, true)
-    outfile = File.join(sub_outdir, "#{type_obj.name}.#{age}.#{out}")
-    existing_contents = File.read(outfile)
-    out_fh = File.open(outfile, 'w')
-    out_fh.puts models.join("\t")
-    out_fh.write existing_contents
-    out_fh.close
-  end
-end
-
-
-def process_k(cats, models, age_name, ages, typesh, k, outdir, dir, ref_dir)
-  subdir = File.join(dir, k.to_s)
-
-  ages.each do |age|
-    tmp_out = File.join(outdir, "tmp.out-#{k}-#{age}")
-    FileUtils.rm(tmp_out) if File.exist?(tmp_out)
-    cats.each do |cat|
-      mkdir_with_force(File.join(outdir,cat), false, true)
-      target_dir = File.join(subdir, "#{age_name}-#{age}", cat)
-      typesh.each_pair do |type, type_obj|
-        models.each do |m|
-          target_tree = File.join(target_dir, "dating/#{m}/combined/", type_obj.type_infile)
-          cmd = "Rscript #{CALCULATE_BRANCH_SCORE} #{File.join(target_dir, ref_dir+'/'+ type_obj.ref_tree)} #{target_tree} 1 2 #{type_obj.tf} >> #{tmp_out}"
-          ` #{cmd} `
-          if $? != 0
-            puts target_tree
-            `printf "NA\tNA\tNA\tNA\t\n" >> #{tmp_out}`
-          end
-        end
-        prefix = [type, age].join('.')
-        system("cut -f1 #{tmp_out} | transpose.rb -i - >> #{File.join(outdir, "#{cat}/#{prefix}.score")}")
-        system("cut -f2 #{tmp_out} | transpose.rb -i - >> #{File.join(outdir, "#{cat}/#{prefix}.reldiff")}")
-        system("cut -f3 #{tmp_out} | transpose.rb -i - >> #{File.join(outdir, "#{cat}/#{prefix}.coefficient")}")
-        system("cut -f4 #{tmp_out} | transpose.rb -i - >> #{File.join(outdir, "#{cat}/#{prefix}.rs")}")
-        FileUtils.rm(tmp_out)
-      end
+def mkdir_with_force(path, force = false, tolerate = false)
+  if File.exist?(path)
+    if force
+      FileUtils.rm_rf(path)
+      FileUtils.mkdir_p(path)
+    elsif !tolerate
+      raise "Directory #{path} already exists! Use --force or --tolerate."
     end
+  else
+    FileUtils.mkdir_p(path)
+  end
+end
+
+
+def compute_branch_score(ref_tree_path, target_tree, tf)
+  unless File.exist?(ref_tree_path)
+    $stderr.puts "WARNING: ref tree not found: #{ref_tree_path}"
+    return %w[NA NA NA NA]
+  end
+  unless File.exist?(target_tree)
+    $stderr.puts "WARNING: target tree not found: #{target_tree}"
+    return %w[NA NA NA NA]
+  end
+
+  cmd = "Rscript #{CALCULATE_BRANCH_SCORE} #{ref_tree_path} #{target_tree} 1 2 #{tf}"
+  output = `#{cmd} 2>&1`.strip
+
+  if $?.success? && !output.empty?
+    fields = output.split("\t")
+    if fields.size >= 4
+      fields[0, 4]
+    else
+      $stderr.puts "WARNING: unexpected output (#{fields.size} fields) for #{target_tree}: #{output}"
+      %w[NA NA NA NA]
+    end
+  else
+    $stderr.puts "WARNING: Rscript failed (exit #{$?.exitstatus}) for #{target_tree}"
+    $stderr.puts "  cmd: #{cmd}"
+    $stderr.puts "  output: #{output}" unless output.empty?
+    %w[NA NA NA NA]
   end
 end
 
 
 ######################################################
-# Default values
-cats = Array.new
+# Defaults
+cats = []
 range = nil
 dir = Dir.pwd
 cpu = 4
-models = ['ori', 'LG+G', 'LG+C20+G', 'LG+C40+G']
-ages = [10, 20, 30, 40].map(&:to_s)
+models = %w[ori LG+G LG+C20+G LG+C40+G]
+ages = %w[10 20 30 40]
 age_name = 'age'
-is_mu = false
-
 ref_type = 'sim'
 ref_dir = 'sim/tree/'
-
+branchwise = 'F'
 outdir = nil
 is_force = false
 is_tolerate = false
 
 
 ######################################################
-# Parse arguments
 opts = GetoptLong.new(
-  ['--cat', GetoptLong::REQUIRED_ARGUMENT],
-  ['--age', GetoptLong::REQUIRED_ARGUMENT],
+  ['--cat',      GetoptLong::REQUIRED_ARGUMENT],
+  ['--age',      GetoptLong::REQUIRED_ARGUMENT],
   ['--age_name', GetoptLong::REQUIRED_ARGUMENT],
-  ['--mu', GetoptLong::NO_ARGUMENT],
+  ['--mu',       GetoptLong::NO_ARGUMENT],
   ['-m', '--model', GetoptLong::REQUIRED_ARGUMENT],
-  ['--range', GetoptLong::REQUIRED_ARGUMENT],
+  ['--range',    GetoptLong::REQUIRED_ARGUMENT],
   ['--ref_type', GetoptLong::REQUIRED_ARGUMENT],
-  ['--cpu', GetoptLong::REQUIRED_ARGUMENT],
-  ['--outdir', GetoptLong::REQUIRED_ARGUMENT],
-  ['--force', GetoptLong::NO_ARGUMENT],
+  ['--branchwise', GetoptLong::NO_ARGUMENT],
+  ['--cpu',      GetoptLong::REQUIRED_ARGUMENT],
+  ['--outdir',   GetoptLong::REQUIRED_ARGUMENT],
+  ['--force',    GetoptLong::NO_ARGUMENT],
   ['--tolerate', GetoptLong::NO_ARGUMENT]
 )
 
 opts.each do |opt, arg|
   case opt
-    when '--cat'
-      cats = arg.split(',')
-    when '--age'
-      ages = value.split(',')
-    when '--mu'
-      is_mu = true
-      ages = %w[-1.6 -2.3 -3 -3.7]
-      age_name = 'mu'
-    when '--age_name'
-      age_name = arg
-    when '-m', '--model'
-      models = arg.split(',')
-    when '--range'
-      a = arg.split(/[-,:]/)
-      range = (a[0]..a[-1])
-    when '--ref_type'
-      ref_type = arg
-    when '--cpu'
-      cpu = arg.to_i
-    when '--outdir'
-      outdir = File.expand_path(arg)
-    when '--force'
-      is_force = true
-    when '--tolerate'
-      is_tolerate = true
+  when '--cat'         then cats = arg.split(',')
+  when '--age'         then ages = arg.split(',')
+  when '--mu'
+    ages = %w[-1.6 -2.3 -3 -3.7]
+    age_name = 'mu'
+  when '--age_name'    then age_name = arg
+  when '-m', '--model' then models = arg.split(',')
+  when '--range'
+    a = arg.split(/[-,:]/)
+    range = (a[0]..a[-1])
+  when '--ref_type'    then ref_type = arg
+  when '--branchwise'  then branchwise = 'T'
+  when '--cpu'         then cpu = arg.to_i
+  when '--outdir'      then outdir = File.expand_path(arg)
+  when '--force'       then is_force = true
+  when '--tolerate'    then is_tolerate = true
   end
 end
 
 case age_name
-  when /rate|mu/
-     ages = %w[-1.6 -2.3 -3 -3.7]
-  when 'age'
-    ages = [10, 20, 30, 40].map(&:to_s)
+when /rate|mu/ then ages = %w[-1.6 -2.3 -3 -3.7]
+when 'age'     then ages = %w[10 20 30 40]
 end
 
-
-if outdir.nil? || outdir.empty?
-  puts "outdir has to be specified!"
-  exit 1
-end
-
-
+abort "outdir has to be specified!" if outdir.nil? || outdir.empty?
 mkdir_with_force(outdir, is_force, is_tolerate)
-raise "range has to be given by --range! Exiting ......" if range.nil?
-
+abort "range has to be given by --range!" if range.nil?
 
 ######################################################
-if ref_type == 'sim'
-  typesh = {
-    'time' => TYPE.new('time', 'time.tre', 'figtree.nwk', 'F'), 
-    'rate' => TYPE.new('rate', 'rate.tre', 'rate.tre', 'T')
+typesh = if ref_type == 'sim'
+  {
+    'time' => TypeInfo.new('time', 'time.tre', 'figtree.nwk', branchwise),
+    'rate' => TypeInfo.new('rate', 'rate.tre', 'rate.tre',     'T')
   }
 else
-  typesh = {
-    'time' => TYPE.new('time', 'figtree.nwk', 'figtree.nwk', 'F'), 
-    'rate' => TYPE.new('rate', 'rate.tre', 'rate.tre', 'T')
+  ref_dir = "dating/#{ref_type}/combined"
+  {
+    'time' => TypeInfo.new('time', 'figtree.nwk', 'figtree.nwk', branchwise),
+    'rate' => TypeInfo.new('rate', 'rate.tre',     'rate.tre',     'T')
   }
-  ref_dir = ['dating', ref_type, 'combined'].join('/')
 end
-
 
 ######################################################
-models = get_all_models(range) if models == ['all']
-cats = get_all_cats(range) if cats == ['all']
+models    = get_all_models(range) if models == ['all']
+cats      = get_all_cats(range)   if cats == ['all']
+range_arr = range.to_a
 
-Parallel.each(range, in_processes: cpu) do |k|
-  process_k(cats, models, age_name, ages, typesh, k, outdir, dir, ref_dir)
-end
+# Create output directories upfront
+cats.each { |cat| mkdir_with_force(File.join(outdir, cat), false, true) }
 
-cats.each do |cat|
+######################################################
+# Build flat task list: every (k, age, cat, type, model) combination
+# This enables full parallelism across ALL dimensions, not just k.
+tasks = []
+range_arr.each do |k|
   ages.each do |age|
-    typesh.each_pair do |type, type_obj|
-      write_header(models, cat, age, type_obj, outdir)
+    cats.each do |cat|
+      typesh.each_pair do |type, type_obj|
+        models.each_with_index do |model, model_idx|
+          tasks << {
+            k: k, age: age, cat: cat, type: type,
+            type_infile: type_obj.type_infile,
+            ref_tree: type_obj.ref_tree, tf: type_obj.tf,
+            model: model, model_idx: model_idx
+          }
+        end
+      end
     end
   end
 end
 
+$stderr.puts "Running #{tasks.size} tasks across #{cpu} processes..."
+
+# Execute ALL R script calls in parallel (worker processes are reused)
+results = Parallel.map(tasks, in_processes: cpu) do |task|
+  subdir     = File.join(dir, task[:k].to_s)
+  target_dir = File.join(subdir, "#{age_name}-#{task[:age]}", task[:cat])
+  target_tree   = File.join(target_dir, 'dating', task[:model], 'combined', task[:type_infile])
+  ref_tree_path = File.join(target_dir, ref_dir, task[:ref_tree])
+
+  values = compute_branch_score(ref_tree_path, target_tree, task[:tf])
+
+  { k: task[:k], age: task[:age], cat: task[:cat], type: task[:type],
+    model_idx: task[:model_idx], values: values }
+end
+
+######################################################
+# Organize: grouped[(cat, type, age, k)] => array of [score, reldiff, coeff, rs] per model
+grouped = {}
+results.each do |r|
+  key = [r[:cat], r[:type], r[:age], r[:k]]
+  grouped[key] ||= Array.new(models.size)
+  grouped[key][r[:model_idx]] = r[:values]
+end
+
+######################################################
+# Write all output files in one pass — no temp files, no cut, no transpose.rb
+cats.each do |cat|
+  sub_outdir = File.join(outdir, cat)
+
+  typesh.each_pair do |type, type_obj|
+    ages.each do |age|
+      OUTS.each_with_index do |out, col_idx|
+        outfile = File.join(sub_outdir, "#{type_obj.name}.#{age}.#{out}")
+        File.open(outfile, 'w') do |fh|
+          fh.puts models.join("\t")
+          range_arr.each do |k|
+            row = grouped[[cat, type, age, k]]
+            if row
+              fh.puts row.map { |v| v ? v[col_idx] : 'NA' }.join("\t")
+            else
+              fh.puts (['NA'] * models.size).join("\t")
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+$stderr.puts "Done. Results written to #{outdir}"
 

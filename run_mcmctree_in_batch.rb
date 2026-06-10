@@ -1,25 +1,22 @@
 #! /bin/env ruby
 
-
 ##################################################
 DIR ||= File.dirname(__FILE__)
-
 
 ##################################################
 require_relative 'do_mcmctree.rb'
 require 'getoptlong'
 require 'parallel'
 
-
 ##################################################
 #OUTPUT_MCMCTREE_RATE = File.expand_path("~/lab-tools/dating/output_mcmctree_rate.rb")
 OUTPUT_MCMCTREE_RATE = File.join(DIR, 'output_mcmctree_rate.rb')
 FIGTREE2TREE = File.join(DIR, 'figtree2tree.sh')
 
-
 ##################################################
 opts = GetoptLong.new(
   ['--indir', GetoptLong::REQUIRED_ARGUMENT],
+  ['--include', GetoptLong::REQUIRED_ARGUMENT],   # <-- added
   ['--nohup', GetoptLong::NO_ARGUMENT],
   ['--hpc', '--HPC', GetoptLong::NO_ARGUMENT],
   ['--wait', GetoptLong::NO_ARGUMENT],
@@ -33,6 +30,7 @@ type = ''
 prefix = 'mib'
 w_arg = ''
 cpu = 1
+includes = []  # <-- collect include terms
 
 opts.each do |opt, arg|
   case opt
@@ -50,6 +48,9 @@ opts.each do |opt, arg|
     w_arg = "-w #{arg}"
   when '--cpu'
     cpu = arg.to_i
+  when '--include'
+    # supports comma-separated and repeated --include
+    includes.concat(arg.split(',').map(&:strip).reject(&:empty?))
   end
 end
 
@@ -58,16 +59,20 @@ if indir.nil? || indir.empty?
   exit(1)
 end
 
-
 # Main processing
 mcmctree_files = Dir.glob(File.join(indir, '**', 'mcmctree.ctl'))
 
-cmd = "[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree.nwk; rm rate*.tre 2>/dev/null; rm mcmc.txt* 2>/dev/null; mcmctree > mcmctree.final; bash #{FIGTREE2TREE} -i FigTree.tre > figtree.nwk; ln -s out out.txt 2>/dev/null; #{OUTPUT_MCMCTREE_RATE}; tar czvf mcmc.txt.gz mcmc.txt && rm mcmc.txt"
-
-
-Parallel.each(mcmctree_files, in_threads: cpu) do |ctl_file|
-  dir = File.dirname(ctl_file)
-  `cd #{dir}; #{cmd};`
+# Filter by include terms (path must contain at least one term)
+unless includes.empty?
+  mcmctree_files.select! do |ctl_file|
+    includes.any? { |term| ctl_file.include?(term) }
+  end
 end
 
 
+cmd = "[ -f FigTree.tre ] && rm FigTree.tre; [ -f figtree.nwk ] && rm figtree.nwk; rm rate*.tre 2>/dev/null; rm mcmc.txt* 2>/dev/null; mcmctree > mcmctree.final; bash #{FIGTREE2TREE} -i FigTree.tre > figtree.nwk; ln -s out out.txt 2>/dev/null; #{OUTPUT_MCMCTREE_RATE}; gzip -c mcmc.txt > mcmc.txt.gz && rm mcmc.txt"
+
+Parallel.each(mcmctree_files, in_threads: cpu) do |ctl_file|
+  dir = File.dirname(ctl_file)
+  system(cmd, chdir: dir)
+end

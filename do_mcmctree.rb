@@ -212,6 +212,7 @@ end
 def output_rate(print)
   output_tree = false
   k = 0
+  File.exist? 'out' && `ln -s out out.txt`
   IO.popen("grep -A1 rategram out.txt 2>/dev/null") do |grep_output|
     grep_output.each_line do |line|
       line.chomp!
@@ -343,7 +344,8 @@ if __FILE__ == $0
         clock = value
         clock = 1 if clock =~ /^SR|STR$/
         clock = 2 if clock == 'IR' or clock == 'ILN'
-        clock = 3 if clock == 'AR' or clock == 'GBM'
+        clock = 3 if %w[AR gbm ou].include?(clock.to_s.downcase)
+        #clock = 32 if clock == 'AR' or clock == 'gbm' or clock == 'gbm_full'
         STDOUT.puts "clock = #{clock}".colorize(:red)
       when '--BDparas', '--BD', '--bd'
         bd_paras = value.gsub(",", ' ')
@@ -524,7 +526,8 @@ if __FILE__ == $0
     # no matter if is_inBV or not
     `echo $$ > mcmctree.final; #{MCMCTREE} mcmctree.ctl >> mcmctree.final`
     `gzip -c mcmc.txt > mcmc.txt.gz`
-    $? == 0 and `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
+    $? == 0 and `rm mcmc.txt`
+    `bash #{FIGTREE2NWK} -i FigTree.tre > figtree.nwk`
 
     #`grep rategram out.txt && grep -A1 rategram out.txt | tail -1 > rate.tre`
     output_rate(print)

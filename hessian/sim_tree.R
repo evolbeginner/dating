@@ -1,4 +1,10 @@
-#! /bin/env Rscript
+#! /usr/bin/env Rscript
+
+
+###################################################
+#   2025-02-06
+#   check mean of sd(log(rate))
+#   see "calc mean"
 
 
 ###################################################
@@ -14,23 +20,7 @@ suppressPackageStartupMessages(
 
 
 ###################################################
-calculate_var_AR0 <- function(C) {
-    n=nrow(C)
-    (sum(diag(C))-1/n*sum(C)) / (n-1)
-}
-
-calculate_var_AR <- function(sd2, C) {
-    n <- nrow(C)
-    sd2*(n-1) / (sum(diag(C))-1/n*sum(C))
-}
-
-calculate_var_AR2 <- function(sd2, C) {
-    n <- nrow(C)
-    A = sum(diag(C)) - 1/n*sum(C)
-    B = 1/4 * (sum(diag(C)^2) - 1/n*sum(diag(C))^2)
-    2*(n-1)*sd2 / (sqrt(A^2+4*B*(n-1)*sd2)+A)
-    #(sqrt(A^2+4*B*(n-1)*sd2)-A)/(2*B)
-}
+calculate_var_AR <- function(C) { n=nrow(C); ( sum(diag(C)) - 1/n * sum(C) ) / (n-1) }
 
 vcv_branches <- function(tree) {
     node_dist_m <- mrca(tree, full=T)
@@ -71,6 +61,8 @@ vcv_branches <- function(tree) {
 mu <- -2.3 # corresponding to E(x) = 1
 sd <- 0.2
 s2 <- NULL
+drift <- 0
+r_opt <- NULL
 
 # gamma_rate
 alpha <- 2.5
@@ -94,6 +86,8 @@ command=matrix(c(
     'mu', 'm', 2, 'numeric',
     'sd', '', 2, 'numeric',
     's2', 'S', 2, 'numeric',
+    'drift', 'D', 2, 'numeric',
+    'r_opt', 'M', 2, 'numeric',
     'alpha', 'A', 2, 'numeric',
     'beta', 'B', 2, 'numeric',
     'scale', 's', 2, 'numeric',
@@ -118,12 +112,6 @@ if(is.null(args[["mu"]])){
 	mu <- args$mu
 }
 
-if(is.null(args[["sd"]])){
-	sd <- sd
-}else{
-	sd <- args$sd
-}
-
 if(!is.null(args[["alpha"]])){
 	alpha <- args$alpha
 }
@@ -131,8 +119,20 @@ if(!is.null(args[["beta"]])){
 	beta <- args$beta
 }
 
+if(is.null(args[["sd"]])){
+	sd <- sd
+}else{
+	sd <- args$sd
+}
+
 if(!is.null(args[["s2"]])){
 	s2 <- args$s2
+}
+if(!is.null(args[["drift"]])){
+	drift <- args$drift
+}
+if(!is.null(args[["r_opt"]])){
+    r_opt <- args$r_opt
 }
 
 # if not given will exit!
@@ -161,6 +161,11 @@ death <- args$death
 n <- args$num
 
 
+# calc mean
+sds <- numeric(1000)
+for(i in 1:1000){
+# calc mean
+
 if (is.null(args[["timetree"]])){
 	#tree <- rphylo(n, birth, death)
 	trees <- sim.bd.taxa.age(n, 1, birth, death, rho, age, mrca = TRUE);
@@ -178,8 +183,7 @@ timetree$edge.length <- timetree$edge.length * scale
 if (clock == 'AR' && is.null(s2)){
     #c <- vcv(timetree)
     c <- vcv_branches(timetree)
-    print(calculate_var_AR(sd^2, c))
-    s2 <- calculate_var_AR2(sd^2, c)
+    s2 <- sd^2 / calculate_var_AR(c)
     cat(paste("s2", s2, sep="\t"), "\n")
 }
 
@@ -195,8 +199,11 @@ if(clock == 'IR' || clock == 'ILN'){
     subs_tree$edge.length <- subs_tree$edge.length * rate
 } else if(clock == 'AR'){
     #s2 <- sd^2 / (tr(vcv(timetree)) - 0.5*sum(timetree$edge.length))
-    mu_new = mu + s2/(2*n)*sum(diag(c)) #+ s2 * sum(diag(c))
-    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu_new), s2=s2)
+    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu), s2=s2)
+} else if(clock == 'gbm'){
+    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu), s2=s2, drift=drift)
+} else if(clock == 'ou'){
+    subs_tree <- relaxed.tree(subs_tree, model="gbm", r=exp(mu), s2=s2, r_opt=r_opt, theta=exp(drift))
 }
 
 # create unrooted tree
@@ -206,7 +213,12 @@ unrooted_tree <- unroot(subs_tree)
 rate_tree <- subs_tree
 rate_tree$edge.length <- subs_tree$edge.length/timetree$edge.length
 
-#cat(paste0("mean_sd:\t", mean(sds),"\n")); print(var(sds))
+# calc mean
+sds[i] = sd(log(rate_tree$edge.length))
+}
+# calc mean
+
+cat(paste0("mean_sd:\t", mean(sds),"\n")); print(var(sds))
 
 
 ###################################################
@@ -229,6 +241,5 @@ if(is.null(args[["outdir"]])){
 	write.tree(rate_tree, rate_tree_file)
 	#lapply(args, write, cmd_file, append=TRUE, ncolumns=1000)
 }
-
 
 

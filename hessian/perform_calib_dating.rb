@@ -38,14 +38,16 @@ is_force = false
 num = 2
 percent = 0.2
 shift_percent = 0.0
+ancient = ''
 
 
 # Option parsing using GetoptLong
 opts = GetoptLong.new(
   ["--indir", GetoptLong::REQUIRED_ARGUMENT],
-  ["--num", GetoptLong::REQUIRED_ARGUMENT],
+  ["-n", "--num", GetoptLong::REQUIRED_ARGUMENT],
   ["-p", "--percent", GetoptLong::REQUIRED_ARGUMENT],
   ['-s', '--sp', '--shift', '--shift_percent', GetoptLong::REQUIRED_ARGUMENT],
+  ["--ancient", GetoptLong::NO_ARGUMENT],
   ["--only_min", GetoptLong::NO_ARGUMENT],
   ["--only_max", GetoptLong::NO_ARGUMENT],
   ["--run_mcmctree", GetoptLong::NO_ARGUMENT],
@@ -59,12 +61,14 @@ opts.each do |opt, arg|
   case opt
     when '--indir'
       indir = arg
-    when '--num'
+    when '-n', '--num'
       num = arg.to_i
     when '-p', '--percent'
       percent = arg.to_f
     when '-s', '--sp', '--shift', '--shift_percent'
       shift_percent = arg.to_f
+    when '--ancient'
+      ancient = '--ancient'
     when '--only_min'
       only_min_arg = '--only_min'
     when '--only_max'
@@ -106,7 +110,7 @@ dir = Dir.pwd
 # Process time tree
 timetree = "#{indir}/sim/tree/time.tre"
 tipN = `nw_stats #{timetree} | grep leaves | awk '{print $2}'`.strip
-cmd = "Rscript #{MAKE_CALIB_TO_TREE} -t #{timetree} -n #{num} -p #{percent} -s #{shift_percent} #{only_min_arg} #{only_max_arg} | nw_topology -".strip
+cmd = "Rscript #{MAKE_CALIB_TO_TREE} -t #{timetree} -n #{num} -p #{percent} -s #{shift_percent} #{only_min_arg} #{only_max_arg} #{ancient} | nw_topology -".strip
 
 puts cmd
 new_tree = ` #{cmd} `
